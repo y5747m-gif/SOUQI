@@ -1,15 +1,13 @@
 /* =========================================================================
-   الجزء 4-ب: المتاجر الحقيقية حولك — بحث حقيقي في OpenStreetMap
+   الجزء 4-ب: المتاجر الحقيقية حولك — بحث حقيقي في Google Places عبر Backend من نفس الأصل
    -------------------------------------------------------------------------
-   الفكرة: مفيش بيانات وهمية في «المتاجر القريبة». الأداة بتاخد موقعك الفعلي
-   (GPS) أو أي منطقة تختارها، وبتسأل قاعدة بيانات OpenStreetMap المفتوحة عن
-   المحلات الحقيقية المسجّلة على أرض الواقع داخل النطاق، وترجّع:
-   الاسم • النوع • العنوان • المسافة • التليفون • المواعيد • لينك الخريطة.
-   وبخصوص الأسعار: لا نعرف أي سعر من OSM، فبنقول بوضوح «لا توجد أسعار مسجّلة»
-   وبنسمح للمستخدم إنه يسجّل السعر بنفسه — ومش بنخترع أي رقم.
+   المفتاح لا يصل للمتصفح. الخادم يتحقق من الدولة والمحافظة لكل نتيجة.
+   بيانات Google مؤقتة في الذاكرة فقط؛ لا يتم تخزينها في localStorage.
+   أدوات قراءة OSM أدناه باقية للتوافق مع أسعار المستخدمين القديمة فقط.
    ========================================================================= */
 
 const REAL = {
+  requestId: 0,
   status: 'idle',        // idle | locating | loading | ready | error
   all: [],               // كل المتاجر الحقيقية في النطاق
   items: [],             // بعد الفلاتر (قسم/كلمة/مفتوح)
@@ -20,42 +18,29 @@ const REAL = {
   keyword: '', cat: '', openOnly: false,
   err: '', endpoint: '', usedCache: false, note: ''
 };
-const OSM_ENDPOINTS = [
-  'https://overpass-api.de/api/interpreter',
-  'https://overpass.kumi.systems/api/interpreter',
-  'https://overpass.private.coffee/api/interpreter'
-];
-const NOMINATIM = 'https://nominatim.openstreetmap.org/search';
-
 /* مناطقة مصر بإحداثيات حقيقية — تُستخدم لو الجهاز رفض مشاركة الموقع */
 const EG_AREAS = [
   { ar: 'وسط القاهرة', lat: 30.0459, lon: 31.2405 }, { ar: 'مدينة نصر', lat: 30.0586, lon: 31.3305 },
   { ar: 'مصر الجديدة', lat: 30.0896, lon: 31.3321 }, { ar: 'المعادي', lat: 29.9603, lon: 31.2503 },
-  { ar: 'حلوان', lat: 29.8500, lon: 31.3300 }, { ar: 'شبرا الخيمة', lat: 30.1286, lon: 31.2422 },
-  { ar: 'العبور', lat: 30.2280, lon: 31.4560 }, { ar: 'القاهرة الجديدة (التجمع)', lat: 30.0074, lon: 31.4913 },
+  { ar: 'حلوان', lat: 29.8500, lon: 31.3300 }, { ar: 'القاهرة الجديدة (التجمع)', lat: 30.0074, lon: 31.4913 },
   { ar: 'مدينة 6 أكتوبر', lat: 29.9285, lon: 30.9188 }, { ar: 'الشيخ زايد', lat: 30.0055, lon: 30.9750 },
-  { ar: 'الجيزة — الدقي', lat: 30.0131, lon: 31.2089 }, { ar: 'الهرم وفيصل', lat: 29.9900, lon: 31.1700 },
-  { ar: 'الإسكندرية — وسط البلد', lat: 31.2001, lon: 29.9187 }, { ar: 'سموحة', lat: 31.2150, lon: 29.9500 },
-  { ar: 'العجمي', lat: 31.1300, lon: 29.7800 }, { ar: 'المنصورة', lat: 31.0409, lon: 31.3785 },
-  { ar: 'طنطا', lat: 30.7865, lon: 31.0004 }, { ar: 'دمنهور', lat: 31.0341, lon: 30.4682 },
-  { ar: 'كفر الشيخ', lat: 31.1107, lon: 30.9388 }, { ar: 'الزقازيق', lat: 30.5877, lon: 31.5020 },
-  { ar: 'بنها', lat: 30.4662, lon: 31.1837 }, { ar: 'دمياط', lat: 31.4165, lon: 31.8133 },
-  { ar: 'بورسعيد', lat: 31.2653, lon: 32.3019 }, { ar: 'الإسماعيلية', lat: 30.5965, lon: 32.2715 },
-  { ar: 'السويس', lat: 29.9668, lon: 32.5498 }, { ar: 'الفيوم', lat: 29.3084, lon: 30.8428 },
-  { ar: 'بني سويف', lat: 29.0661, lon: 31.0994 }, { ar: 'المنيا', lat: 28.1099, lon: 30.7503 },
-  { ar: 'أسيوط', lat: 27.1809, lon: 31.1837 }, { ar: 'سوهاج', lat: 26.5591, lon: 31.6957 },
-  { ar: 'قنا', lat: 26.1551, lon: 32.7160 }, { ar: 'الأقصر', lat: 25.6872, lon: 32.6396 },
-  { ar: 'أسوان', lat: 24.0889, lon: 32.8998 }, { ar: 'الغردقة', lat: 27.2579, lon: 33.8116 },
-  { ar: 'شرم الشيخ', lat: 27.9158, lon: 34.3300 }, { ar: 'مرسى مطروح', lat: 31.3543, lon: 27.2373 },
-  { ar: 'العريش', lat: 31.1312, lon: 33.7984 }, { ar: 'الطور (سيناء)', lat: 28.2410, lon: 33.6220 }
+  { ar: 'الجيزة — الدقي', lat: 30.0131, lon: 31.2089 }, { ar: 'الهرم وفيصل', lat: 29.9900, lon: 31.1700 }
 ];
-
-/* حماية النطاق: حتى البحث الحقيقي من GPS/جوجل لا يخرج من القاهرة والجيزة */
+// Initial envelope only. Authoritative governorate filtering happens on the server.
 function inServiceArea(lat, lon) {
-  // حدود عملية تغطي القاهرة الكبرى والجيزة (وليست مصر كلها)
-  return lat >= 29.70 && lat <= 30.35 && lon >= 30.85 && lon <= 31.65;
+  return Number.isFinite(lat) && Number.isFinite(lon) && lat >= 27 && lat <= 30.6 && lon >= 27 && lon <= 32.7;
 }
 function serviceAreaError() { return 'سوقي يعمل حاليًا داخل القاهرة والجيزة فقط. اختر منطقة داخل النطاق.'; }
+function realSource(st) { return st && st.source === 'osm' ? 'OpenStreetMap' : 'Google Maps'; }
+function realMapUrl(st) {
+  return st.source === 'osm' ? 'https://www.openstreetmap.org/' + st.osmRef :
+    'https://www.google.com/maps/search/?api=1&query=' + st.lat + ',' + st.lon + '&query_place_id=' + encodeURIComponent(st.placeId || '');
+}
+function realAttribution(st) {
+  if (st.source !== 'google') return '';
+  return '<div class="tiny muted mt10" dir="ltr">Google Maps' + (st.attributions || []).map(a =>
+    a.url && /^https?:\/\//.test(a.url) ? ' · <a href="' + esc(a.url) + '" target="_blank" rel="noopener">' + esc(a.name) + '</a>' : ' · ' + esc(a.name)).join('') + '</div>';
+}
 
 /* تحويل وسوم OpenStreetMap → أقسام سوقي + اسم نوع عربي دقيق */
 const OSM_TYPES = {
@@ -164,6 +149,7 @@ function parseOH(s) {
 }
 function realHoursText(st) {
   if (!st) return 'مواعيد غير مسجّلة';
+  if (st.source === 'google') return st.hoursRaw || 'مواعيد غير مسجّلة';
   if (st.hoursAlways) return 'مفتوح 24 ساعة';
   if (st.openH == null || st.closeH == null) return 'مواعيد غير مسجّلة';
   if (st.hoursRaw && st.hoursRaw.length <= 26) return st.hoursRaw.replace(/;/g, ' · ');
@@ -172,6 +158,7 @@ function realHoursText(st) {
 /* حالة المحل: مفتوح / مغلق / غير معروفة — بلا تخمين */
 function realOpenState(st) {
   if (!st) return 'unknown';
+  if (st.source === 'google') return st.openNow === true ? 'open' : st.openNow === false ? 'closed' : 'unknown';
   if (st.hoursAlways) return 'open';
   if (st.openH == null || st.closeH == null) return 'unknown';
   const h = new Date().getHours() + new Date().getMinutes() / 60;
@@ -180,7 +167,7 @@ function realOpenState(st) {
 }
 function realOpenBadge(st) {
   const s = realOpenState(st);
-  if (s === 'open') return '<span class="badge ok"><i class="dot g"></i> مفتوح الآن (حسب مواعيد OSM)</span>';
+  if (s === 'open') return '<span class="badge ok"><i class="dot g"></i> مفتوح الآن (حسب ' + realSource(st) + ')</span>';
   if (s === 'closed') return '<span class="badge ink"><i class="dot r"></i> مغلق حاليًا</span>';
   return '<span class="badge ink">🕒 مواعيد غير مسجّلة</span>';
 }
@@ -248,45 +235,29 @@ function realQuery(lat, lon, radiusM) {
 const realHost = (u) => String(u).replace(/^https?:\/\//, '').split('/')[0];
 
 /* ------------------------- 2. الاتصال بالخدمة ------------------------- */
-async function realFetch(query, ms) {
-  if (typeof fetch !== 'function' || typeof AbortController !== 'function')
-    throw new Error('no-fetch');
-  let last = null;
-  for (const url of OSM_ENDPOINTS) {
-    try {
-      const ctl = new AbortController();
-      const t = setTimeout(() => ctl.abort(), ms || 16000);
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'data=' + encodeURIComponent(query),
-        signal: ctl.signal
-      });
-      clearTimeout(t);
-      if (!res.ok) { last = new Error('http:' + res.status); continue; }
-      const json = await res.json();
-      REAL.endpoint = realHost(url);
-      return json;
-    } catch (e) { last = e; }
-  }
-  throw last || new Error('service');
-}
-async function realGeocodeArea(q) {
-  if (!/(القاهرة|القاهره|الجيزة|الجيزه|الهرم|فيصل|الدقي|المهندسين|المعادي|مدينة نصر|مصر الجديدة|التجمع|اكتوبر|أكتوبر|الشيخ زايد|حلوان|شبرا)/i.test(q)) throw new Error(serviceAreaError());
+let realController = null;
+async function realApi(path, body) {
+  if (location.protocol === 'file:') throw new Error('شغّل سوقي من خادم التطبيق؛ البحث لا يعمل بفتح ملف HTML مباشرة.');
   if (typeof fetch !== 'function') throw new Error('no-fetch');
-  const url = NOMINATIM + '?format=json&limit=1&countrycodes=eg&accept-language=ar&q=' + encodeURIComponent(q);
-  const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
-  if (!res.ok) throw new Error('http:' + res.status);
-  const j = await res.json();
-  if (!j.length) return null;
-  return { lat: +j[0].lat, lon: +j[0].lon, where: j[0].display_name.split(',').slice(0, 2).join('، ') };
+  if (realController) realController.abort();
+  const ctl = new AbortController(); realController = ctl;
+  const timer = setTimeout(() => ctl.abort(), 12000);
+  try {
+    const res = await fetch('/api/places/' + path, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body), signal: ctl.signal, credentials: 'same-origin'
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error && json.error.message || 'خدمة البحث غير متاحة حاليًا.');
+    return json;
+  } finally { clearTimeout(timer); if (realController === ctl) realController = null; }
 }
+async function realGeocodeArea(q) { return realApi('area', { q }); }
 function realErrMsg(e) {
   const m = String((e && e.message) || e || '');
-  if (m === 'no-fetch') return 'المتصفح لا يدعم الاتصال بالخدمة، أو المتصفح يمنع الطلبات الخارجية في هذه البيئة.';
-  if (m.includes('http:403') || m.includes('http:429')) return 'خدمة OpenStreetMap رفضت الطلب مؤقتًا (حد استخدام). استنى دقيقة وجرّب تاني.';
-  if (m === 'service' || m.includes('abort')) return 'تعذّر الوصول لخدمة OpenStreetMap. تأكد من الإنترنت وجرّب مرة أخرى.';
-  return 'تعذّر الوصول لخدمة OpenStreetMap (' + (m || 'خطأ غير معروف') + ').';
+  if (m === 'no-fetch') return 'المتصفح لا يدعم الاتصال بالخدمة أو يمنع الطلبات. استخدم متصفحًا حديثًا.';
+  if (/Failed to fetch|NetworkError|Load failed|abort|JSON|Unexpected token/i.test(m)) return 'تعذّر الاتصال بخادم Google Places. افتح التطبيق من الخادم وتأكد من الإنترنت ثم حاول مرة أخرى.';
+  return m || 'تعذّر الوصول إلى Google Places.';
 }
 const realIsNetworkBlocked = () => /no-fetch|Failed to fetch|NetworkError|Load failed|ERR_|abort/i.test(REAL.err || '');
 
@@ -303,6 +274,7 @@ function realLocate() {
 }
 function realLocateMsg(e) {
   const m = String((e && e.message) || '');
+  if (m === serviceAreaError()) return m;
   if (m === 'geo-unsupported') return 'جهازك/المتصفح لا يدعم تحديد الموقع. اختر منطقتك من القائمة وجرّب.';
   if (m === 'geo-denied') return 'رفضت مشاركة الموقع. اختر منطقتك من القائمة يدويًا — البحث هيبقى حقيقي برضه.';
   if (m === 'geo-timeout') return 'تحديد الموقع أخد وقتًا طويلًا. جرّب تاني أو اختر منطقتك يدويًا.';
@@ -319,7 +291,7 @@ function realApplyFilter() {
   REAL.items = REAL.all.filter(s => {
     if (REAL.cat && s.cat !== REAL.cat) return false;
     if (REAL.openOnly && realOpenState(s) !== 'open') return false;
-    if (kw && !(arNorm(s.name).includes(kw) || arNorm(s.catAr).includes(kw) || arNorm(s.area).includes(kw) || arNorm(s.city).includes(kw))) return false;
+    if (s.source !== 'google' && kw && !(arNorm(s.name).includes(kw) || arNorm(s.catAr).includes(kw) || arNorm(s.area).includes(kw) || arNorm(s.city).includes(kw))) return false;
     return true;
   });
   return REAL.items;
@@ -329,86 +301,75 @@ function realCatCounts() {
   REAL.all.forEach(s => m[s.cat] = (m[s.cat] || 0) + 1);
   return m;
 }
-async function realSearch(opts) {
+function googleToStore(s) {
+  return Object.assign({ verified: false, rating: 0, rc: 0, plan: 'google', delivery: false,
+    pay: [], svc: [], fri: '', joined: null, views: 0, clicksWa: 0, calls: 0, dirs: 0, weekly: [],
+    desc: '', tags: {}, openH: null, closeH: null, hoursAlways: false }, s);
+}
+async function realSearch(opts, requestId) {
   opts = opts || {};
-  if (opts.radiusKm) REAL.radiusKm = parseFloat(opts.radiusKm);
+  const id = requestId == null ? ++REAL.requestId : requestId;
+  if (realController) realController.abort();
+  REAL.all = []; REAL.items = []; REAL.err = ''; REAL.note = '';
+  if (opts.radiusKm != null) REAL.radiusKm = Math.max(0.3, Math.min(25, Number(opts.radiusKm) || 3));
   if (opts.keyword != null) REAL.keyword = opts.keyword;
   if (opts.cat != null) REAL.cat = opts.cat;
   if (opts.openOnly != null) REAL.openOnly = opts.openOnly;
   if (opts.locate) {
-    REAL.status = 'locating'; REAL.err = ''; realRefreshUI();
+    REAL.status = 'locating'; realRefreshUI();
     try {
       const p = await realLocate();
+      if (id !== REAL.requestId) return false;
       if (!inServiceArea(p.lat, p.lon)) throw new Error(serviceAreaError());
       REAL.lat = p.lat; REAL.lon = p.lon; REAL.acc = p.acc;
       REAL.where = 'موقعك الحالي' + (p.acc ? ' (±' + p.acc + ' م)' : '');
       APP.loc = { lat: p.lat, lon: p.lon, label: REAL.where, area: 'موقعك الحالي', city: '', exact: true };
       save('loc', APP.loc);
-    } catch (e) { REAL.status = 'error'; REAL.err = realLocateMsg(e); realRefreshUI(); return false; }
+    } catch (e) {
+      if (id !== REAL.requestId) return false;
+      REAL.status = 'error'; REAL.err = realLocateMsg(e); realRefreshUI(); return false;
+    }
   }
-  if (REAL.lat == null) {
-    REAL.status = 'error';
-    REAL.err = 'لسه محددناش موقعك. اضغط «📍 استخدم موقعي» أو اختار منطقتك من القائمة.';
+  if (REAL.lat == null || !inServiceArea(REAL.lat, REAL.lon)) {
+    REAL.status = 'error'; REAL.err = REAL.lat == null ? 'اضغط «استخدم موقعي» أو اختر منطقة داخل القاهرة والجيزة.' : serviceAreaError();
     realRefreshUI(); return false;
   }
-  REAL.status = 'loading'; REAL.err = ''; REAL.note = ''; realRefreshUI();
+  REAL.status = 'loading'; realRefreshUI();
   try {
-    const json = await realFetch(realQuery(REAL.lat, REAL.lon, Math.max(300, Math.round(REAL.radiusKm * 1000))));
-    const list = (json.elements || []).map(el => osmToStore(el, REAL.lat, REAL.lon))
-      .filter(s => s && s.distKm <= REAL.radiusKm + 0.02);
-    REAL.all = dedupeReal(list).sort((a, b) => a.distKm - b.distKm);
-    REAL.at = Date.now(); REAL.usedCache = false;
-    realApplyFilter();
-    REAL.status = 'ready';
-    realCacheSave();
-    if (!REAL.all.length) REAL.note = 'مفيش محلات مسجّلة على OpenStreetMap في النطاق ده. جرّب توسّع النطاق أو غيّر المنطقة.';
-    toast(REAL.all.length ? `لقينا <b>${REAL.all.length}</b> محلًا حقيقيًا حولك` : 'مفيش محلات مسجّلة في النطاق ده — وسّعه', REAL.all.length ? 'ok' : 'warn', REAL.all.length ? '🏬' : '🔍');
+    const json = await realApi('search', { lat: REAL.lat, lon: REAL.lon, radiusKm: REAL.radiusKm, keyword: REAL.keyword });
+    if (id !== REAL.requestId) return false;
+    if (!Array.isArray(json.items)) throw new Error('استجابة خدمة البحث غير صحيحة.');
+    REAL.all = json.items.map(googleToStore);
+    REAL.endpoint = 'Google Maps'; REAL.at = Date.now(); REAL.usedCache = false;
+    realApplyFilter(); realEnsureAllInDB(); REAL.status = 'ready';
+    REAL.note = 'حتى 20 نتيجة في الطلب؛ النتائج ليست حصرًا لكل المحلات. يتم استبعاد النتائج خارج القاهرة والجيزة أو مجهولة المحافظة.';
   } catch (e) {
+    if (id !== REAL.requestId) return false;
     REAL.status = 'error'; REAL.err = realErrMsg(e);
   }
-  realRefreshUI();
-  return REAL.status === 'ready';
+  realRefreshUI(); return REAL.status === 'ready';
 }
 async function realSearchArea(q, opts) {
-  opts = opts || {};
-  const known = EG_AREAS.find(a => arNorm(a.ar) === arNorm(q));
-  REAL.status = 'locating'; REAL.err = ''; realRefreshUI();
+  const id = ++REAL.requestId;
+  if (realController) realController.abort();
+  REAL.all = []; REAL.items = []; REAL.status = 'locating'; REAL.err = ''; realRefreshUI();
   try {
-    let p = known ? { lat: known.lat, lon: known.lon, where: known.ar } : await realGeocodeArea(q);
-    if (!p) { REAL.status = 'error'; REAL.err = 'مش عارفين نحدد «' + esc(q) + '» على الخريطة. اكتب اسم المنطقة أو المحافظة بشكل أوضح (مثال: المنصورة).'; realRefreshUI(); return false; }
-    if (!inServiceArea(p.lat, p.lon)) throw new Error(serviceAreaError());
+    const known = EG_AREAS.find(a => arNorm(a.ar) === arNorm(q));
+    const p = known ? { lat: known.lat, lon: known.lon, where: known.ar } : await realGeocodeArea(q);
+    if (id !== REAL.requestId) return false;
+    if (!p || !inServiceArea(p.lat, p.lon)) throw new Error(serviceAreaError());
     REAL.lat = p.lat; REAL.lon = p.lon; REAL.acc = null; REAL.where = p.where;
+    // Google-derived geocoding data stays in memory, not localStorage.
     APP.loc = { lat: p.lat, lon: p.lon, label: p.where, area: p.where, city: '', exact: false };
-    save('loc', APP.loc);
   } catch (e) {
+    if (id !== REAL.requestId) return false;
     REAL.status = 'error'; REAL.err = realErrMsg(e); realRefreshUI(); return false;
   }
-  return realSearch(opts);
+  return realSearch(opts, id);
 }
-function realCacheSave() {
-  try {
-    const items = REAL.all.slice(0, 220).map(s => ({
-      id: s.id, osmRef: s.osmRef, name: s.name, cat: s.cat, catAr: s.catAr, subLabel: s.subLabel,
-      lat: s.lat, lon: s.lon, area: s.area, city: s.city, address: s.address, phone: s.phone,
-      website: s.website, hoursRaw: s.hoursRaw, hoursAlways: s.hoursAlways, openH: s.openH, closeH: s.closeH
-    }));
-    save('realCache', { at: REAL.at, lat: REAL.lat, lon: REAL.lon, where: REAL.where, radiusKm: REAL.radiusKm, endpoint: REAL.endpoint, items });
-  } catch (e) { }
-}
-function realCacheLoad() {
-  const c = load('realCache', null);
-  if (!c || !c.items || !c.items.length) return false;
-  REAL.lat = c.lat; REAL.lon = c.lon; REAL.where = c.where; REAL.radiusKm = c.radiusKm || REAL.radiusKm;
-  REAL.endpoint = c.endpoint || '';
-  REAL.all = c.items.map(s => Object.assign({
-    real: true, source: 'osm', cats: [s.cat], verified: false, rating: 0, rc: 0, plan: 'osm',
-    delivery: false, pay: [], svc: [], views: 0, desc: '', tags: {}
-  }, s, { distKm: distKm({ lat: c.lat, lon: c.lon }, { lat: s.lat, lon: s.lon }) }))
-    .sort((a, b) => a.distKm - b.distKm);
-  REAL.at = c.at; REAL.status = 'ready'; REAL.usedCache = true;
-  realApplyFilter();
-  return true;
-}
+// Remove old cached provider results; never persist Google Places content.
+function realCacheSave() { save('realCache', null); }
+function realCacheLoad() { realCacheSave(); return false; }
 function realRefreshUI() {
   if (APP.route.name === 'nearby') render();
   else {
@@ -432,7 +393,7 @@ function realPriceLine(st) {
   if (!mine.length) return `
     <div class="real-noprice">
       <div class="b sm">💰 الأسعار: لا توجد أسعار مسجّلة لهذا المحل</div>
-      <p class="tiny muted mt6">إحنا ما بنخترعش أسعار. OpenStreetMap بتعطينا الاسم والموقع والنوع فقط — السعر لسه محدش سجّله.</p>
+      <p class="tiny muted mt6">إحنا ما بنخترعش أسعار. ${realSource(st)} بتعطينا الاسم والموقع والنوع فقط — السعر لسه محدش سجّله.</p>
       <div class="row gap6 mt10 wrapx">
         <button class="btn primary sm2" data-act="real-price" data-store="${st.id}">➕ سجّل سعرًا (كن أول واحد)</button>
         <a class="btn sm2" href="#/store/${st.id}">👁️ صفحة المحل</a>
@@ -461,9 +422,9 @@ function realPriceLine(st) {
 
 /* ------------------------- 6. المكوّنات (UI) ------------------------- */
 function realStatusLine() {
-  if (REAL.status === 'locating') return `<div class="real-status load"><span class="spin"></span> بنحدّد موقعك الفعلي… <span class="tiny muted">(المتصفح هيسألك تسمح بالوصول للموقع)</span></div>`;
-  if (REAL.status === 'loading') return `<div class="real-status load"><span class="spin"></span> بنسأل OpenStreetMap عن المحلات الحقيقية داخل ${kmTxt(REAL.radiusKm)}… <span class="tiny muted">(قد تاخد ٥–٢٠ ثانية)</span></div>`;
-  if (REAL.status === 'error') return `<div class="real-status bad">⚠️ ${esc(REAL.err)}${realIsNetworkBlocked() ? '<div class="tiny mt6">ملاحظة: المعاينة داخل نافذة مقيّدة تمنع الاتصال بالإنترنت — نزّل الملف <b>souqi.html</b> وافتحه في المتصفح مباشرة وسيعمل البحث الحقيقي فورًا.</div>' : ''}</div>`;
+  if (REAL.status === 'locating') return `<div class="real-status load"><span class="spin"></span> بنحدّد موقع البحث… <span class="tiny muted">(الموقع الحالي أو المنطقة المختارة)</span></div>`;
+  if (REAL.status === 'loading') return `<div class="real-status load"><span class="spin"></span> بنسأل Google Places عن المحلات الحقيقية داخل ${kmTxt(REAL.radiusKm)}… <span class="tiny muted">(داخل القاهرة والجيزة فقط)</span></div>`;
+  if (REAL.status === 'error') return `<div class="real-status bad">⚠️ ${esc(REAL.err)}${realIsNetworkBlocked() ? '<div class="tiny mt6">افتح التطبيق من خادم سوقي. فتح ملف HTML مباشرة أو GitHub Pages وحده لا يشغّل البحث الحقيقي.</div>' : ''}</div>`;
   if (REAL.status === 'ready') return `<div class="real-status ok">✅ <b>${nf(REAL.all.length)}</b> محل حقيقي داخل ${kmTxt(REAL.radiusKm)}${REAL.where ? ' حول <b>' + esc(REAL.where) + '</b>' : ''} · النتائج الظاهرة: <b>${nf(REAL.items.length)}</b>${REAL.usedCache ? ' · <span class="badge warn">نتائج محفوظة ' + realLastUpdate() + '</span>' : ''}${REAL.endpoint ? ' · <span class="tiny muted">المصدر: ' + esc(REAL.endpoint) + '</span>' : ''}</div>`;
   return `<div class="real-status idle">📍 اضغط «استخدم موقعي» أو اختار منطقتك، وسوقي هيرجّع لك المحلات الحقيقية المسجّلة حولك — بالاسم والنوع والمسافة، وبدون أي بيانات وهمية.</div>`;
 }
@@ -477,8 +438,8 @@ function realSearchPanel() {
   <div class="card pad mb14 real-panel">
     <div class="between wrapx mb10">
       <div>
-        <div class="b">🏬 بحث حقيقي في محلات حولك — بيانات OpenStreetMap</div>
-        <div class="tiny muted mt6">مصدر مفتوح وموثّق (ODbL): الأسماء والمواقع والنوع والتليفون والمواعيد من الواقع. مفيش أي محل وهمي في هذا القسم.</div>
+        <div class="b">🏬 بحث حقيقي — Google Places · القاهرة والجيزة فقط</div>
+        <div class="tiny muted mt6">اتصال آمن عبر خادم سوقي؛ المفتاح لا يصل إلى متصفحك. النتائج تُراجع حسب المحافظة، ولا نعرض أسعارًا غير مسجّلة.</div>
       </div>
       <div class="row gap6 wrapx">
         <button class="btn primary sm2" id="realLocate">📍 استخدم موقعي وابحث</button>
@@ -487,15 +448,15 @@ function realSearchPanel() {
     </div>
 
     <div class="row wrapx gap8 mb10">
-      <div class="field" style="flex:1;min-width:220px"><label>أو ابحث حول منطقة بالاسم (مصر كلها)</label>
+      <div class="field" style="flex:1;min-width:220px"><label>أو ابحث حول منطقة بالقاهرة أو الجيزة</label>
         <div class="row gap6">
-          <input class="select" id="realArea" list="realAreas" placeholder="مثال: المنصورة / مدينة نصر / الغردقة" value="">
+          <input class="select" id="realArea" maxlength="120" list="realAreas" placeholder="مثال: مدينة نصر / الدقي / الشيخ زايد" value="">
           <button class="btn sm2" id="realAreaGo" style="white-space:nowrap">ابحث هنا</button>
         </div>
         <datalist id="realAreas">${EG_AREAS.map(a => `<option value="${esc(a.ar)}"></option>`).join('')}</datalist>
       </div>
       <div class="field" style="min-width:180px"><label>بحث بالاسم أو النوع</label>
-        <input class="select" id="realKw" placeholder="صيدلية، سوبر ماركت، اسم محل…" value="${esc(REAL.keyword)}"></div>
+        <div class="row gap6"><input class="select" id="realKw" maxlength="120" placeholder="صيدلية، سوبر ماركت، اسم محل…" value="${esc(REAL.keyword)}"><button class="btn sm2" id="realKwGo">بحث</button></div></div>
     </div>
 
     <div class="row wrapx gap14 mb10">
@@ -511,7 +472,7 @@ function realSearchPanel() {
 
     ${chips ? `<div class="scroll-x mb10"><button class="chip ${!REAL.cat ? 'on' : ''}" data-rcat="">كل الأنواع</button>${chips}</div>` : ''}
     <div id="realLive">${realStatusLine()}</div>
-    <div class="tiny muted mt10">ℹ️ البيانات © مساهمو OpenStreetMap — منشورة تحت رخصة ODbL. سوقي لا تخترع أسعارًا: أي سعر تشوفه هنا مسجّل بواسطة مستخدم أو متجر بالفعل.</div>
+    <div class="tiny muted mt10"><span dir="ltr">Google Maps</span> · حتى 20 نتيجة لكل طلب، وليست قائمة شاملة. نستبعد النتائج مجهولة المحافظة. الأسعار يضيفها المستخدمون ولا تأتي من Google.</div>
   </div>`;
 }
 function realStats() {
@@ -520,9 +481,9 @@ function realStats() {
   const priced = REAL.items.filter(s => realPrices(s.id).length).length;
   const nearest = REAL.items[0];
   return `<div class="stats mb14">
-    ${statBox('محلات حقيقية في النطاق', `<span class="num">${nf(REAL.all.length)}</span>`, 'من قاعدة بيانات OpenStreetMap')}
+    ${statBox('محلات حقيقية في النطاق', `<span class="num">${nf(REAL.all.length)}</span>`, 'Google Maps · القاهرة والجيزة')}
     ${statBox('ظاهرة بعد الفلترة', `<span class="num">${nf(REAL.items.length)}</span>`, REAL.cat ? 'فلتر النوع + كلمة البحث' : 'كل الأنواع')}
-    ${statBox('مفتوح الآن', `<span class="num">${nf(open)}</span>`, unk ? `${nf(unk)} محلًا مواعيده غير مسجّلة` : 'حسب مواعيد OSM')}
+    ${statBox('مفتوح الآن', `<span class="num">${nf(open)}</span>`, unk ? `${nf(unk)} محلًا مواعيده غير مسجّلة` : 'حسب بيانات المصدر')}
     ${statBox('أقرب محل', nearest ? kmTxt(nearest.distKm) : '—', nearest ? esc(nearest.name) : '—')}
     ${statBox('فيه أسعار مسجّلة', `<span class="num">${nf(priced)}</span>`, priced ? 'مسجّلة بمستخدمين' : 'لسه محدش سجّل — كن الأول')}
   </div>`;
@@ -533,7 +494,7 @@ function realCard(st, o) {
   const pn = realPrices(st.id).length;
   return `
   <article class="card hv store-card rel real-card" data-store="${st.id}">
-    <span class="ribbon real-ribbon">🧭 بيانات حقيقية · OpenStreetMap</span>
+    <span class="ribbon real-ribbon">🧭 بيانات حقيقية · ${realSource(st)}</span>
     <div class="row" style="align-items:flex-start">
       <div class="thumb lg">${c.em}</div>
       <div style="flex:1;min-width:0">
@@ -558,17 +519,19 @@ function realCard(st, o) {
     <hr class="sep">
     <div class="between wrapx">
       <div class="row gap6 wrapx">
-        <a class="btn sm2" href="https://www.openstreetmap.org/${st.osmRef}" target="_blank" rel="noopener">🗺️ على الخريطة</a>
+        <a class="btn sm2" href="${esc(realMapUrl(st))}" target="_blank" rel="noopener">🗺️ على الخريطة</a>
         <a class="btn sm2" href="https://www.google.com/maps/search/?api=1&query=${st.lat},${st.lon}" target="_blank" rel="noopener">🧭 الاتجاهات</a>
         ${st.phone ? `<a class="btn sm2" href="tel:${esc(st.phone)}">☎️ اتصال</a>` : ''}
 
       </div>
-      <button class="btn ghost sm2" data-act="real-edit" data-store="${st.id}">✏️ صحّح بيانات المحل</button>
+      ${st.source !== 'google' ? `<button class="btn ghost sm2" data-act="real-edit" data-store="${st.id}">✏️ صحّح بيانات المحل</button>` : ''}
     </div>
+    ${realAttribution(st)}
   </article>`;
 }
 /* خريطة الحي الحقيقية: إسقاط فعلي لإحداثيات المتاجر حول موقعك */
 function realMap(items, uLat, uLon, radiusKm) {
+  if (items.some(s => s.source === 'google')) return '<div class="card pad mb14 tiny muted">نتائج Google Maps تُعرض كقائمة. افتح رابط الخريطة أو الاتجاهات لكل محل لعرضه على خرائط Google.</div>';
   const W = 780, H = 620, cx = W / 2, cy = H / 2, pad = 46;
   const k = Math.cos(uLat * Math.PI / 180);
   const pxPerKm = (Math.min(W, H) / 2 - pad) / radiusKm;
@@ -620,7 +583,7 @@ function realNearbySection() {
       ${realStats()}
       ${realMap(REAL.items, REAL.lat, REAL.lon, REAL.radiusKm)}
       <div class="sec-head"><div><h2>🏬 محلات حقيقية داخل ${kmTxt(REAL.radiusKm)}</h2>
-      <p>مرتّبة من الأقرب — الاسم والموقع من OpenStreetMap، والأسعار فقط ما سجّله المستخدمون</p></div>
+      <p>مرتّبة من الأقرب — الاسم والموقع من Google Maps، والأسعار فقط ما سجّله المستخدمون</p></div>
       <span class="badge ok">✅ بيانات واقعية</span></div>
       <div class="grid g-auto">${REAL.items.slice(0, 60).map(s => realCard(s)).join('')}</div>
       ${REAL.items.length > 60 ? `<p class="tiny muted mt10">بنعرض أول ٦٠ محلًا من ${nf(REAL.items.length)} — ضيّق النطاق أو فلتر النوع لنتائج أدق.</p>` : ''}`;
@@ -628,10 +591,10 @@ function realNearbySection() {
   if (REAL.status === 'ready') {
     return `<div class="card pad center">
       <div style="font-size:34px">🔍</div>
-      <div class="b mt6">مفيش محلات مسجّلة في النطاق ده على OpenStreetMap</div>
-      <p class="sm muted mt6">جرّب توسيع النطاق (مثلًا ${kmTxt(REAL.radiusKm * 3)}) أو غيّر المنطقة — كل ما النطاق يكبر، كل ما تظهر محلات أكتر.</p>
+      <div class="b mt6">مفيش محلات مسجّلة مطابقة في القاهرة والجيزة ضمن النطاق والفلاتر الحالية</div>
+      <p class="sm muted mt6">جرّب توسيع النطاق (مثلًا ${kmTxt(Math.min(25, REAL.radiusKm * 3))}) أو غيّر المنطقة — كل ما النطاق يكبر، كل ما تظهر محلات أكتر.</p>
       <div class="row gap6 mt10" style="justify-content:center">
-        <button class="btn primary sm2" data-rrad="${REAL.radiusKm * 3}">وسّع النطاق إلى ${kmTxt(REAL.radiusKm * 3)}</button>
+        <button class="btn primary sm2" data-rrad="${Math.min(25, REAL.radiusKm * 3)}">وسّع النطاق إلى ${kmTxt(Math.min(25, REAL.radiusKm * 3))}</button>
         <button class="btn sm2" id="realPickArea">غيّر المنطقة</button>
       </div></div>`;
   }
@@ -652,7 +615,7 @@ function realSearchStrip(q) {
   const hits = realMatchesFor(q, 3);
   if (!hits.length) return '';
   return `<div class="card pad mb14 real-strip">
-    <div class="between wrapx mb10"><div class="b">🏬 محلات حقيقية مطابقة لبحثك (من OpenStreetMap)</div>
+    <div class="between wrapx mb10"><div class="b">🏬 محلات حقيقية مطابقة لبحثك (حسب مصدر البيانات)</div>
     <a class="btn sm2" href="#/nearby">كل المحلات حولي ←</a></div>
     <div class="grid g-auto">${hits.map(s => realCard(s)).join('')}</div>
   </div>`;
@@ -725,7 +688,7 @@ function persistUserPrices() {
     return {
       listing: { productId: l.productId, price: l.price, inStock: l.inStock, unit: l.unit, note: l.note, at: l.at, by: l.by },
       product: p.userMade ? { id: p.id, name: p.name, cat: p.cat, em: p.em, unit: p.unit } : null,
-      store: {
+      store: st.source === 'google' ? { id: st.id, placeId: st.placeId, source: 'google', real: true } : {
         id: st.id, name: st.name, cat: st.cat, catAr: st.catAr, lat: st.lat, lon: st.lon, real: !!st.real,
         area: st.area, city: st.city, address: st.address, phone: st.phone, osmRef: st.osmRef,
         hoursRaw: st.hoursRaw, hoursAlways: st.hoursAlways, openH: st.openH, closeH: st.closeH
@@ -744,6 +707,7 @@ function loadUserPrices() {
     if (!PRODUCTS.some(p => p.id === rec.listing.productId) && rec.product) PRODUCTS.push(rec.product);
     if (!DB.stores.some(x => x.id === s.id)) {
       DB.stores.push(Object.assign({
+        name: 'محل محفوظ — ابحث مجددًا لتحديث بياناته', lat: null, lon: null,
         real: true, source: 'osm', cats: [s.cat || 'other'], verified: false, rating: 0, rc: 0,
         plan: 'osm', delivery: false, pay: [], svc: [], views: 0, weekly: [], tags: {}, distKm: null
       }, s, { id: s.id, cats: [s.cat || 'other'] }));
@@ -763,7 +727,7 @@ function realEnsureInDB(st) {
   if (!st) return null;
   const found = DB.stores.find(s => s.id === st.id);
   if (found) {
-    if (st.distKm != null) found.distKm = st.distKm;
+    Object.assign(found, st);
     return found;
   }
   DB.stores.push(st);
@@ -776,6 +740,7 @@ function realEnsureAllInDB() { REAL.all.forEach(realEnsureInDB); }
 function openRealEdit(storeId) {
   const st = DB.stores.find(s => s.id === storeId);
   if (!st) return;
+  if (st.source === 'google') return window.open(realMapUrl(st), '_blank', 'noopener');
   const e = REAL.edits[storeId] || {};
   openModal('✏️ صحّح بيانات المحل (OpenStreetMap)', `
     <p class="sm">البيانات الأصلية من OpenStreetMap. تصحيحك بيتحفظ عندك على الجهاز ويظهر في كل النتائج — وسوقي بتعرضه كتعديل مستخدم لا كبيان رسمي.</p>
@@ -816,16 +781,10 @@ function bindRealSearch() {
   const pa = $('#realPickArea'); if (pa) pa.onclick = () => { const i = $('#realArea'); if (i) { i.scrollIntoView({ behavior: 'smooth', block: 'center' }); i.focus(); } };
   const kw = $('#realKw');
   if (kw) {
-    let t = null;
-    kw.oninput = () => {
-      clearTimeout(t);
-      t = setTimeout(() => {
-        REAL.keyword = kw.value.trim(); realApplyFilter();
-        const box = $('#realResults');
-        if (box) box.innerHTML = realNearbySection(); else render();
-      }, 380);
-    };
+    kw.oninput = () => { REAL.keyword = kw.value.trim(); };
+    kw.onkeydown = e => { if (e.key === 'Enter') realSearch({ keyword: kw.value.trim() }); };
   }
+  const kg = $('#realKwGo'); if (kg) kg.onclick = () => realSearch({ keyword: kw ? kw.value.trim() : '' });
   const op = $('#realOpen'); if (op) op.onchange = () => { REAL.openOnly = op.checked; realApplyFilter(); render(); };
   document.querySelectorAll('[data-rrad]').forEach(b => b.onclick = () => { REAL.radiusKm = parseFloat(b.dataset.rrad); if (REAL.lat != null) realSearch({ radiusKm: REAL.radiusKm }); else render(); });
   document.querySelectorAll('[data-rcat]').forEach(b => b.onclick = () => { REAL.cat = b.dataset.rcat; realApplyFilter(); render(); });
@@ -836,6 +795,7 @@ function bindRealSearch() {
 
 /* ------------------------- 10. صفحة محل حقيقي ------------------------- */
 function realStorePage(st) {
+  if (st.source === 'google') return googleStorePage(st);
   const tab = APP.route.p.tab || 'prices';
   const c = realCatInfo(st.cat);
   const mine = realPrices(st.id);
@@ -856,7 +816,7 @@ function realStorePage(st) {
         <div style="flex:1;min-width:250px">
           <div class="row wrapx gap6">
             <h1 style="font-size:23px">${esc(st.name)}</h1>
-            <span class="badge ok">🧭 بيانات حقيقية · OpenStreetMap</span>
+            <span class="badge ok">🧭 بيانات حقيقية · ${realSource(st)}</span>
             ${st.edited ? '<span class="badge p">✏️ معدّل بواسطتك</span>' : ''}
           </div>
           <div class="row wrapx gap14 mt10">
@@ -880,7 +840,7 @@ function realStorePage(st) {
     <div class="insight info mb14"><span class="ic">🧭</span><div class="tiny">
       <b>مصدر البيانات:</b> OpenStreetMap (مشروع خرائط مفتوح) بترخيص ODbL — الاسم والنوع والموقع والتليفون والمواعيد كما سجّلها مساهمو الخرائط،
       و<b>سوقي لا تخترع أسعارًا</b>: أي سعر يظهر هنا سجّله مستخدم أو صاحب المحل.
-      ${st.osmRef ? ` · <a href="https://www.openstreetmap.org/${st.osmRef}" target="_blank" rel="noopener">المرجع الأصلي (${esc(st.osmRef)})</a>` : ''}
+      ${st.osmRef ? ` · <a href="${esc(realMapUrl(st))}" target="_blank" rel="noopener">المرجع الأصلي (${esc(st.osmRef)})</a>` : ''}
     </div></div>
 
     <div class="tabs mb14">${tabBtn('prices', '💰 الأسعار المسجّلة')}${tabBtn('nearby', '🗺️ محلات حقيقية حوله')}${tabBtn('info', '📋 بيانات المحل')}</div>
@@ -901,7 +861,7 @@ function realStorePage(st) {
       <div class="card pad center">
         <div style="font-size:34px">💰</div>
         <div class="b mt6">لا توجد أسعار مسجّلة لهذا المحل بعد</div>
-        <p class="sm muted mt6" style="max-width:560px;margin-inline:auto">المحل موجود فعلًا على أرض الواقع (من OpenStreetMap)، لكن محدش سجّل أسعاره. لو تعرف سعر أي منتج فيه، سجّله وهيساعد كل الناس — ومش هنعرض أي رقم من عندنا.</p>
+        <p class="sm muted mt6" style="max-width:560px;margin-inline:auto">المحل موجود فعلًا على أرض الواقع (حسب مصدر البيانات)، لكن محدش سجّل أسعاره. لو تعرف سعر أي منتج فيه، سجّله وهيساعد كل الناس — ومش هنعرض أي رقم من عندنا.</p>
         <div class="row gap6 mt10" style="justify-content:center">
           <button class="btn primary" data-act="real-price" data-store="${st.id}">➕ سجّل أول سعر</button>
           <a class="btn" href="#/nearby">شوف محلات تانية حولي</a>
@@ -931,7 +891,7 @@ function realStorePage(st) {
           </div>
           <hr class="sep">
           <div class="row wrapx gap6">
-            <a class="btn sm2" href="https://www.openstreetmap.org/${st.osmRef}" target="_blank" rel="noopener">🗺️ افتح على OpenStreetMap</a>
+            <a class="btn sm2" href="${esc(realMapUrl(st))}" target="_blank" rel="noopener">🗺️ افتح على OpenStreetMap</a>
             <a class="btn sm2" href="https://www.openstreetmap.org/edit?${(st.osmRef || '').split('/')[0]}=${(st.osmRef || '').split('/')[1]}" target="_blank" rel="noopener">✍️ حسّن البيانات في المصدر</a>
             <button class="btn sm2" data-act="real-edit" data-store="${st.id}">✏️ صحّح هنا</button>
           </div>
@@ -952,3 +912,16 @@ function realStorePage(st) {
 }
 /* مساعدة: هل عندنا إحداثيات المنطقة الحالية؟ */
 function realGeocodeAreaDone(st) { return !!(st && st.lat != null); }
+
+/* Google content is shown only on Google-linked cards, never on the OSM/demo map. */
+function googleStorePage(st) {
+  if (!Number.isFinite(st.lat) || !Number.isFinite(st.lon)) return shell('nearby', `<div class="wrap card pad mt14"><h1>المحل محفوظ بمعرّفه فقط</h1><p>للحفاظ على خصوصية بيانات المصدر لا نخزّن تفاصيل Google على الجهاز. ابحث عن المحل مرة أخرى لتحديث بياناته؛ أسعارك المسجّلة محفوظة.</p><a class="btn primary" href="#/nearby">البحث في القاهرة والجيزة</a></div>`);
+  const prices = realPrices(st.id);
+  return shell('nearby', `<div class="wrap" style="padding-top:22px">
+    <a class="btn sm2 mb14" href="#/nearby">← المحلات القريبة</a>
+    ${realCard(st)}
+    <div class="card pad mt14"><h2>الأسعار المسجّلة بواسطة المستخدمين</h2>
+      <p class="tiny muted">سوقي لا تخترع أسعارًا. هذه الأسعار ليست بيانات Google ولا تثبت توافر المنتج حاليًا.</p>
+      ${prices.map(l => `<div class="between mt10"><span>${esc(productName(l.productId))}</span><span>${priceHtml(l.price)} · ${esc(l.unit || '')}</span></div>`).join('') || '<p>لا توجد أسعار مسجّلة بعد.</p>'}
+    </div></div>`);
+}

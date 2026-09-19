@@ -57,7 +57,7 @@ function egyptMap(o) {
         ${EG_CITY_LABELS.filter(c => ['الإسكندرية', 'القاهرة', 'المنصورة', 'أسيوط', 'الأقصر', 'أسوان', 'الغردقة', 'شرم الشيخ', 'مرسى مطروح', 'الفيوم', 'بورسعيد', 'الإسماعيلية'].includes(c[0]))
       .map(([n, la, lo]) => `<text class="ring-lbl" x="${PX(lo) + 6}" y="${PY(la) + 3}" font-size="10.5" fill="#8D8888">${n}</text>`).join('')}
         <g id="egPins">
-          ${DB.stores.map(st => {
+          ${DB.stores.filter(st => st.source !== 'google').map(st => {
         const x = PX(st.lon), y = PY(st.lat);
         const col = pinColor(st);
         return `<g class="pin" data-store="${st.id}" data-x="${x}" data-y="${y}">
@@ -167,6 +167,7 @@ function storePop(st) {
 
 /* ---------- خريطة الرادار: المتاجر القريبة داخل نطاق ---------- */
 function radialMap(rows, radiusKm, height) {
+  rows = rows.filter(r => (r.st || DB.stores.find(s => s.id === r.storeId) || {}).source !== 'google');
   const h = height || 430, C = 390, R = 320;
   // ترتيب الزوايا بتباعد ذهبي لتقليل التزاحم
   const sorted = rows.slice().sort((a, b) => a.dist - b.dist);

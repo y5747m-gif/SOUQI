@@ -4,7 +4,7 @@
 #  يجمع ملفات src/*.js داخل ملف واحد souqi.html ويعمل اختبار تشغيلي.
 #  الاستخدام:  bash build.sh        (بناء + اختبار)
 # ============================================================
-set -e
+set -euo pipefail
 cd "$(dirname "$0")"
 
 echo "▸ تجميع ملفات المصدر..."
@@ -36,7 +36,12 @@ node /tmp/souqi-boot.js | tail -3
 echo "▸ اختبار وحدة تسجيل المحلات..."
 cat tests/dom-stub.js /tmp/souqi-app.js tests/register-tests.js > /tmp/souqi-reg.js
 node /tmp/souqi-reg.js | tail -4
-echo "▸ اختبار المحلات الحقيقية (OpenStreetMap) والأيقونة..."
+echo "▸ اختبار المحلات الحقيقية والأيقونة..."
 cat tests/dom-stub.js /tmp/souqi-app.js tests/real-tests.js > /tmp/souqi-real.js
 node /tmp/souqi-real.js | tail -8
-echo "✅ تم البناء والاختبار بنجاح — افتح souqi.html في المتصفح."
+echo "▸ اختبارات واجهة Google Places..."
+cat tests/dom-stub.js /tmp/souqi-app.js tests/places-client-tests.js > /tmp/souqi-places-client.js
+node /tmp/souqi-places-client.js
+echo "▸ اختبارات Backend Google Places..."
+node --test tests/places-server.test.js
+echo "✅ تم البناء والاختبار بنجاح — شغّل npm start لفتح التطبيق والبحث الحقيقي."

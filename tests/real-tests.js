@@ -26,7 +26,7 @@ try {
   R('‎#/product/ip15 يفتح صفحة المنتج', h2.indexOf('iPhone 15 128GB') > -1);
   global.location.hash = '#/nearby'; global.window.location.hash = '#/nearby'; FORCE_ROUTE = null; render();
   const h3 = document.querySelector('#app').innerHTML;
-  R('‎#/nearby يعرض البحث الحقيقي + القسم التوضيحي', h3.indexOf('OpenStreetMap') > -1 && h3.indexOf('بيانات تجريبية') > -1 && h3.indexOf('استخدم موقعي') > -1);
+  R('‎#/nearby يعرض البحث الحقيقي + القسم التوضيحي', h3.indexOf('Google Places') > -1 && h3.indexOf('بيانات تجريبية') > -1 && h3.indexOf('استخدم موقعي') > -1);
   R('المعرّف يُقرأ بشكل صحيح', (function () { global.location.hash = '#/store/techno?tab=info'; APP.route = parseHash(); return APP.route.name === 'store' && APP.route.p.id === 'techno' && APP.route.p.tab === 'info'; })());
 } catch (e) { rf++; console.log('❌ التوجيه: ' + e.message + ' | ' + (e.stack || '').split('\n')[1]); }
 
@@ -114,7 +114,13 @@ const PAYLOAD = {
     { type: 'node', id: 906, lat: 30.0420, lon: 31.2410, tags: { shop: 'butcher' } }
   ]
 };
-global.fetch = async (url, opts) => ({ ok: true, json: async () => PAYLOAD });
+const GOOGLE_PAYLOAD = { items: PAYLOAD.elements.map(el => osmToStore(el, 30.0405, 31.2385)).filter(s => s && s.distKm < 3).map(s => Object.assign({}, s, {
+  id: 'google-' + s.id, placeId: s.id, source: 'google', openNow: null, attributions: []
+})) };
+global.fetch = async (url, opts) => {
+  R('طلب البحث إلى Backend فقط بدون مفتاح', url === '/api/places/search' && !JSON.stringify(opts).includes('Api-Key'));
+  return { ok: true, json: async () => GOOGLE_PAYLOAD };
+};
 REAL.lat = 30.0405; REAL.lon = 31.2385; REAL.radiusKm = 3; REAL.where = 'موقعك الحالي';
 REAL.keyword = ''; REAL.cat = ''; REAL.openOnly = false;
 (async () => {
@@ -126,11 +132,11 @@ REAL.keyword = ''; REAL.cat = ''; REAL.openOnly = false;
     R('الموقع الحقيقي يُحفظ في التطبيق', APP.loc.exact === true && APP.loc.lat === 30.0405 && REAL.acc === 18);
 
     const ok = await realSearch({});
-    R('البحث الحقيقي ينجح مع استجابة OSM', ok === true);
+    R('البحث الحقيقي ينجح مع استجابة Backend', ok === true);
     R('كل النتائج محلات (البنك مستبعد)', REAL.all.every(s => s.cat !== 'other' || s.name.indexOf('بنك') === -1));
     R('المحل البعيد خارج النطاق مستبعد', !REAL.all.some(s => s.name === 'محل بعيد جدًا'));
     R('النتائج مرتّبة من الأقرب', REAL.all.length > 1 && REAL.all[0].distKm <= REAL.all[1].distKm);
-    R('مافيش أي سعر مخترع في نتائج OSM', REAL.all.every(s => !DB.byStore[s.id] || DB.byStore[s.id].every(l => l.source === 'user')));
+    R('مافيش أي سعر مخترع في نتائج Google', REAL.all.every(s => !DB.byStore[s.id] || DB.byStore[s.id].every(l => l.source === 'user')));
     R('عدّادات الأقسام صحيحة', realCatCounts().supermarket >= 1 && realCatCounts().pharmacy >= 1);
 
     REAL.cat = 'pharmacy'; realApplyFilter();
@@ -140,22 +146,23 @@ REAL.keyword = ''; REAL.cat = ''; REAL.openOnly = false;
     REAL.openOnly = false; REAL.keyword = 'الدقي'; realApplyFilter();
     R('البحث بالكلمة يطابق الاسم/المنطقة', REAL.items.length >= 2);
     REAL.keyword = 'zzz'; realApplyFilter();
-    R('كلمة غير موجودة → صفر نتائج', REAL.items.length === 0);
+    R('فلترة الكلمات لنتائج Google تتم على الخادم وليس تخمينًا محليًا', REAL.items.length === REAL.all.length);
     REAL.keyword = ''; realApplyFilter();
 
-    R('الخريطة الحقيقية تُرسم بنقاط الإحداثيات', (function () { const m = realMap(REAL.all, REAL.lat, REAL.lon, 3); return m.indexOf('real-pin') > -1 && m.indexOf('موقعك') > -1 && (m.match(/real-pin/g) || []).length === REAL.all.length; })());
-
+    R('لا نعرض بيانات Google على خريطة غير Google', realMap(REAL.all, REAL.lat, REAL.lon, 3).includes('Google Maps') && !realMap(REAL.all, REAL.lat, REAL.lon, 3).includes('<svg'));
     realCacheSave();
-    const idsBefore = REAL.all.map(s => s.id).join(',');
-    REAL.all = []; REAL.items = []; REAL.status = 'idle';
-    R('النتائج تُحفظ على الجهاز وتُسترجع', realCacheLoad() === true && REAL.all.map(s => s.id).join(',') === idsBefore);
-    R('الاسترجاع من الذاكرة موسوم بوضوح', REAL.usedCache === true && realCacheLoad() && true);
+    R('بيانات Google لا تُحفظ كذاكرة دائمة', load('realCache', null) === null && realCacheLoad() === false);
+    const googleStore = REAL.all[0];
+    R('صفحة Google بدون نسبتها إلى OSM', googleStore && realStorePage(googleStore).includes('Google Maps') && !realStorePage(googleStore).includes('OpenStreetMap'));
+    const saved = saveUserPrice({ storeId: googleStore.id, productId: 'ip15', price: 123 });
+    const stored = load('userPrices', []).find(r => r.store.id === googleStore.id);
+    R('سعر المستخدم محفوظ مع Place ID فقط دون بيانات Google', saved.ok && stored.store.placeId && !stored.store.name && !stored.store.address && !stored.store.lat);
 
     R('شريط البحث يعرض المحلات الحقيقية المطابقة', realSearchStrip('صيدلية').indexOf('بيانات حقيقية') > -1);
     R('شريط البحث يخفي نفسه عند عدم المطابقة', realSearchStrip('zzzz') === '');
-    R('لوحة البحث تعرض النطاق الحقيقي والخيارات', (function () { const p = realSearchPanel(); return p.indexOf('OpenStreetMap') > -1 && p.indexOf('data-rrad') > -1 && REAL.radiusKm && p.indexOf('مفتوح الآن فقط') > -1; })());
+    R('لوحة البحث تعرض النطاق الحقيقي والخيارات', (function () { const p = realSearchPanel(); return p.indexOf('Google Places') > -1 && p.indexOf('data-rrad') > -1 && REAL.radiusKm && p.indexOf('مفتوح الآن فقط') > -1; })());
 
-    R('حالة الخطأ لما الشبكة مقفولة واضحة', (function () { const oS = REAL.status, oE = REAL.err; REAL.status = 'error'; REAL.err = realErrMsg(new Error('Failed to fetch')); const s = realStatusLine(); REAL.status = oS; REAL.err = oE; return s.indexOf('⚠️') > -1 && s.indexOf('OpenStreetMap') > -1; })());
+    R('حالة الخطأ لما الشبكة مقفولة واضحة', (function () { const oS = REAL.status, oE = REAL.err; REAL.status = 'error'; REAL.err = realErrMsg(new Error('Failed to fetch')); const s = realStatusLine(); REAL.status = oS; REAL.err = oE; return s.indexOf('⚠️') > -1 && s.indexOf('Google Places') > -1; })());
   } catch (e) { rf++; console.log('❌ البحث الحقيقي: ' + e.message + ' | ' + (e.stack || '').split('\n')[1]); }
 
   // محاكاة فشل الاتصال تمامًا (بيئة معاينة بدون إنترنت)
@@ -174,4 +181,5 @@ REAL.keyword = ''; REAL.cat = ''; REAL.openOnly = false;
   } catch (e) { rf++; console.log('❌ حالة الخطأ: ' + e.message); }
 
   console.log('\n' + (rf ? '⚠️ فشل ' + rf + ' اختبارًا في وحدة المحلات الحقيقية' : '🎉 كل اختبارات المحلات الحقيقية والأيقونة نجحت'));
+  if (rf) process.exitCode = 1;
 })();

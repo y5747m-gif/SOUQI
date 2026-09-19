@@ -44,6 +44,7 @@ const etaMin = (d) => Math.max(2, Math.round(d / 22 * 60));
 
 /* هل المتجر مفتوح الآن؟ (يعتمد على مواعيد العمل المسجلة) */
 function isOpen(st, now = new Date()) {
+  if (st.source === 'google') return typeof st.openNow === 'boolean' ? st.openNow : null;
   if (st.openH == null || st.closeH == null) return null;   // مواعيد غير مسجّلة → لا نخمّن
   const h = now.getHours() + now.getMinutes() / 60;
   const isFri = now.getDay() === 5;

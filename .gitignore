@@ -10,3 +10,9 @@ Thumbs.db
 *.tmp
 souqi-repo.bundle
 souqi-project.zip
+
+# Server secrets and dependencies
+.env
+.env.*
+!.env.example
+node_modules/

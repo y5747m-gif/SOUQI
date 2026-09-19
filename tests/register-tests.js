@@ -117,3 +117,5 @@ APP.route = { name: 'nearby', p: { dist: '25' } };
 R('المتاجر القريبة تشمل المحل الجديد في نطاقه', nearbyPage().includes(ns.area));
 
 console.log('\n' + (rf ? '⚠️ فشل ' + rf + ' اختبارًا' : '🎉 كل اختبارات وحدة التسجيل نجحت'));
+
+if (rf) process.exitCode = 1;

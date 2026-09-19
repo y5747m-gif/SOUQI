@@ -98,3 +98,5 @@ console.log('تنبيهات متحققة: ' + alertsMatch().length + ' من ' + 
 console.log('تاريخ أسعار ip15: ' + priceHistory('ip15').map(x=>x.v).join(' → '));
 
 console.log('\n' + (fails ? '⚠️ عدد المشاكل: ' + fails : '🎉 كل الاختبارات نجحت بدون أخطاء'));
+
+if (fails) process.exitCode = 1;

@@ -30,3 +30,5 @@ try {
   console.log('✅ الدوال المساعدة تعمل');
 } catch(e) { bad++; console.log('❌ دوال مساعدة: ' + e.message); }
 console.log('\nنتيجة التشغيل: ' + ok + ' صفحة ناجحة من ' + routes.length + (bad ? ' | مشاكل: ' + bad : ' | بدون مشاكل 🎉'));
+
+if (bad) process.exitCode = 1;
