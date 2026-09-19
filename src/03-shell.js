@@ -145,7 +145,7 @@ function offerRibbon(l) { return l.disc ? `<span class="badge acc">🔥 خصم $
 
 function storeCard(st, o) {
   o = o || {};
-  if (st.real) return realCard(st, o);   // محل حقيقي من OpenStreetMap
+  if (st.real) return realCard(st, o);   // محل حقيقي من Google Maps
   const l = o.listing;
   const d = o.dist != null ? o.dist : distKm(LOC, st);
   const open = isOpen(st);
@@ -301,8 +301,8 @@ function homePage() {
     ${REAL.all.length ? `
     <section class="sec">
       <div class="sec-head">
-        <div><h2>🏬 محلات حقيقية حولك</h2><p>${nf(REAL.all.length)} محلًا مسجّلًا فعليًا داخل ${kmTxt(REAL.radiusKm)} من ${esc(REAL.where || 'موقعك')} — بيانات OpenStreetMap</p></div>
-        <a class="btn primary sm2" href="#/nearby">استعرض على الخريطة ←</a>
+        <div><h2>🏬 محلات حقيقية حولك</h2><p>${nf(REAL.all.length)} محلًا مسجّلًا فعليًا داخل ${kmTxt(REAL.radiusKm)} من ${esc(REAL.where || 'موقعك')} — بيانات Google Maps</p></div>
+        <a class="btn primary sm2" href="#/nearby">استعرض المحلات ←</a>
       </div>
       <div class="grid g-auto">${REAL.items.slice(0, 3).map(s => realCard(s)).join('')}</div>
     </section>` : `
@@ -312,7 +312,7 @@ function homePage() {
           <div style="font-size:38px">🏬</div>
           <div style="flex:1;min-width:240px">
             <div class="b">عايز تشوف المحلات الحقيقية اللي حواليك؟</div>
-            <p class="sm muted mt6">سوقي بتروح لمصدر الخرائط المفتوح (OpenStreetMap) وترجّع لك المحلات المسجّلة فعليًا حول موقعك: الاسم، النوع، المسافة، التليفون، والمواعيد — بدون أي محل وهمي.</p>
+            <p class="sm muted mt6">سوقي بتروح لخدمة Google Places عبر خادم آمن وترجّع لك المحلات المسجّلة فعليًا حول موقعك: الاسم، النوع، المسافة، التليفون، والمواعيد — بدون أي محل وهمي.</p>
           </div>
           <a class="btn primary" href="#/nearby">📍 ابحث حولي الآن</a>
         </div>

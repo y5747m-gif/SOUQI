@@ -136,7 +136,7 @@ function nearbyPage() {
   <div class="wrap" style="padding-top:22px">
     <div class="sec-head">
       <div><h1 style="font-size:25px">📍 المتاجر القريبة مني</h1>
-      <p>القسم الأساسي ده <b>بحث حقيقي</b> في محلات مسجّلة على أرض الواقع (OpenStreetMap) داخل النطاق اللي تختاره — مش بيانات وهمية.</p></div>
+      <p>القسم الأساسي ده <b>بحث حقيقي</b> في محلات مسجّلة على أرض الواقع (Google Maps) داخل النطاق اللي تختاره — مش بيانات وهمية.</p></div>
       <button class="btn primary sm2" id="nbLoc">📍 استخدام موقعي</button>
     </div>
 
@@ -175,7 +175,7 @@ function nearbyPage() {
         ${statBox('متاجر تجريبية داخل النطاق', `<span class="num">${list.length}</span>`, `من إجمالي ${DB.stores.filter(s => !s.real).length} متجرًا في العرض التوضيحي`)}
         ${statBox('مفتوح الآن', `<span class="num">${list.filter(s => isOpen(s)).length}</span>`, 'حسب المواعيد التجريبية')}
         ${statBox('أقرب متجر تجريبي', list.length ? kmTxt(list[0].dist) : '—', list.length ? esc(list[0].name) : '')}
-        ${statBox('محلات حقيقية (للمقارنة)', `<span class="num">${nf(REAL.all.length)}</span>`, REAL.all.length ? 'من OpenStreetMap في النطاق ' + kmTxt(REAL.radiusKm) : 'ابحث فوق لتحميلها')}
+        ${statBox('محلات حقيقية (للمقارنة)', `<span class="num">${nf(REAL.all.length)}</span>`, REAL.all.length ? 'من Google Maps في النطاق ' + kmTxt(REAL.radiusKm) : 'ابحث فوق لتحميلها')}
       </div>
 
       <div class="grid g-side">
@@ -195,7 +195,7 @@ function nearbyPage() {
           </div>
           <div class="card pad mb14">
             <div class="b mb10">✅ المحلات الحقيقية فوق</div>
-            <p class="tiny muted">الأسماء والمواقع اللي في القسم الأول جايّة من OpenStreetMap (خرائط مفتوحة) ومن مساهمين حقيقيين — مفيش أي محل مُختلق. الفرصة الوحيدة للنقص: المواعيد أو الأسعار مش دائمًا مسجّلة، وسوقي بتقولها بصراحة بدل ما تخترعها.</p>
+            <p class="tiny muted">الأسماء والمواقع اللي في القسم الأول جايّة من Google Places عبر خادم سوقي — مفيش أي محل مُختلق. الفرصة الوحيدة للنقص: المواعيد أو الأسعار مش دائمًا مسجّلة، وسوقي بتقولها بصراحة بدل ما تخترعها.</p>
             <button class="btn soft block sm2 mt10" id="nbRealGo">🏬 ابحث في المحلات الحقيقية</button>
           </div>
           <div class="card pad">
