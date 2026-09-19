@@ -15,6 +15,7 @@
 #   • أي خطأ يُطبع بعد إخفاء التوكن.
 # ============================================================
 set -u
+set -o pipefail
 cd "$(dirname "$0")/.."
 
 REPO="${SOUQI_REPO:-}"
@@ -61,8 +62,13 @@ fi
 git remote remove origin 2>/dev/null || true
 git remote add origin "$CLEAN"
 
+echo "▸ جلب حالة الفرع البعيد أولًا (عشان force-with-lease يكون دقيق)…"
+GIT_TERMINAL_PROMPT=0 git fetch "$AUTH" "+refs/heads/*:refs/remotes/origin/*" >/dev/null 2>&1 || true
+
 echo "▸ جاري الرفع…"
-if GIT_TERMINAL_PROMPT=0 git push "$AUTH" "HEAD:main" --force-with-lease 2>&1 | mask; then
+PUSH_OUT="$(GIT_TERMINAL_PROMPT=0 git push "$AUTH" "HEAD:main" 2>&1)"; PUSH_RC=$?
+printf '%s\n' "$PUSH_OUT" | mask
+if [ "$PUSH_RC" -eq 0 ]; then
   git branch --set-upstream-to=origin/main main >/dev/null 2>&1 || true
   echo
   echo "✅ تم الرفع بنجاح إلى: $CLEAN"
