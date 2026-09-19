@@ -184,6 +184,7 @@ function storeCard(st, o) {
         <div class="row wrapx gap6 mt6">
           ${l.inStock ? `<span class="badge ok">متوفر</span>` : `<span class="badge bad">غير متوفر</span>`}
           ${trustBadge(l.updatedH)}
+          <span class="badge info">🚚 الشحن ${egp(l.shipping || 25)} · الإجمالي ${egp(l.totalCost || l.price)}</span>
         </div>
       </div>
       <div class="row" style="flex-direction:column;align-items:stretch;gap:6px;min-width:132px">

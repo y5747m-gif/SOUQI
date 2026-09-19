@@ -50,6 +50,13 @@ const EG_AREAS = [
   { ar: 'العريش', lat: 31.1312, lon: 33.7984 }, { ar: 'الطور (سيناء)', lat: 28.2410, lon: 33.6220 }
 ];
 
+/* حماية النطاق: حتى البحث الحقيقي من GPS/جوجل لا يخرج من القاهرة والجيزة */
+function inServiceArea(lat, lon) {
+  // حدود عملية تغطي القاهرة الكبرى والجيزة (وليست مصر كلها)
+  return lat >= 29.70 && lat <= 30.35 && lon >= 30.85 && lon <= 31.65;
+}
+function serviceAreaError() { return 'سوقي يعمل حاليًا داخل القاهرة والجيزة فقط. اختر منطقة داخل النطاق.'; }
+
 /* تحويل وسوم OpenStreetMap → أقسام سوقي + اسم نوع عربي دقيق */
 const OSM_TYPES = {
   'shop=supermarket': ['supermarket', 'سوبر ماركت'], 'shop=convenience': ['supermarket', 'بقالة'],
@@ -265,6 +272,7 @@ async function realFetch(query, ms) {
   throw last || new Error('service');
 }
 async function realGeocodeArea(q) {
+  if (!/(القاهرة|القاهره|الجيزة|الجيزه|الهرم|فيصل|الدقي|المهندسين|المعادي|مدينة نصر|مصر الجديدة|التجمع|اكتوبر|أكتوبر|الشيخ زايد|حلوان|شبرا)/i.test(q)) throw new Error(serviceAreaError());
   if (typeof fetch !== 'function') throw new Error('no-fetch');
   const url = NOMINATIM + '?format=json&limit=1&countrycodes=eg&accept-language=ar&q=' + encodeURIComponent(q);
   const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
@@ -331,6 +339,7 @@ async function realSearch(opts) {
     REAL.status = 'locating'; REAL.err = ''; realRefreshUI();
     try {
       const p = await realLocate();
+      if (!inServiceArea(p.lat, p.lon)) throw new Error(serviceAreaError());
       REAL.lat = p.lat; REAL.lon = p.lon; REAL.acc = p.acc;
       REAL.where = 'موقعك الحالي' + (p.acc ? ' (±' + p.acc + ' م)' : '');
       APP.loc = { lat: p.lat, lon: p.lon, label: REAL.where, area: 'موقعك الحالي', city: '', exact: true };
@@ -367,6 +376,7 @@ async function realSearchArea(q, opts) {
   try {
     let p = known ? { lat: known.lat, lon: known.lon, where: known.ar } : await realGeocodeArea(q);
     if (!p) { REAL.status = 'error'; REAL.err = 'مش عارفين نحدد «' + esc(q) + '» على الخريطة. اكتب اسم المنطقة أو المحافظة بشكل أوضح (مثال: المنصورة).'; realRefreshUI(); return false; }
+    if (!inServiceArea(p.lat, p.lon)) throw new Error(serviceAreaError());
     REAL.lat = p.lat; REAL.lon = p.lon; REAL.acc = null; REAL.where = p.where;
     APP.loc = { lat: p.lat, lon: p.lon, label: p.where, area: p.where, city: '', exact: false };
     save('loc', APP.loc);
@@ -551,7 +561,7 @@ function realCard(st, o) {
         <a class="btn sm2" href="https://www.openstreetmap.org/${st.osmRef}" target="_blank" rel="noopener">🗺️ على الخريطة</a>
         <a class="btn sm2" href="https://www.google.com/maps/search/?api=1&query=${st.lat},${st.lon}" target="_blank" rel="noopener">🧭 الاتجاهات</a>
         ${st.phone ? `<a class="btn sm2" href="tel:${esc(st.phone)}">☎️ اتصال</a>` : ''}
-        ${st.website ? `<a class="btn sm2" href="${esc(st.website)}" target="_blank" rel="noopener">🌐 الموقع</a>` : ''}
+
       </div>
       <button class="btn ghost sm2" data-act="real-edit" data-store="${st.id}">✏️ صحّح بيانات المحل</button>
     </div>

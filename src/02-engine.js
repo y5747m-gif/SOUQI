@@ -158,7 +158,7 @@ function searchListings(q, opt) {
   opt = opt || {};
   const parsed = parseQuery(q);
   const center = opt.center || LOC;
-  let rows = DB.listings.slice();
+  let rows = DB.listings.slice(); // بُنيت القاعدة أصلًا من SERVICE_CITIES فقط
 
   // الفلترة
   if (parsed.product && !opt.ignoreProduct) rows = rows.filter(l => l.productId === parsed.product.id);
@@ -175,7 +175,9 @@ function searchListings(q, opt) {
   // المسافة والحالة
   rows = rows.map(l => {
     const st = DB.stores.find(s => s.id === l.storeId);
-    return Object.assign({}, l, { st, dist: distKm(center, st), open: isOpen(st) });
+    const dist = distKm(center, st);
+    const shipping = st.delivery ? Math.round((st.deliveryFeeBase || 25) + dist * 5) : 0;
+    return Object.assign({}, l, { st, dist, shipping, totalCost: l.price + shipping, open: isOpen(st) });
   });
   const rk = opt.maxDist || parsed.radiusK || 0;
   if (rk) rows = rows.filter(r => r.dist <= rk);
@@ -202,7 +204,7 @@ function searchListings(q, opt) {
     rows.sort((a, b) => scoreRow(b, mn, mx) - scoreRow(a, mn, mx) || a.price - b.price);
   } else {
     rows.sort((a, b) => {
-      if (sort === 'price') return a.price - b.price || a.dist - b.dist;
+      if (sort === 'price') return (a.totalCost || a.price) - (b.totalCost || b.price) || a.price - b.price;
       if (sort === 'dist') return a.dist - b.dist || a.price - b.price;
       if (sort === 'disc') return b.disc - a.disc || a.price - b.price;
       if (sort === 'rating') return b.st.rating - a.st.rating || a.price - b.price;

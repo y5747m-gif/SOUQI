@@ -788,6 +788,9 @@ const USER_NAMES = ['أحمد م.', 'محمود ع.', 'سارة ح.', 'منة ا
 
 /* ------------------------- 5. بناء قاعدة البيانات ------------------------- */
 const CITY_COORDS = {}; // إحداثي تقريبي لكل محافظة (لحساب المسافة بين المحافظات غير الموجودة)
+/* نطاق الخدمة الإلزامي: القاهرة والجيزة فقط. لا تُعرض ولا تُحلّل أي بيانات خارجهما. */
+const SERVICE_CITIES = new Set(['القاهرة', 'الجيزة']);
+const SERVICE_CITY_LABEL = 'القاهرة والجيزة';
 const DB = { stores: [], listings: [], byStore: {}, byProduct: {}, offers: [], reviews: {}, alerts: [], reports: [] };
 
 /* كم متجرًا يغطي كل قسم؟ (لاستكمال الأقسام النادرة مثل المطاعم والصيدليات) */
@@ -796,10 +799,12 @@ RAW_STORES.forEach(r => (r[6] || []).forEach(c => CAT_COUNT[c] = (CAT_COUNT[c] |
 
 RAW_STORES.forEach((r, si) => {
   const [id, name, area, city, lat, lon, cats, rating, rc, openH, closeH, pf, plan, verified, phone, desc, fri, sponsored] = r;
+  if (!SERVICE_CITIES.has(city)) return; // حماية مركزية تمنع تسرب محافظات خارج نطاق الخدمة
   const seed = 'st' + id;
   const st = {
     id, name, area, city, lat, lon, cats, rating, rc, openH, closeH, pf, plan,
     verified: !!verified, phone, desc, fri, sponsored: !!sponsored,
+    delivery: true, deliveryFeeBase: 25, deliveryRadius: 25,
     whatsapp: phone, pay: PAYS.slice(0, 3 + Math.floor(rnd(seed + 'pay') * 3)),
     svc: SVCS[cats[0]].slice(0, 2 + Math.floor(rnd(seed + 'sv') * 3)),
     address: 'شارع ' + pick(seed + 'a', ['الجيش', 'النيل', 'الطيران', 'سعد زغلول', 'الثورة', 'المحطة', 'السلام', 'الجمهورية', 'الهرم', 'المشير']) +
@@ -1033,7 +1038,7 @@ function searchListings(q, opt) {
   opt = opt || {};
   const parsed = parseQuery(q);
   const center = opt.center || LOC;
-  let rows = DB.listings.slice();
+  let rows = DB.listings.slice(); // بُنيت القاعدة أصلًا من SERVICE_CITIES فقط
 
   // الفلترة
   if (parsed.product && !opt.ignoreProduct) rows = rows.filter(l => l.productId === parsed.product.id);
@@ -1050,7 +1055,9 @@ function searchListings(q, opt) {
   // المسافة والحالة
   rows = rows.map(l => {
     const st = DB.stores.find(s => s.id === l.storeId);
-    return Object.assign({}, l, { st, dist: distKm(center, st), open: isOpen(st) });
+    const dist = distKm(center, st);
+    const shipping = st.delivery ? Math.round((st.deliveryFeeBase || 25) + dist * 5) : 0;
+    return Object.assign({}, l, { st, dist, shipping, totalCost: l.price + shipping, open: isOpen(st) });
   });
   const rk = opt.maxDist || parsed.radiusK || 0;
   if (rk) rows = rows.filter(r => r.dist <= rk);
@@ -1077,7 +1084,7 @@ function searchListings(q, opt) {
     rows.sort((a, b) => scoreRow(b, mn, mx) - scoreRow(a, mn, mx) || a.price - b.price);
   } else {
     rows.sort((a, b) => {
-      if (sort === 'price') return a.price - b.price || a.dist - b.dist;
+      if (sort === 'price') return (a.totalCost || a.price) - (b.totalCost || b.price) || a.price - b.price;
       if (sort === 'dist') return a.dist - b.dist || a.price - b.price;
       if (sort === 'disc') return b.disc - a.disc || a.price - b.price;
       if (sort === 'rating') return b.st.rating - a.st.rating || a.price - b.price;
@@ -1364,6 +1371,7 @@ function storeCard(st, o) {
         <div class="row wrapx gap6 mt6">
           ${l.inStock ? `<span class="badge ok">متوفر</span>` : `<span class="badge bad">غير متوفر</span>`}
           ${trustBadge(l.updatedH)}
+          <span class="badge info">🚚 الشحن ${egp(l.shipping || 25)} · الإجمالي ${egp(l.totalCost || l.price)}</span>
         </div>
       </div>
       <div class="row" style="flex-direction:column;align-items:stretch;gap:6px;min-width:132px">
@@ -2046,6 +2054,13 @@ const EG_AREAS = [
   { ar: 'العريش', lat: 31.1312, lon: 33.7984 }, { ar: 'الطور (سيناء)', lat: 28.2410, lon: 33.6220 }
 ];
 
+/* حماية النطاق: حتى البحث الحقيقي من GPS/جوجل لا يخرج من القاهرة والجيزة */
+function inServiceArea(lat, lon) {
+  // حدود عملية تغطي القاهرة الكبرى والجيزة (وليست مصر كلها)
+  return lat >= 29.70 && lat <= 30.35 && lon >= 30.85 && lon <= 31.65;
+}
+function serviceAreaError() { return 'سوقي يعمل حاليًا داخل القاهرة والجيزة فقط. اختر منطقة داخل النطاق.'; }
+
 /* تحويل وسوم OpenStreetMap → أقسام سوقي + اسم نوع عربي دقيق */
 const OSM_TYPES = {
   'shop=supermarket': ['supermarket', 'سوبر ماركت'], 'shop=convenience': ['supermarket', 'بقالة'],
@@ -2261,6 +2276,7 @@ async function realFetch(query, ms) {
   throw last || new Error('service');
 }
 async function realGeocodeArea(q) {
+  if (!/(القاهرة|القاهره|الجيزة|الجيزه|الهرم|فيصل|الدقي|المهندسين|المعادي|مدينة نصر|مصر الجديدة|التجمع|اكتوبر|أكتوبر|الشيخ زايد|حلوان|شبرا)/i.test(q)) throw new Error(serviceAreaError());
   if (typeof fetch !== 'function') throw new Error('no-fetch');
   const url = NOMINATIM + '?format=json&limit=1&countrycodes=eg&accept-language=ar&q=' + encodeURIComponent(q);
   const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
@@ -2327,6 +2343,7 @@ async function realSearch(opts) {
     REAL.status = 'locating'; REAL.err = ''; realRefreshUI();
     try {
       const p = await realLocate();
+      if (!inServiceArea(p.lat, p.lon)) throw new Error(serviceAreaError());
       REAL.lat = p.lat; REAL.lon = p.lon; REAL.acc = p.acc;
       REAL.where = 'موقعك الحالي' + (p.acc ? ' (±' + p.acc + ' م)' : '');
       APP.loc = { lat: p.lat, lon: p.lon, label: REAL.where, area: 'موقعك الحالي', city: '', exact: true };
@@ -2363,6 +2380,7 @@ async function realSearchArea(q, opts) {
   try {
     let p = known ? { lat: known.lat, lon: known.lon, where: known.ar } : await realGeocodeArea(q);
     if (!p) { REAL.status = 'error'; REAL.err = 'مش عارفين نحدد «' + esc(q) + '» على الخريطة. اكتب اسم المنطقة أو المحافظة بشكل أوضح (مثال: المنصورة).'; realRefreshUI(); return false; }
+    if (!inServiceArea(p.lat, p.lon)) throw new Error(serviceAreaError());
     REAL.lat = p.lat; REAL.lon = p.lon; REAL.acc = null; REAL.where = p.where;
     APP.loc = { lat: p.lat, lon: p.lon, label: p.where, area: p.where, city: '', exact: false };
     save('loc', APP.loc);
@@ -2547,7 +2565,7 @@ function realCard(st, o) {
         <a class="btn sm2" href="https://www.openstreetmap.org/${st.osmRef}" target="_blank" rel="noopener">🗺️ على الخريطة</a>
         <a class="btn sm2" href="https://www.google.com/maps/search/?api=1&query=${st.lat},${st.lon}" target="_blank" rel="noopener">🧭 الاتجاهات</a>
         ${st.phone ? `<a class="btn sm2" href="tel:${esc(st.phone)}">☎️ اتصال</a>` : ''}
-        ${st.website ? `<a class="btn sm2" href="${esc(st.website)}" target="_blank" rel="noopener">🌐 الموقع</a>` : ''}
+
       </div>
       <button class="btn ghost sm2" data-act="real-edit" data-store="${st.id}">✏️ صحّح بيانات المحل</button>
     </div>
