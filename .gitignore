@@ -8,3 +8,5 @@ Thumbs.db
 # مؤقتات البناء والاختبار
 /tmp/
 *.tmp
+souqi-repo.bundle
+souqi-project.zip
