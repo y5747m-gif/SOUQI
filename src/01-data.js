@@ -242,6 +242,9 @@ const USER_NAMES = ['أحمد م.', 'محمود ع.', 'سارة ح.', 'منة ا
 
 /* ------------------------- 5. بناء قاعدة البيانات ------------------------- */
 const CITY_COORDS = {}; // إحداثي تقريبي لكل محافظة (لحساب المسافة بين المحافظات غير الموجودة)
+/* نطاق الخدمة الإلزامي: القاهرة والجيزة فقط. لا تُعرض ولا تُحلّل أي بيانات خارجهما. */
+const SERVICE_CITIES = new Set(['القاهرة', 'الجيزة']);
+const SERVICE_CITY_LABEL = 'القاهرة والجيزة';
 const DB = { stores: [], listings: [], byStore: {}, byProduct: {}, offers: [], reviews: {}, alerts: [], reports: [] };
 
 /* كم متجرًا يغطي كل قسم؟ (لاستكمال الأقسام النادرة مثل المطاعم والصيدليات) */
@@ -250,10 +253,12 @@ RAW_STORES.forEach(r => (r[6] || []).forEach(c => CAT_COUNT[c] = (CAT_COUNT[c] |
 
 RAW_STORES.forEach((r, si) => {
   const [id, name, area, city, lat, lon, cats, rating, rc, openH, closeH, pf, plan, verified, phone, desc, fri, sponsored] = r;
+  if (!SERVICE_CITIES.has(city)) return; // حماية مركزية تمنع تسرب محافظات خارج نطاق الخدمة
   const seed = 'st' + id;
   const st = {
     id, name, area, city, lat, lon, cats, rating, rc, openH, closeH, pf, plan,
     verified: !!verified, phone, desc, fri, sponsored: !!sponsored,
+    delivery: true, deliveryFeeBase: 25, deliveryRadius: 25,
     whatsapp: phone, pay: PAYS.slice(0, 3 + Math.floor(rnd(seed + 'pay') * 3)),
     svc: SVCS[cats[0]].slice(0, 2 + Math.floor(rnd(seed + 'sv') * 3)),
     address: 'شارع ' + pick(seed + 'a', ['الجيش', 'النيل', 'الطيران', 'سعد زغلول', 'الثورة', 'المحطة', 'السلام', 'الجمهورية', 'الهرم', 'المشير']) +
