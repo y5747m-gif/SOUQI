@@ -1,15 +1,14 @@
 {
-  "name": "souqi-subscriptions",
+  "name": "faheem-study-app",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node --watch server/index.js",
-    "start": "node server/index.js",
-    "worker": "node server/renewal-worker.js",
-    "db:migrate": "psql \"$DATABASE_URL\" -v ON_ERROR_STOP=1 -f server/db/schema.sql",
+    "dev": "node --watch server/static.js",
+    "start": "node server/static.js",
+    "test": "node --test tests/faheem-smoke.test.js",
     "test:payments": "node --test tests/payment-server.test.js",
-    "test": "npm run test:payments && bash build.sh"
+    "db:migrate": "psql \"$DATABASE_URL\" -v ON_ERROR_STOP=1 -f server/db/schema.sql"
   },
   "engines": {"node": ">=20"},
   "dependencies": {

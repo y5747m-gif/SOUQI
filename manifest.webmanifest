@@ -1,26 +1,27 @@
 {
-  "id": "./souqi.html",
-  "name": "سوقي — مقارنة الأسعار والمتاجر",
-  "short_name": "سوقي",
-  "description": "اعرف المنتج وسعره ومكانه، وقارن المتاجر والعروض القريبة منك.",
+  "id": "./",
+  "name": "فهيم — منصة الدراسة الذكية",
+  "short_name": "فهيم",
+  "description": "منصة عربية احترافية لتلخيص المواد، بناء الخرائط الذهنية، الرسم بالقلم، والمراجعة الذكية.",
   "lang": "ar",
   "dir": "rtl",
-  "start_url": "./souqi.html#/home",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
-  "orientation": "any",
-  "background_color": "#f7f6f6",
-  "theme_color": "#800020",
-  "categories": ["shopping", "lifestyle", "business"],
+  "orientation": "portrait-primary",
+  "background_color": "#F6F1E7",
+  "theme_color": "#1E3A2F",
+  "categories": ["education", "productivity", "utilities"],
   "icons": [
-    {"src": "souqi-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
-    {"src": "souqi-icon-256.png", "sizes": "256x256", "type": "image/png", "purpose": "any"},
-    {"src": "souqi-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+    {"src": "faheem-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
+    {"src": "faheem-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "faheem-icon-256.png", "sizes": "256x256", "type": "image/png", "purpose": "any"},
+    {"src": "faheem-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
   ],
   "shortcuts": [
-    {"name": "ابحث عن منتج", "short_name": "بحث", "url": "./souqi.html#/search", "icons": [{"src": "souqi-icon-192.png", "sizes": "192x192"}]},
-    {"name": "المتاجر القريبة", "short_name": "قريب مني", "url": "./souqi.html#/nearby", "icons": [{"src": "souqi-icon-192.png", "sizes": "192x192"}]},
-    {"name": "العروض", "short_name": "العروض", "url": "./souqi.html#/offers", "icons": [{"src": "souqi-icon-192.png", "sizes": "192x192"}]}
+    {"name": "إضافة مادة", "short_name": "استيراد", "url": "./index.html#import", "icons": [{"src": "faheem-icon-192.png", "sizes": "192x192"}]},
+    {"name": "الخريطة الذهنية", "short_name": "الخريطة", "url": "./index.html#map", "icons": [{"src": "faheem-icon-192.png", "sizes": "192x192"}]},
+    {"name": "بطاقات المراجعة", "short_name": "مراجعة", "url": "./index.html#review", "icons": [{"src": "faheem-icon-192.png", "sizes": "192x192"}]}
   ]
 }

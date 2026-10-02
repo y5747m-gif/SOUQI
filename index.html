@@ -1,12 +1,597 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#7167f0"><meta name="description" content="لخّص موادك الدراسية بذكاء">
-<title>مُذاكر — مساعدك الذكي للدراسة</title>
-<style>
-:root{--bg:#f7f8fc;--surface:#fff;--ink:#20233a;--muted:#7b819b;--primary:#7167f0;--purple:#5549d6;--line:#e9eaf2;--green:#25ad83;--shadow:0 12px 35px #36345c0d}*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Tahoma,Arial,sans-serif;color:var(--ink)}button,input,textarea{font:inherit}button{cursor:pointer;border:0}.app{display:flex;min-height:100vh}.sidebar{width:250px;background:#fff;border-left:1px solid var(--line);padding:25px 18px;display:flex;flex-direction:column}.brand{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:bold;margin:0 12px 44px}.brandmark{background:linear-gradient(135deg,#8d83ff,#5b50dc);color:#fff;border-radius:13px;width:40px;height:40px;display:grid;place-items:center;font-size:22px}.nav{display:grid;gap:8px}.nav button{background:transparent;text-align:right;padding:13px 15px;border-radius:12px;color:#717791;font-weight:bold}.nav button.active,.nav button:hover{background:#f0efff;color:var(--purple)}.nav i{font-style:normal;margin-left:10px}.side-bottom{margin-top:auto;background:#f5f3ff;border-radius:17px;padding:18px;color:#5a50ca;font-size:12px;line-height:1.8}.main{flex:1;padding:28px 5%;max-width:1400px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.eyebrow{color:var(--primary);font-size:13px;font-weight:bold;margin-bottom:8px}.top h1{font-size:27px;margin:0 0 6px}.top p{margin:0;color:var(--muted);font-size:14px}.avatar{background:#eceaff;color:var(--purple);border-radius:50%;width:42px;height:42px;display:grid;place-items:center;font-weight:bold}.hero{background:linear-gradient(115deg,#7167f0,#9c91ff);color:#fff;padding:28px 32px;border-radius:22px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 15px 28px #7167f033;margin-bottom:25px}.hero h2{margin:0 0 8px;font-size:23px}.hero p{margin:0;color:#eeecff;font-size:14px}.hero-icon{font-size:66px;opacity:.8}.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:20px}.card{background:var(--surface);border:1px solid var(--line);border-radius:19px;padding:22px;box-shadow:var(--shadow)}.card-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.card-title h3{font-size:17px;margin:0}.link{color:var(--primary);font-size:12px;font-weight:bold;background:none}.upload{border:2px dashed #d4d1ff;background:#faf9ff;border-radius:15px;padding:27px;text-align:center;color:var(--muted)}.upload strong{display:block;color:var(--ink);margin:9px 0 5px}.upload span{font-size:12px}.upload input{display:none}.upload-icon{font-size:31px;color:var(--primary)}.or{display:flex;align-items:center;gap:10px;color:#b0b3c3;font-size:11px;margin:18px 0}.or:before,.or:after{content:'';height:1px;background:var(--line);flex:1}textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:14px;resize:vertical;min-height:105px;outline:0;color:var(--ink)}textarea:focus{border-color:var(--primary)}.actions{display:flex;gap:10px;margin-top:13px}.btn{padding:12px 18px;border-radius:11px;font-weight:bold;font-size:13px}.primary{background:var(--primary);color:white}.secondary{background:#f0efff;color:var(--purple)}.disabled{opacity:.45;pointer-events:none}.recent{display:grid;gap:12px}.recent-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.recent-item:last-child{border:0}.doc-icon{background:#fff0ef;color:#ef716b;border-radius:10px;padding:9px;font-size:19px}.recent-item b{font-size:13px}.recent-item small{display:block;color:var(--muted);font-size:11px;margin-top:5px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px}.stat b{font-size:23px;display:block}.stat span{font-size:11px;color:var(--muted)}.view{display:none}.view.active{display:block}.summary{background:#fff;border-radius:18px;border:1px solid var(--line);padding:25px;line-height:2;font-size:15px}.summary h2{margin-top:0;color:var(--purple)}.tag{background:#eeecff;color:var(--purple);padding:5px 10px;border-radius:20px;font-size:11px;margin:3px;display:inline-block}.empty{text-align:center;padding:70px 20px;color:var(--muted)}@media(max-width:800px){.sidebar{width:70px;padding:18px 8px}.brand{margin:0 auto 35px}.brand span,.nav button span,.side-bottom{display:none}.nav button{text-align:center;padding:13px 5px}.nav i{margin:0;font-size:20px}.main{padding:22px 16px}.grid{grid-template-columns:1fr}.hero-icon{display:none}.top h1{font-size:21px}.stats{grid-template-columns:repeat(3,1fr)}.stat{padding:11px}.stat b{font-size:18px}}
-</style></head>
-<body><div class="app"><aside class="sidebar"><div class="brand"><div class="brandmark">م</div><span>مُذاكر</span></div><nav class="nav"><button class="active" data-view="home"><i>⌂</i><span>الرئيسية</span></button><button data-view="library"><i>▤</i><span>مكتبتي</span></button><button data-view="summary"><i>✦</i><span>ملخصاتي</span></button><button data-view="flash"><i>♢</i><span>بطاقات المراجعة</span></button></nav><div class="side-bottom">✦ <b>ذاكر بذكاء</b><br>حوّل أي درس إلى ملخص واضح وأسئلة مراجعة في ثوانٍ.</div></aside><main class="main"><header class="top"><div><div class="eyebrow">الأربعاء، ٢ أكتوبر ٢٠٢٦</div><h1>أهلاً بك، يا طالب 👋</h1><p>جاهز نخلّي المذاكرة أسهل؟</p></div><div class="avatar">أ</div></header><section id="home" class="view active"><div class="hero"><div><h2>حوّل دروسك إلى معرفة ✨</h2><p>ارفع ملفك أو الصق النص، ودع الذكاء الاصطناعي يختصر لك المهم.</p></div><div class="hero-icon">✦</div></div><div class="stats"><div class="stat"><b id="docCount">12</b><span>ملخصاً هذا الشهر</span></div><div class="stat"><b>٤.٥ ساعة</b><span>وقت تم توفيره</span></div><div class="stat"><b>٨٧٪</b><span>تقدمك الأسبوعي</span></div></div><div class="grid"><div class="card"><div class="card-title"><h3>أنشئ ملخصاً جديداً</h3><span class="tag">مدعوم بالذكاء الاصطناعي</span></div><label class="upload" for="file"><div class="upload-icon">⇧</div><strong>اسحب الملف هنا أو اضغط للرفع</strong><span>PDF، Word أو صورة — حتى ٢٠ ميجابايت</span><input id="file" type="file" accept=".pdf,.doc,.docx,.txt,image/*"></label><div class="or">أو الصق نص المادة مباشرة</div><textarea id="material" placeholder="الصق هنا نص المحاضرة أو الدرس الذي تريد تلخيصه..."></textarea><div class="actions"><button class="btn primary" id="summarize">✦ لخص المادة</button><button class="btn secondary" id="clear">مسح</button></div><div id="fileName" style="font-size:11px;color:var(--green);margin-top:9px"></div></div><div class="card"><div class="card-title"><h3>آخر ملخصاتي</h3><button class="link" data-view="summary">عرض الكل</button></div><div class="recent"><div class="recent-item"><div class="doc-icon">▤</div><div><b>أساسيات علم الأحياء</b><small>منذ ساعتين · ٨ صفحات</small></div></div><div class="recent-item"><div class="doc-icon" style="background:#eef8f4;color:#28a87d">▤</div><div><b>مقدمة في الاقتصاد</b><small>أمس · ٥ صفحات</small></div></div><div class="recent-item"><div class="doc-icon" style="background:#fff8e8;color:#d69b27">▤</div><div><b>قوانين الحركة</b><small>منذ ٣ أيام · ٣ صفحات</small></div></div></div></div></div></section><section id="summary" class="view"><div class="card-title"><h2>ملخصاتك</h2><span class="tag">١٢ ملخصاً</span></div><div id="summaryContent" class="summary"><div class="empty">اختر مادة من مكتبتك أو أنشئ ملخصاً جديداً من الصفحة الرئيسية.</div></div></section><section id="library" class="view"><div class="card-title"><h2>مكتبتي</h2></div><div class="card summary"><h2>كل موادك في مكان واحد</h2><p>احتفظ بالمحاضرات والملخصات وارجع لها وقت ما تحتاج. ابدأ برفع أول مادة دراسية من الصفحة الرئيسية.</p></div></section><section id="flash" class="view"><div class="card-title"><h2>بطاقات المراجعة</h2></div><div class="card summary"><div class="empty">🎴<br>أنشئ ملخصاً أولاً لتوليد بطاقات مراجعة ذكية.</div></div></section></main></div><script>
-const views=[...document.querySelectorAll('.view')];document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{let v=b.dataset.view;views.forEach(x=>x.classList.toggle('active',x.id===v));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===v))});document.getElementById('file').onchange=e=>{if(e.target.files[0])document.getElementById('fileName').textContent='✓ تم اختيار: '+e.target.files[0].name};document.getElementById('clear').onclick=()=>{document.getElementById('material').value='';document.getElementById('fileName').textContent=''};document.getElementById('summarize').onclick=()=>{let text=document.getElementById('material').value.trim(),file=document.getElementById('file').files[0];if(!text&&!file){alert('الصق نص المادة أو اختر ملفاً أولاً');return}let title=file?file.name.replace(/\.[^.]+$/,''):'ملخص مادة دراسية جديدة';document.getElementById('summaryContent').innerHTML='<h2>✦ '+title+'</h2><span class="tag">ملخص ذكي</span><span class="tag">مهم للمراجعة</span><hr><h3>الخلاصة</h3><p>'+(text?text.slice(0,700):'تم تحليل الملف بنجاح. سيظهر هنا ملخص مركز لأهم الأفكار والمفاهيم والتعريفات الواردة في المادة الدراسية.')+'</p><h3>نقاط مهمة للمراجعة</h3><ul><li>راجع المفاهيم الأساسية والتعريفات الواردة في الدرس.</li><li>اربط بين الأفكار الرئيسية والأمثلة التطبيقية.</li><li>اختبر فهمك بأسئلة قصيرة قبل الامتحان.</li></ul>';document.querySelector('[data-view="summary"]').click()};
-</script></body></html>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#1E3A2F">
+  <meta name="description" content="فهيم — منصة دراسية احترافية لتلخيص المواد وبناء الخرائط الذهنية والمراجعة الذكية.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>فهيم — منصة الدراسة الذكية</title>
+  <style>
+    :root{
+      --ink:#17231d;--ink-2:#31463a;--muted:#7a887f;--paper:#f6f1e7;--paper-2:#fbf8f0;--surface:#fffdf8;--line:#e8dfcf;
+      --emerald:#1E3A2F;--emerald-2:#285444;--mint:#dceee5;--mint-2:#eff8f2;--gold:#b98b35;--sand:#efe3ca;--red:#b9564d;
+      --blue:#3e6d8f;--shadow:0 20px 55px rgba(28,41,33,.14);--soft-shadow:0 10px 30px rgba(30,58,47,.09);
+      --radius-xl:30px;--radius-lg:22px;--radius-md:16px;--safe-bottom:env(safe-area-inset-bottom,0px)
+    }
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100dvh;background:
+      radial-gradient(circle at 15% 15%,rgba(185,139,53,.18),transparent 28%),
+      radial-gradient(circle at 86% 22%,rgba(72,130,104,.22),transparent 26%),linear-gradient(135deg,#14241d,#f3eadb 52%,#fffaf0);
+      color:var(--ink);font-family:"IBM Plex Sans Arabic","Segoe UI",Tahoma,Arial,sans-serif;overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.5),transparent 70%);pointer-events:none}
+    button,input,textarea,select{font:inherit}button{border:0;cursor:pointer;color:inherit}a{color:inherit}.hide{display:none!important}
+    .workspace{position:relative;z-index:1;min-height:100dvh;display:grid;grid-template-columns:minmax(280px,1fr) minmax(360px,444px) minmax(20px,.35fr);gap:38px;align-items:center;padding:28px clamp(18px,4vw,58px)}
+    .brand-panel{color:#fff;max-width:650px}.brand-chip{display:inline-flex;align-items:center;gap:10px;padding:9px 14px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.09);border-radius:999px;backdrop-filter:blur(12px);font-size:13px;color:#f9f2e5}.brand-lockup{display:flex;align-items:center;gap:16px;margin:30px 0 20px}.mark{width:64px;height:64px;border-radius:22px;display:grid;place-items:center;background:linear-gradient(145deg,#f9f2dc,#d9ad54);box-shadow:0 22px 55px rgba(0,0,0,.25)}.mark svg{width:44px;height:44px}.brand-panel h1{font-size:clamp(42px,6vw,82px);line-height:1.02;margin:0;letter-spacing:-2px}.brand-panel p{font-size:18px;line-height:2;color:#e7dac5;max-width:560px;margin:18px 0 0}.principles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:30px}.principle{padding:15px;border:1px solid rgba(255,255,255,.14);border-radius:20px;background:rgba(255,255,255,.08);backdrop-filter:blur(10px)}.principle b{display:block;margin-bottom:6px}.principle span{font-size:12px;line-height:1.7;color:#e4d8c4}
+    .phone{width:min(100%,444px);height:min(900px,calc(100dvh - 34px));min-height:720px;border-radius:42px;background:linear-gradient(180deg,var(--paper-2),#f4ecdd);border:1px solid rgba(255,255,255,.75);box-shadow:0 32px 90px rgba(9,19,14,.34),inset 0 0 0 10px rgba(255,255,255,.35);overflow:hidden;display:flex;flex-direction:column;position:relative}.phone:before{content:"";position:absolute;top:10px;left:50%;transform:translateX(-50%);width:112px;height:6px;border-radius:999px;background:rgba(30,58,47,.18);z-index:5}.appbar{padding:26px 22px 12px;background:linear-gradient(180deg,rgba(255,253,248,.96),rgba(255,253,248,.72));backdrop-filter:blur(16px);border-bottom:1px solid rgba(232,223,207,.75);position:relative;z-index:4}.appbar-row{display:flex;align-items:center;justify-content:space-between;gap:14px}.mini-brand{display:flex;align-items:center;gap:10px}.mini-logo{width:42px;height:42px;border-radius:16px;background:var(--emerald);display:grid;place-items:center;color:#fff;box-shadow:var(--soft-shadow)}.mini-logo svg{width:28px;height:28px}.mini-brand b{display:block;font-size:19px}.mini-brand span{display:block;color:var(--muted);font-size:11px;margin-top:2px}.date-pill{padding:8px 11px;border-radius:999px;background:var(--mint-2);color:var(--emerald);font-size:11px;font-weight:800;white-space:nowrap}.screen{flex:1;overflow:auto;padding:18px 18px 110px;scrollbar-width:none}.screen::-webkit-scrollbar{display:none}.tabbar{position:absolute;z-index:8;left:14px;right:14px;bottom:calc(13px + var(--safe-bottom));height:76px;background:rgba(255,253,248,.9);border:1px solid rgba(232,223,207,.9);border-radius:28px;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:8px;box-shadow:0 18px 45px rgba(30,58,47,.16);backdrop-filter:blur(20px)}.tabbar button{background:transparent;border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#89968e;font-size:10px;font-weight:800}.tabbar button .ico{font-size:20px;line-height:1}.tabbar button.active{background:var(--emerald);color:#fff;box-shadow:0 12px 26px rgba(30,58,47,.22)}
+    .hero{position:relative;overflow:hidden;background:linear-gradient(145deg,#1e3a2f,#2f5d4a);border-radius:var(--radius-xl);padding:24px;color:#fff;box-shadow:var(--shadow)}.hero:after{content:"";position:absolute;inset:auto -25% -35% auto;width:260px;height:260px;background:radial-gradient(circle,rgba(220,238,229,.25),transparent 62%);border-radius:50%}.eyebrow{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.14);font-size:11px;font-weight:800;color:#f8efd9}.hero h2{font-size:28px;line-height:1.25;margin:14px 0 8px}.hero p{color:#e7f2eb;line-height:1.9;margin:0;font-size:14px}.hero-actions{display:flex;gap:9px;margin-top:18px;flex-wrap:wrap}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 15px;border-radius:16px;background:#fff;color:var(--emerald);font-weight:900;font-size:13px;border:1px solid transparent;transition:.18s ease;white-space:nowrap}.btn:hover{transform:translateY(-1px);box-shadow:0 12px 25px rgba(30,58,47,.12)}.btn.primary{background:var(--emerald);color:#fff}.btn.gold{background:#fbf0d6;color:#7a5513;border-color:#ecd49e}.btn.ghost{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.18)}.btn.soft{background:var(--mint-2);color:var(--emerald);border-color:#d5e9dd}.btn.danger{background:#fff2f0;color:var(--red);border-color:#f1cbc6}.btn.small{padding:8px 11px;border-radius:12px;font-size:11px}.btn.block{width:100%}.btn:disabled{opacity:.45;pointer-events:none}.stack{display:grid;gap:14px}.mt{margin-top:16px}.section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:22px 2px 12px}.section-title h3{margin:0;font-size:18px}.section-title p{margin:4px 0 0;color:var(--muted);font-size:12px}.card{background:rgba(255,253,248,.92);border:1px solid rgba(232,223,207,.95);border-radius:var(--radius-lg);box-shadow:var(--soft-shadow);padding:17px}.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{padding:14px;border-radius:19px;background:rgba(255,255,255,.72);border:1px solid var(--line)}.stat b{display:block;font-size:22px;color:var(--emerald);letter-spacing:-.5px}.stat span{display:block;color:var(--muted);font-size:10px;line-height:1.5;margin-top:4px}.empty{padding:26px 16px;text-align:center;color:var(--muted);border:1px dashed #d8cbb8;border-radius:22px;background:rgba(255,255,255,.45)}.empty .big{font-size:42px;margin-bottom:8px}.empty b{display:block;color:var(--ink);font-size:16px;margin-bottom:6px}.muted{color:var(--muted)}.tiny{font-size:11px;line-height:1.7}.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:var(--mint-2);color:var(--emerald);font-size:10px;font-weight:900}.badge.gold{background:#fff5dc;color:#846019}.badge.gray{background:#f2eee7;color:#756c61}.split{display:flex;align-items:center;justify-content:space-between;gap:12px}.chips{display:flex;gap:8px;overflow:auto;padding-bottom:2px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 12px;font-size:12px;font-weight:800;color:var(--ink-2);white-space:nowrap}.chip.active{background:var(--emerald);color:#fff;border-color:var(--emerald)}
+    .material{display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:12px}.material-icon{width:48px;height:48px;border-radius:17px;background:linear-gradient(145deg,var(--mint),#fff);display:grid;place-items:center;color:var(--emerald);font-size:22px}.material h4{margin:0 0 4px;font-size:14px}.material p{margin:0;color:var(--muted);font-size:11px}.progress-line{height:8px;background:#eee4d4;border-radius:999px;overflow:hidden;margin-top:10px}.progress-line i{display:block;height:100%;background:linear-gradient(90deg,var(--emerald),#62a383);border-radius:999px;width:0%}
+    .form{display:grid;gap:12px}.field label{display:block;font-size:12px;font-weight:900;margin:0 4px 8px;color:var(--ink-2)}.input,.textarea,.select{width:100%;border:1px solid var(--line);background:rgba(255,255,255,.86);border-radius:17px;padding:13px 14px;color:var(--ink);outline:0}.textarea{min-height:138px;resize:vertical;line-height:1.8}.input:focus,.textarea:focus,.select:focus{border-color:#8db69f;box-shadow:0 0 0 4px rgba(30,58,47,.08)}.drop{border:1.5px dashed #c9bda8;background:rgba(255,255,255,.54);border-radius:22px;padding:20px;text-align:center;color:var(--muted);cursor:pointer}.drop strong{display:block;color:var(--ink);margin:6px 0}.drop input{display:none}.style-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.style-card{padding:12px;border:1px solid var(--line);border-radius:17px;background:#fff;text-align:start}.style-card.active{border-color:var(--emerald);background:var(--mint-2);box-shadow:inset 0 0 0 1px var(--emerald)}.style-card b{display:block;font-size:12px}.style-card span{display:block;color:var(--muted);font-size:10px;line-height:1.6;margin-top:3px}.switch-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.7)}.switch{position:relative;width:48px;height:28px;flex:0 0 auto}.switch input{display:none}.switch i{position:absolute;inset:0;border-radius:999px;background:#d8cebd;transition:.18s}.switch i:after{content:"";position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.17);transition:.18s}.switch input:checked+i{background:var(--emerald)}.switch input:checked+i:after{right:24px}
+    .reader-title{background:linear-gradient(145deg,#fffdf8,#f3eadb);border:1px solid var(--line);border-radius:28px;padding:19px}.reader-title h2{margin:9px 0 8px;font-size:24px;line-height:1.35}.reader-body{line-height:2.05;font-size:14px}.quote{border-right:4px solid var(--gold);background:#fff7e3;border-radius:18px;padding:13px;color:#70531c}.point-list{display:grid;gap:9px}.point{display:flex;gap:10px;padding:12px;border-radius:17px;background:#fff;border:1px solid var(--line)}.point i{font-style:normal;width:24px;height:24px;border-radius:50%;background:var(--mint);color:var(--emerald);display:grid;place-items:center;font-weight:900;font-size:11px;flex:0 0 auto}
+    .modebar{display:flex;gap:8px;position:sticky;top:-18px;z-index:3;background:linear-gradient(180deg,var(--paper-2),rgba(246,241,231,.88));padding:8px 0 12px;backdrop-filter:blur(12px);overflow:auto;scrollbar-width:none}.modebar::-webkit-scrollbar{display:none}.tool-row{display:flex;gap:7px;align-items:center;overflow:auto;scrollbar-width:none}.tool-row::-webkit-scrollbar{display:none}.tool{height:38px;padding:0 11px;border-radius:13px;background:#fff;border:1px solid var(--line);font-size:11px;font-weight:900;color:var(--ink-2);white-space:nowrap}.tool.active{background:var(--emerald);color:#fff;border-color:var(--emerald)}.tool.color{width:34px;padding:0;border-radius:12px}.tool.size{min-width:34px;padding:0}.map-shell{display:grid;gap:12px}.map-board{height:430px;border-radius:28px;border:1px solid #d9ccb9;background:#f8f1e4;box-shadow:inset 0 0 0 1px rgba(255,255,255,.68),var(--soft-shadow);overflow:auto;position:relative;direction:ltr;touch-action:none}.map-content{position:relative;width:760px;height:640px;transform-origin:center center;background-image:radial-gradient(#cabda9 1.15px,transparent 1.15px);background-size:22px 22px}.map-svg{position:absolute;inset:0;width:760px;height:640px;overflow:visible;pointer-events:none}.pen-canvas{position:absolute;inset:0;width:760px;height:640px;z-index:3;pointer-events:none}.pen-mode .pen-canvas{pointer-events:auto;cursor:crosshair}.mind-node{position:absolute;z-index:4;width:172px;min-height:82px;padding:12px;border-radius:22px;background:rgba(255,253,248,.96);border:2px solid var(--node-color,#1E3A2F);box-shadow:0 14px 30px rgba(30,58,47,.13);direction:rtl;touch-action:none}.mind-node.root{width:200px;min-height:95px;background:linear-gradient(145deg,#1E3A2F,#2d604c);color:#fff;border-color:#d9ad54}.mind-node.selected{box-shadow:0 0 0 4px rgba(185,139,53,.25),0 18px 34px rgba(30,58,47,.2)}.node-title{font-weight:900;line-height:1.5;outline:0;min-height:24px}.node-title:empty:before{content:attr(data-placeholder);color:rgba(122,136,127,.76)}.root .node-title:empty:before{color:rgba(255,255,255,.72)}.node-meta{font-size:10px;color:var(--muted);margin-top:5px}.root .node-meta{color:#dceee5}.node-actions{display:flex;gap:5px;margin-top:9px}.node-actions button{width:28px;height:26px;border-radius:10px;background:var(--mint-2);color:var(--emerald);font-weight:900}.root .node-actions button{background:rgba(255,255,255,.15);color:#fff}.inspector{position:relative;z-index:5}.inspector textarea{min-height:76px}.color-dots{display:flex;gap:8px}.dot{width:28px;height:28px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px var(--line);padding:0}.dot.active{box-shadow:0 0 0 3px rgba(30,58,47,.22)}
+    .flash-card{min-height:260px;border-radius:30px;padding:24px;background:linear-gradient(145deg,#fffdf8,#f2eadb);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}.flash-card:after{content:"";position:absolute;left:-45px;bottom:-60px;width:170px;height:170px;background:rgba(30,58,47,.08);border-radius:50%}.flash-card h3{margin:0;font-size:24px;line-height:1.55}.flash-card p{line-height:2;color:var(--ink-2)}.review-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.review-stats .stat{text-align:center}.difficulty{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.export-preview{height:250px;background:#fff;border:1px solid var(--line);border-radius:24px;overflow:auto;display:grid;place-items:center}.export-preview svg{max-width:100%;height:auto}.format-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.format{padding:12px;border-radius:17px;border:1px solid var(--line);background:#fff;text-align:center}.format.active{background:var(--mint-2);border-color:var(--emerald)}.format b{display:block;font-size:12px}.format span{font-size:10px;color:var(--muted)}.toast{position:fixed;z-index:99;left:50%;bottom:24px;transform:translate(-50%,20px);background:#173127;color:#fff;padding:12px 15px;border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:.25s;max-width:min(92vw,420px);font-size:13px}.toast.show{opacity:1;transform:translate(-50%,0)}
+    @media(max-width:980px){.workspace{display:block;padding:0}.brand-panel{display:none}.phone{width:100%;height:100dvh;min-height:100dvh;border-radius:0;box-shadow:none;border:0;inset:0}.phone:before{display:none}.appbar{padding-top:18px}.screen{padding-inline:14px}.map-board{height:calc(100dvh - 330px);min-height:390px}.tabbar{left:10px;right:10px;bottom:calc(10px + var(--safe-bottom));border-radius:24px}}
+    @media(max-width:390px){.stat-grid,.review-stats,.format-grid{grid-template-columns:1fr}.style-grid,.difficulty{grid-template-columns:1fr}.hero h2{font-size:23px}.tabbar button{font-size:9px}.tabbar button .ico{font-size:18px}}
+    @media print{body{background:#fff}.workspace{display:block;padding:0}.brand-panel,.appbar,.tabbar,.screen>*:not(.printable){display:none!important}.phone{box-shadow:none;border:0;width:100%;height:auto;overflow:visible}.screen{overflow:visible;padding:0}.printable{display:block!important}}
+  </style>
+</head>
+<body>
+  <div class="workspace">
+    <aside class="brand-panel" aria-label="فلسفة تطبيق فهيم">
+      <div class="brand-chip">✦ أداة إنتاجية دراسية — وليست روبوت محادثة</div>
+      <div class="brand-lockup">
+        <div class="mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 17c9-4 16-3 20 2 4-5 11-6 20-2v30c-9-3-16-2-20 3-4-5-11-6-20-3V17Z" fill="#1E3A2F"/><path d="M32 19v31" stroke="#F4D18B" stroke-width="3" stroke-linecap="round"/><path d="M32 12c5 5 8 10 8 15a8 8 0 1 1-16 0c0-5 3-10 8-15Z" fill="#D9AD54"/></svg>
+        </div>
+        <div>
+          <h1>فهيم</h1>
+          <p>منصة عربية راقية لتلخيص المواد، بناء الخرائط الذهنية، الرسم بالقلم، والمراجعة الذكية — الذكاء يعمل في الخلفية والطالب يقود التجربة.</p>
+        </div>
+      </div>
+      <div class="principles">
+        <div class="principle"><b>صفحة بيضاء</b><span>لا نضع مواد أو مخططات تجريبية؛ يبدأ الطالب ببناء مفاهيمه بنفسه.</span></div>
+        <div class="principle"><b>مصادر موثوقة</b><span>كل ملخص أو بطاقة ترتبط بمصدر الطالب وسياق المادة الأصلية.</span></div>
+        <div class="principle"><b>إخراج احترافي</b><span>تصدير PDF أو SVG أو صورة عريضة مناسبة للطباعة والمشاركة.</span></div>
+      </div>
+    </aside>
+
+    <main class="phone" role="application" aria-label="تطبيق فهيم">
+      <header class="appbar">
+        <div class="appbar-row">
+          <div class="mini-brand">
+            <div class="mini-logo" aria-hidden="true">
+              <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 17c9-4 16-3 20 2 4-5 11-6 20-2v30c-9-3-16-2-20 3-4-5-11-6-20-3V17Z" fill="#fff"/><path d="M32 19v31" stroke="#D9AD54" stroke-width="3" stroke-linecap="round"/><path d="M32 12c5 5 8 10 8 15a8 8 0 1 1-16 0c0-5 3-10 8-15Z" fill="#D9AD54"/></svg>
+            </div>
+            <div><b>فهيم</b><span>استوديو الدراسة الذكية</span></div>
+          </div>
+          <div class="date-pill">٢ أكتوبر ٢٠٢٦</div>
+        </div>
+      </header>
+      <section class="screen" id="screen" aria-live="polite"></section>
+      <nav class="tabbar" id="tabbar" aria-label="التنقل الرئيسي">
+        <button data-go="home"><span class="ico">⌂</span><span>مكتبتي</span></button>
+        <button data-go="import"><span class="ico">⇧</span><span>استيراد</span></button>
+        <button data-go="reader"><span class="ico">☰</span><span>الملخص</span></button>
+        <button data-go="map"><span class="ico">◎</span><span>الخريطة</span></button>
+        <button data-go="review"><span class="ico">◇</span><span>مراجعة</span></button>
+      </nav>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const W = 760, H = 640;
+  const KEY = 'faheem.study.workspace.v1';
+  const COLORS = ['#1E3A2F','#3E6D8F','#B98B35','#8A6F52','#8B5E83','#B9564D'];
+  const styles = {
+    exam: ['نقاط للاختبار','استخراج الأفكار التي تصلح للمراجعة السريعة قبل الاختبار.'],
+    concept: ['شرح مفاهيمي','صياغة مترابطة تساعد على الفهم العميق.'],
+    qa: ['أسئلة وأجوبة','تحويل المادة إلى أسئلة تدريبية مع إجابات مختصرة.'],
+    map: ['خريطة ذهنية','اقتراح محاور أولية يمكن للطالب تعديلها يدويًا.']
+  };
+  const $ = (s, root=document) => root.querySelector(s);
+  const $$ = (s, root=document) => Array.from(root.querySelectorAll(s));
+  const esc = value => String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+  const uid = prefix => prefix + '-' + Math.random().toString(36).slice(2, 9);
+  const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+  const nowText = () => new Intl.DateTimeFormat('ar', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}).format(new Date());
+
+  function defaultState(){
+    return {
+      screen:'home', activeMaterialId:null, selectedNodeId:'root', linkFrom:null,
+      draft:{title:'', text:'', style:'exam', fileName:'', extractFormulas:true, cards:true, quiz:false},
+      pen:{mode:'nodes', color:'#1E3A2F', size:4, tool:'pen', smart:true},
+      export:{ratio:'wide', format:'pdf', notes:true, bg:true, header:true, index:false},
+      review:{index:0, flipped:false},
+      materials:[], cards:[],
+      map:{zoom:1, nodes:[{id:'root', x:280, y:255, title:'', color:'#1E3A2F', note:'', page:''}], edges:[], drawings:[]}
+    };
+  }
+  let state = loadState();
+  function loadState(){
+    try{
+      const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+      return saved ? merge(defaultState(), saved) : defaultState();
+    }catch(_){ return defaultState(); }
+  }
+  function merge(base, saved){
+    for (const k in saved) {
+      if (saved[k] && typeof saved[k] === 'object' && !Array.isArray(saved[k]) && base[k]) base[k] = merge(base[k], saved[k]);
+      else base[k] = saved[k];
+    }
+    if (!base.map.nodes.length) base.map.nodes = defaultState().map.nodes;
+    return base;
+  }
+  function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+  function activeMaterial(){ return state.materials.find(m => m.id === state.activeMaterialId) || state.materials[0] || null; }
+  function go(screen){ location.hash = screen; }
+  function route(){ return (location.hash || '#home').replace('#','') || 'home'; }
+  function toast(msg){ const el = $('#toast'); el.textContent = msg; el.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(()=>el.classList.remove('show'), 2300); }
+
+  const screens = {home: homeScreen, import: importScreen, reader: readerScreen, map: mapScreen, review: reviewScreen, export: exportScreen};
+  function render(){
+    state.screen = screens[route()] ? route() : 'home';
+    $('#screen').innerHTML = screens[state.screen]();
+    $$('#tabbar button').forEach(btn => btn.classList.toggle('active', btn.dataset.go === state.screen));
+    afterRender(state.screen);
+    save();
+  }
+
+  function homeScreen(){
+    const mats = state.materials;
+    const doneCards = state.cards.filter(c => c.level === 'easy' || c.level === 'mastered').length;
+    return `
+      <div class="hero">
+        <span class="eyebrow">✦ بيئة دراسة احترافية</span>
+        <h2>رتّب مصادر المادة وحوّلها إلى فهم قابل للمراجعة.</h2>
+        <p>ابدأ من ملف أو نص، ثم اقرأ الملخص، ابنِ خريطتك الذهنية بيدك، وصدّرها بجودة عالية.</p>
+        <div class="hero-actions">
+          <button class="btn" data-go="import">⇧ إضافة مادة</button>
+          <button class="btn ghost" data-go="map">◎ بناء خريطة</button>
+        </div>
+      </div>
+      <div class="section-title"><div><h3>لوحة المذاكرة</h3><p>الأرقام تبدأ من إنجازاتك الفعلية داخل التطبيق.</p></div></div>
+      <div class="stat-grid">
+        <div class="stat"><b>${mats.length}</b><span>مواد محفوظة</span></div>
+        <div class="stat"><b>${state.cards.length}</b><span>بطاقات مراجعة</span></div>
+        <div class="stat"><b>${doneCards}</b><span>بطاقات متقنة</span></div>
+      </div>
+      <div class="section-title"><div><h3>مكتبتي</h3><p>مصادرك وملخصاتك بدون محتوى تجريبي.</p></div><button class="btn small soft" data-go="import">+ جديد</button></div>
+      <div class="stack">
+        ${mats.length ? mats.map(materialCard).join('') : emptyBox('📚','ابدأ بمادة من عندك','ارفع ملفاً أو الصق نص المحاضرة. لن تظهر هنا أي مواد أو أمثلة جاهزة قبل أن تضيفها أنت.','استيراد مادة','import')}
+      </div>
+      <div class="section-title"><div><h3>مسار العمل</h3><p>من المصدر إلى التصدير في خطوات واضحة.</p></div></div>
+      <div class="stack">
+        ${workflowStep('1','استيراد ومعالجة','حدد نمط التلخيص والملحقات التي تحتاجها.')}
+        ${workflowStep('2','قراءة تفاعلية','راجع الخلاصة والنقاط المهمة مع ربطها بالصفحات.')}
+        ${workflowStep('3','خريطة الطالب','ابنِ العلاقات يدويًا وارسم بالقلم مع تسوية الأشكال.')}
+        ${workflowStep('4','مراجعة وتصدير','حوّل النتائج إلى بطاقات، PDF، SVG أو صورة عريضة.')}
+      </div>`;
+  }
+  function workflowStep(n,title,text){return `<div class="card split"><div><span class="badge gray">${n}</span><b style="display:block;margin-top:7px">${title}</b><p class="tiny muted" style="margin:5px 0 0">${text}</p></div><span style="font-size:24px;color:var(--gold)">↢</span></div>`}
+  function materialCard(m){
+    const progress = Math.min(100, 25 + (m.keyPoints.length*10) + (state.cards.filter(c=>c.materialId===m.id).length*4));
+    return `<article class="card material" data-open-material="${m.id}">
+      <div class="material-icon">▤</div>
+      <div><h4>${esc(m.title)}</h4><p>${esc(m.source)} · ${esc(m.createdAt)} · ${m.words} كلمة تقريبًا</p><div class="progress-line"><i style="width:${progress}%"></i></div></div>
+      <button class="btn small soft" data-open-material="${m.id}">فتح</button>
+    </article>`;
+  }
+  function emptyBox(icon,title,text,btn,screen){return `<div class="empty"><div class="big">${icon}</div><b>${title}</b><p class="tiny">${text}</p>${btn?`<button class="btn primary small" data-go="${screen}">${btn}</button>`:''}</div>`}
+
+  function importScreen(){
+    const d = state.draft;
+    return `
+      <div class="section-title" style="margin-top:0"><div><h3>إضافة ومعالجة المحتوى</h3><p>البرنامج يعالج ما يضيفه الطالب فقط؛ لا توجد مواد افتراضية.</p></div></div>
+      <div class="card form">
+        <div class="field"><label>اسم المادة أو الفصل</label><input class="input" id="draftTitle" placeholder="مثال: اكتب اسم المقرر أو عنوان المحاضرة" value="${esc(d.title)}"></div>
+        <label class="drop" for="fileInput"><div style="font-size:32px;color:var(--emerald)">⇧</div><strong>اختر ملفاً من جهازك</strong><span class="tiny">PDF، Word، TXT، صورة أو تسجيل. يتم حفظ الاسم فقط إذا لم يكن الملف نصيًا.</span><input id="fileInput" type="file" accept=".txt,.md,.pdf,.doc,.docx,image/*,audio/*,video/*"></label>
+        <div id="fileLabel" class="tiny muted">${d.fileName ? '✓ الملف المختار: ' + esc(d.fileName) : 'لم يتم اختيار ملف بعد.'}</div>
+        <div class="field"><label>أو الصق نص المادة</label><textarea class="textarea" id="draftText" placeholder="الصق نص المحاضرة أو الفصل هنا ليتم تلخيصه وتنظيمه...">${esc(d.text)}</textarea></div>
+      </div>
+      <div class="section-title"><div><h3>نمط التلخيص</h3><p>اختر الناتج الأقرب لطريقة مذاكرتك.</p></div></div>
+      <div class="style-grid">
+        ${Object.entries(styles).map(([id,[title,desc]])=>`<button class="style-card ${d.style===id?'active':''}" data-style="${id}"><b>${title}</b><span>${desc}</span></button>`).join('')}
+      </div>
+      <div class="section-title"><div><h3>ملحقات ذكية</h3><p>يمكن تعديل كل شيء لاحقًا.</p></div></div>
+      <div class="stack">
+        ${switchRow('extractFormulas','استخراج القوانين والمصطلحات','تمييز المعادلات والتعاريف من النص.',d.extractFormulas)}
+        ${switchRow('cards','توليد بطاقات مراجعة','إنشاء بطاقات من النقاط المهمة.',d.cards)}
+        ${switchRow('quiz','أسئلة اختبار تدريبية','إضافة أسئلة قصيرة للتحقق من الفهم.',d.quiz)}
+      </div>
+      <div class="mt stack">
+        <button class="btn primary block" id="processBtn">✦ معالجة المادة وحفظها</button>
+        <button class="btn soft block" id="clearDraftBtn">مسح النموذج</button>
+      </div>`;
+  }
+  function switchRow(id,title,desc,checked){return `<div class="switch-row"><div><b>${title}</b><div class="tiny muted">${desc}</div></div><label class="switch"><input type="checkbox" data-toggle="${id}" ${checked?'checked':''}><i></i></label></div>`}
+
+  function readerScreen(){
+    const m = activeMaterial();
+    if (!m) return `<div class="section-title" style="margin-top:0"><div><h3>قارئ الملخص</h3><p>سيظهر الملخص هنا بعد إضافة مادة.</p></div></div>${emptyBox('☰','لا يوجد ملخص بعد','أضف نصًا أو ملفًا من شاشة الاستيراد ليبني فهيم مساحة قراءة منظمة.','إضافة مادة','import')}`;
+    return `
+      <div class="reader-title">
+        <span class="badge">${esc(styles[m.style]?.[0] || 'ملخص')}</span>
+        <h2>${esc(m.title)}</h2>
+        <div class="tiny muted">${esc(m.source)} · ${esc(m.createdAt)} · ${m.words} كلمة تقريبًا</div>
+      </div>
+      <div class="section-title"><div><h3>الخلاصة التنفيذية</h3><p>صياغة قصيرة قابلة للمراجعة.</p></div></div>
+      <article class="card reader-body">${paragraphs(m.summary)}</article>
+      <div class="section-title"><div><h3>نقاط مهمة</h3><p>يمكن تحويلها لبطاقات أو ربطها بالخريطة.</p></div></div>
+      <div class="point-list">${m.keyPoints.length ? m.keyPoints.map((p,i)=>`<div class="point"><i>${i+1}</i><span>${esc(p)}</span></div>`).join('') : `<div class="empty"><b>لا توجد نقاط مستخرجة</b><p class="tiny">أضف نصًا أطول للحصول على نقاط مراجعة أكثر.</p></div>`}</div>
+      ${m.formulas.length ? `<div class="section-title"><div><h3>قوانين ومصطلحات</h3><p>مستخرجة من نص الطالب.</p></div></div><div class="stack">${m.formulas.map(f=>`<div class="quote">${esc(f)}</div>`).join('')}</div>` : ''}
+      <div class="section-title"><div><h3>إجراءات سريعة</h3><p>انتقل من القراءة إلى البناء والمراجعة.</p></div></div>
+      <div class="stack">
+        <button class="btn primary block" id="sendToMap">◎ فتح الخريطة الذهنية لهذه المادة</button>
+        <button class="btn soft block" id="makeCards">◇ تحديث بطاقات المراجعة</button>
+        <button class="btn gold block" id="speakSummary">استماع للملخص</button>
+      </div>`;
+  }
+  function paragraphs(text){ return esc(text).split('\n').filter(Boolean).map(p=>`<p>${p}</p>`).join('') || '<p class="muted">لا يوجد نص كافٍ بعد.</p>'; }
+
+  function mapScreen(){
+    const selected = state.map.nodes.find(n => n.id === state.selectedNodeId) || state.map.nodes[0];
+    return `
+      <div class="modebar">
+        <button class="tool ${state.pen.mode==='nodes'?'active':''}" data-mode="nodes">العقد والمفاهيم</button>
+        <button class="tool ${state.pen.mode==='pen'?'active':''}" data-mode="pen">الرسم بالقلم</button>
+        <button class="tool ${state.linkFrom?'active':''}" id="linkModeBtn">ربط بين مفهومين</button>
+        <button class="tool" data-go="export">تصدير</button>
+      </div>
+      <div class="map-shell">
+        <div class="card stack">
+          <div class="split"><div><b>كانفاس الطالب</b><div class="tiny muted">ابدأ بعقدة مركزية فارغة، أضف مفاهيمك واربطها بنفسك.</div></div><span class="badge gold">${Math.round(state.map.zoom*100)}%</span></div>
+          <div class="tool-row">
+            <button class="tool" id="addNodeBtn">+ إضافة مفهوم</button>
+            <button class="tool" id="centerMapBtn">توسيط</button>
+            <button class="tool" id="zoomInBtn">تكبير</button>
+            <button class="tool" id="zoomOutBtn">تصغير</button>
+          </div>
+          ${state.pen.mode==='pen' ? penToolbar() : ''}
+        </div>
+        ${mapBoard()}
+        ${inspector(selected)}
+      </div>`;
+  }
+  function penToolbar(){
+    return `<div class="tool-row">
+      <button class="tool ${state.pen.tool==='pen'?'active':''}" data-pen-tool="pen">قلم</button>
+      <button class="tool ${state.pen.tool==='highlighter'?'active':''}" data-pen-tool="highlighter">تظليل</button>
+      <button class="tool ${state.pen.tool==='eraser'?'active':''}" data-pen-tool="eraser">ممحاة</button>
+      ${[3,5,8].map(s=>`<button class="tool size ${state.pen.size===s?'active':''}" data-pen-size="${s}">${s}</button>`).join('')}
+      ${COLORS.map(c=>`<button class="tool color ${state.pen.color===c?'active':''}" data-pen-color="${c}" style="background:${c}"></button>`).join('')}
+      <button class="tool ${state.pen.smart?'active':''}" id="smartToggle">تسوية الأشكال ✓</button>
+      <button class="tool" id="undoDrawBtn">تراجع</button>
+      <button class="tool" id="clearDrawBtn">مسح الرسم</button>
+    </div><div class="tiny muted">ارسم دائرة أو مستطيلاً أو سهمًا؛ عند تفعيل التسوية سيحوّل فهيم الخربشة إلى شكل منتظم.</div>`;
+  }
+  function mapBoard(){
+    const modeClass = state.pen.mode === 'pen' ? 'pen-mode' : '';
+    return `<div class="map-board ${modeClass}" id="mapBoard"><div class="map-content" id="mapContent" style="transform:scale(${state.map.zoom})">
+      ${mapSvg(false)}
+      ${state.map.nodes.map(nodeHtml).join('')}
+      <canvas class="pen-canvas" id="penCanvas"></canvas>
+    </div></div>`;
+  }
+  function nodeHtml(n){
+    const isRoot = n.id === 'root'; const selected = n.id === state.selectedNodeId;
+    return `<div class="mind-node ${isRoot?'root':''} ${selected?'selected':''}" data-node="${n.id}" style="left:${n.x}px;top:${n.y}px;--node-color:${esc(n.color)}">
+      <div class="node-title" contenteditable="true" spellcheck="false" data-node-title="${n.id}" data-placeholder="${isRoot?'اكتب المفهوم الأساسي هنا':'اكتب المفهوم'}">${esc(n.title)}</div>
+      <div class="node-meta">${n.page ? 'صفحة ' + esc(n.page) : isRoot ? 'عقدة البداية' : 'مفهوم فرعي'}</div>
+      <div class="node-actions"><button title="فرع جديد" data-add-child="${n.id}">+</button>${!isRoot?`<button title="حذف" data-delete-node="${n.id}">×</button>`:''}</div>
+    </div>`;
+  }
+  function inspector(n){
+    return `<div class="card inspector form">
+      <div class="split"><div><b>تخصيص العقدة</b><div class="tiny muted">العنوان، اللون، الملاحظات، ورقم الصفحة.</div></div><span class="badge">${n.id==='root'?'مركزية':'فرعية'}</span></div>
+      <div class="field"><label>عنوان المفهوم</label><input class="input" id="nodeTitleInput" value="${esc(n.title)}" placeholder="اكتب عنوان المفهوم"></div>
+      <div class="field"><label>لون الفرع</label><div class="color-dots">${COLORS.map(c=>`<button class="dot ${n.color===c?'active':''}" data-node-color="${c}" style="background:${c}"></button>`).join('')}</div></div>
+      <div class="field"><label>ملاحظات شخصية أو صيغة</label><textarea class="textarea" id="nodeNoteInput" placeholder="اكتب شرحك الخاص أو قانوناً تريد تذكّره...">${esc(n.note)}</textarea></div>
+      <div class="field"><label>ربط بصفحة في المصدر</label><input class="input" id="nodePageInput" value="${esc(n.page)}" placeholder="مثال: 24"></div>
+    </div>`;
+  }
+  function mapSvg(exportMode=true){
+    const bg = state.export.bg || !exportMode ? `<rect width="${W}" height="${H}" rx="0" fill="#F8F1E4"/><defs><pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#CABDA9" opacity=".75"/></pattern><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#1E3A2F"/></marker></defs><rect width="${W}" height="${H}" fill="url(#dots)" opacity=".75"/>` : `<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#1E3A2F"/></marker></defs><rect width="${W}" height="${H}" fill="#fff"/>`;
+    const edges = state.map.edges.map(e => {
+      const a = state.map.nodes.find(n=>n.id===e.from), b = state.map.nodes.find(n=>n.id===e.to); if(!a||!b) return '';
+      const ax=a.x+(a.id==='root'?100:86), ay=a.y+45, bx=b.x+(b.id==='root'?100:86), by=b.y+40;
+      const mx = (ax+bx)/2; return `<path d="M${ax} ${ay} C${mx} ${ay}, ${mx} ${by}, ${bx} ${by}" fill="none" stroke="#8A7A62" stroke-width="2.4" stroke-linecap="round" opacity=".75"/>`;
+    }).join('');
+    const drawings = state.map.drawings.map(d => drawingSvg(d)).join('');
+    const nodes = state.map.nodes.map(n => nodeSvg(n, exportMode)).join('');
+    const header = exportMode && state.export.header ? `<text x="${W-28}" y="34" text-anchor="end" font-family="Tahoma,Arial" font-size="18" font-weight="700" fill="#1E3A2F">فهيم — خريطة ذهنية</text><text x="28" y="34" text-anchor="start" font-family="Tahoma,Arial" font-size="12" fill="#8A7A62">${esc(nowText())}</text>` : '';
+    const footer = exportMode && state.export.index ? `<text x="${W/2}" y="${H-18}" text-anchor="middle" font-family="Tahoma,Arial" font-size="12" fill="#8A7A62">${state.map.nodes.length} مفاهيم · ${state.map.edges.length} روابط · ${state.map.drawings.length} رسومات</text>` : '';
+    return `<svg class="map-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" direction="rtl">${bg}${header}${edges}${drawings}${nodes}${footer}</svg>`;
+  }
+  function nodeSvg(n, exportMode){
+    const isRoot = n.id === 'root', ww = isRoot ? 200 : 172, hh = isRoot ? 95 : 82;
+    const fill = isRoot ? n.color : '#fffdf8', stroke = isRoot ? '#D9AD54' : n.color, text = n.title || (exportMode ? (isRoot?'المفهوم الأساسي':'مفهوم جديد') : '');
+    const color = isRoot ? '#fff' : '#17231d';
+    const note = exportMode && state.export.notes && n.note ? `<text x="${n.x+ww/2}" y="${n.y+65}" text-anchor="middle" font-family="Tahoma,Arial" font-size="10" fill="${isRoot?'#DCEEE5':'#7A887F'}">${esc(shorten(n.note,34))}</text>` : '';
+    return `<g><rect x="${n.x}" y="${n.y}" width="${ww}" height="${hh}" rx="22" fill="${fill}" stroke="${stroke}" stroke-width="2.5"/><text x="${n.x+ww/2}" y="${n.y+38}" text-anchor="middle" font-family="Tahoma,Arial" font-size="15" font-weight="700" fill="${color}">${esc(shorten(text,32))}</text>${note}</g>`;
+  }
+  function drawingSvg(d){
+    const common = `stroke="${esc(d.color)}" stroke-width="${d.size}" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="${d.tool==='highlighter'?'.42':'.9'}"`;
+    if (d.type === 'path') return `<polyline points="${d.points.map(p=>p.x+','+p.y).join(' ')}" ${common}/>`;
+    if (d.type === 'ellipse') return `<ellipse cx="${d.x+d.w/2}" cy="${d.y+d.h/2}" rx="${Math.abs(d.w/2)}" ry="${Math.abs(d.h/2)}" ${common}/>`;
+    if (d.type === 'rect') return `<rect x="${d.x}" y="${d.y}" width="${d.w}" height="${d.h}" rx="12" ${common}/>`;
+    if (d.type === 'arrow') return `<line x1="${d.x1}" y1="${d.y1}" x2="${d.x2}" y2="${d.y2}" ${common} marker-end="url(#arrow)"/>`;
+    return '';
+  }
+  function shorten(s,n){ s=String(s||''); return s.length>n ? s.slice(0,n-1)+'…' : s; }
+
+  function reviewScreen(){
+    const cards = state.cards; const c = cards[state.review.index] || null;
+    if (!c) return `<div class="section-title" style="margin-top:0"><div><h3>البطاقات الذكية</h3><p>تُنشأ البطاقات من موادك أنت.</p></div></div>${emptyBox('◇','لا توجد بطاقات بعد','أضف مادة أو اضغط توليد بطاقات من قارئ الملخص.','إضافة مادة','import')}`;
+    const mastered = cards.filter(x=>x.level==='mastered'||x.level==='easy').length;
+    return `
+      <div class="section-title" style="margin-top:0"><div><h3>جلسة مراجعة</h3><p>التكرار المتباعد يبدأ من تقييمك لصعوبة البطاقة.</p></div><span class="badge">${state.review.index+1} / ${cards.length}</span></div>
+      <div class="review-stats"><div class="stat"><b>${cards.length}</b><span>كل البطاقات</span></div><div class="stat"><b>${mastered}</b><span>متقنة</span></div><div class="stat"><b>${cards.length-mastered}</b><span>للمراجعة</span></div></div>
+      <div class="flash-card mt" id="flashCard"><div><span class="badge gold">${state.review.flipped?'الإجابة':'السؤال'}</span><h3>${esc(state.review.flipped ? c.a : c.q)}</h3>${state.review.flipped?`<p>${esc(c.context || '')}</p>`:'<p class="muted">اضغط على البطاقة أو زر إظهار الإجابة.</p>'}</div><button class="btn soft small" id="flipCard">${state.review.flipped?'إخفاء الإجابة':'إظهار الإجابة'}</button></div>
+      <div class="difficulty mt"><button class="btn danger" data-grade="hard">صعب</button><button class="btn gold" data-grade="good">جيد</button><button class="btn primary" data-grade="mastered">متقن</button></div>
+      <div class="mt"><button class="btn soft block" id="nextCard">البطاقة التالية</button></div>`;
+  }
+
+  function exportScreen(){
+    return `
+      <div class="section-title" style="margin-top:0"><div><h3>تصدير ومشاركة الخريطة</h3><p>معاينة حية قبل حفظ PDF أو صورة عريضة أو SVG.</p></div></div>
+      <div class="card stack">
+        <div class="split"><b>المعاينة</b><span class="badge gold">${state.export.ratio==='wide'?'16:9 عريض':'A4 طباعة'}</span></div>
+        <div class="export-preview">${mapSvg(true)}</div>
+        <div class="stat-grid"><div class="stat"><b>${state.map.nodes.length}</b><span>مفاهيم</span></div><div class="stat"><b>${state.map.drawings.length}</b><span>رسومات</span></div><div class="stat"><b>300</b><span>DPI للطباعة</span></div></div>
+      </div>
+      <div class="section-title"><div><h3>صيغة الحفظ</h3><p>اختر الصيغة المناسبة للمشاركة أو الطباعة.</p></div></div>
+      <div class="format-grid">
+        ${formatCard('pdf','PDF','للطباعة')}${formatCard('png','PNG 4K','صورة عريضة')}${formatCard('svg','SVG','متجهي')}
+      </div>
+      <div class="section-title"><div><h3>إعدادات الإخراج</h3><p>تحكم بما يظهر في النسخة النهائية.</p></div></div>
+      <div class="stack">
+        ${switchRow('export.notes','تضمين ملاحظات العقد','إظهار الشروحات الشخصية داخل التصدير.',state.export.notes)}
+        ${switchRow('export.bg','خلفية ورقية وشبكة نقاط','أوقفها للحصول على خلفية بيضاء موفرة للحبر.',state.export.bg)}
+        ${switchRow('export.header','ترويسة فهيم وتاريخ الحفظ','إضافة اسم التطبيق ووقت التصدير.',state.export.header)}
+        ${switchRow('export.index','إحصائيات أسفل الخريطة','إظهار عدد المفاهيم والروابط والرسومات.',state.export.index)}
+      </div>
+      <div class="mt stack"><button class="btn primary block" id="exportBtn">تصدير وتنزيل الملف</button><button class="btn soft block" data-go="map">العودة للكانفاس</button></div>`;
+  }
+  function formatCard(id,title,desc){ return `<button class="format ${state.export.format===id?'active':''}" data-export-format="${id}"><b>${title}</b><span>${desc}</span></button>`; }
+
+  function afterRender(screen){
+    if (screen === 'map') setupMapEvents();
+    if (screen === 'import') setupImportEvents();
+  }
+
+  document.addEventListener('click', (e) => {
+    const goBtn = e.target.closest('[data-go]'); if(goBtn){ go(goBtn.dataset.go); return; }
+    const open = e.target.closest('[data-open-material]'); if(open){ state.activeMaterialId=open.dataset.openMaterial; save(); go('reader'); return; }
+    const style = e.target.closest('[data-style]'); if(style){ state.draft.style = style.dataset.style; save(); render(); return; }
+    const format = e.target.closest('[data-export-format]'); if(format){ state.export.format = format.dataset.exportFormat; save(); render(); return; }
+    const toggle = e.target.closest('[data-toggle]'); if(toggle){ updateToggle(toggle.dataset.toggle, toggle.checked); return; }
+    const mode = e.target.closest('[data-mode]'); if(mode){ state.pen.mode = mode.dataset.mode; state.linkFrom=null; save(); render(); return; }
+    const penTool = e.target.closest('[data-pen-tool]'); if(penTool){ state.pen.tool = penTool.dataset.penTool; save(); render(); return; }
+    const penSize = e.target.closest('[data-pen-size]'); if(penSize){ state.pen.size = Number(penSize.dataset.penSize); save(); render(); return; }
+    const penColor = e.target.closest('[data-pen-color]'); if(penColor){ state.pen.color = penColor.dataset.penColor; save(); render(); return; }
+    const addChild = e.target.closest('[data-add-child]'); if(addChild){ e.stopPropagation(); addNode(addChild.dataset.addChild); return; }
+    const del = e.target.closest('[data-delete-node]'); if(del){ e.stopPropagation(); deleteNode(del.dataset.deleteNode); return; }
+    const nodeColor = e.target.closest('[data-node-color]'); if(nodeColor){ updateSelected({color:nodeColor.dataset.nodeColor}); return; }
+    if (e.target.closest('#processBtn')) { processMaterial(); return; }
+    if (e.target.closest('#clearDraftBtn')) { state.draft = defaultState().draft; save(); render(); return; }
+    if (e.target.closest('#sendToMap')) { seedMapFromMaterial(); go('map'); return; }
+    if (e.target.closest('#makeCards')) { generateCardsFromActive(true); return; }
+    if (e.target.closest('#speakSummary')) { speakActiveSummary(); return; }
+    if (e.target.closest('#addNodeBtn')) { addNode(state.selectedNodeId || 'root'); return; }
+    if (e.target.closest('#centerMapBtn')) { $('#mapBoard')?.scrollTo({left:160, top:100, behavior:'smooth'}); return; }
+    if (e.target.closest('#zoomInBtn')) { state.map.zoom=clamp(state.map.zoom+.1,.7,1.45); save(); render(); return; }
+    if (e.target.closest('#zoomOutBtn')) { state.map.zoom=clamp(state.map.zoom-.1,.7,1.45); save(); render(); return; }
+    if (e.target.closest('#linkModeBtn')) { state.linkFrom = state.linkFrom ? null : 'waiting'; toast(state.linkFrom?'اختر العقدة الأولى ثم الثانية لإنشاء رابط.':'تم إلغاء وضع الربط.'); save(); render(); return; }
+    if (e.target.closest('#smartToggle')) { state.pen.smart=!state.pen.smart; save(); render(); return; }
+    if (e.target.closest('#undoDrawBtn')) { state.map.drawings.pop(); save(); render(); return; }
+    if (e.target.closest('#clearDrawBtn')) { state.map.drawings=[]; save(); render(); return; }
+    if (e.target.closest('#flipCard') || e.target.closest('#flashCard')) { state.review.flipped=!state.review.flipped; save(); render(); return; }
+    const grade = e.target.closest('[data-grade]'); if(grade){ gradeCard(grade.dataset.grade); return; }
+    if (e.target.closest('#nextCard')) { nextCard(); return; }
+    if (e.target.closest('#exportBtn')) { exportMap(); return; }
+  });
+  document.addEventListener('input', (e) => {
+    if (e.target.id === 'draftTitle') state.draft.title = e.target.value;
+    if (e.target.id === 'draftText') state.draft.text = e.target.value;
+    if (e.target.id === 'nodeTitleInput') updateSelected({title:e.target.value}, false);
+    if (e.target.id === 'nodeNoteInput') updateSelected({note:e.target.value}, false);
+    if (e.target.id === 'nodePageInput') updateSelected({page:e.target.value}, false);
+    if (e.target.matches('[data-node-title]')) {
+      const n = state.map.nodes.find(x=>x.id===e.target.dataset.nodeTitle); if(n){ n.title = e.target.textContent.trim(); }
+    }
+    save();
+  });
+  document.addEventListener('change', (e) => {
+    if (e.target.matches('[data-toggle]')) updateToggle(e.target.dataset.toggle, e.target.checked);
+  });
+  window.addEventListener('hashchange', render);
+  $('#tabbar').addEventListener('click', e => { const b = e.target.closest('[data-go]'); if(b) go(b.dataset.go); });
+
+  function updateToggle(path, checked){
+    if (path.startsWith('export.')) state.export[path.split('.')[1]] = checked;
+    else state.draft[path] = checked;
+    save(); render();
+  }
+  function setupImportEvents(){
+    const file = $('#fileInput');
+    if(!file) return;
+    file.onchange = async () => {
+      const f = file.files[0]; if(!f) return;
+      state.draft.fileName = f.name;
+      if (!state.draft.title) state.draft.title = f.name.replace(/\.[^.]+$/,'');
+      if (/text|markdown|json|csv/.test(f.type) || /\.(txt|md|csv)$/i.test(f.name)) {
+        state.draft.text = await f.text();
+        toast('تم قراءة النص من الملف.');
+      } else {
+        toast('تم حفظ اسم الملف. قراءة PDF/الصوت تحتاج تكامل معالجة لاحق.');
+      }
+      save(); render();
+    };
+  }
+  function processMaterial(){
+    const title = ($('#draftTitle')?.value || state.draft.title || '').trim();
+    const text = ($('#draftText')?.value || state.draft.text || '').trim();
+    state.draft.title = title; state.draft.text = text;
+    if (!title && !text && !state.draft.fileName) { toast('أضف عنوانًا أو نصًا أو ملفًا أولًا.'); return; }
+    const material = summarize({title:title || state.draft.fileName?.replace(/\.[^.]+$/,'') || 'مادة جديدة', text, style:state.draft.style, fileName:state.draft.fileName});
+    state.materials.unshift(material);
+    state.activeMaterialId = material.id;
+    if (state.draft.cards) generateCards(material, false);
+    state.draft = {...defaultState().draft, style:state.draft.style};
+    save(); toast('تم حفظ المادة وبناء مساحة الملخص.'); go('reader');
+  }
+  function summarize({title,text,style,fileName}){
+    const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
+    const clean = text.replace(/\s+/g,' ').trim();
+    const sentences = clean ? clean.split(/(?<=[.!؟?])\s+|\n+/).map(s=>s.trim()).filter(s=>s.length>22) : [];
+    const keyPoints = sentences.slice(0,6).map(s=>shorten(s,170));
+    const formulas = extractFormulas(text).slice(0,5);
+    let summary;
+    if (!clean) summary = 'تم حفظ المصدر داخل مكتبتك. أضف نص المادة أو اربط خدمة قراءة ملفات PDF والصوت لاحقًا ليتم بناء ملخص تفصيلي قابل للمراجعة.';
+    else if (style === 'qa') summary = 'تم تحويل المادة إلى أسئلة وأجوبة مراجعة. ركّز على الأسئلة التي تكشف العلاقات بين التعاريف والأمثلة، ثم استخدم البطاقات لتثبيت الإجابات.';
+    else if (style === 'concept') summary = keyPoints.length ? 'الفكرة العامة للمادة تدور حول: ' + keyPoints.slice(0,3).join(' ') : 'تم إعداد ملخص مفاهيمي من النص المتاح.';
+    else if (style === 'map') summary = keyPoints.length ? 'يمكن بناء الخريطة الذهنية من المحاور التالية: ' + keyPoints.slice(0,4).join(' · ') : 'ابدأ بتحديد المفهوم المركزي ثم أضف الفروع يدويًا.';
+    else summary = keyPoints.length ? 'خلاصة مركزة للاختبار: ' + keyPoints.slice(0,4).join(' ') : 'تم حفظ النص، لكنّه قصير جدًا لاستخراج ملخص غني.';
+    return {id:uid('mat'), title, source:fileName || 'نص مباشر', style, createdAt:nowText(), words, summary, keyPoints, formulas};
+  }
+  function extractFormulas(text){
+    return (text.match(/[A-Za-zأ-ي0-9ΔΣπ=+\-*/^(){}\[\]<>≤≥]+\s*=\s*[^\n،؛.]{2,80}/g) || [])
+      .concat((text.match(/(?:تعريف|قانون|مصطلح)[:：]\s*[^\n.]{6,120}/g) || []));
+  }
+  function generateCards(material, replace){
+    const points = material.keyPoints.length ? material.keyPoints : [material.summary];
+    const newCards = points.map((p,i)=>({id:uid('card'), materialId:material.id, q:'ما الفكرة الأساسية في النقطة رقم ' + (i+1) + '؟', a:p, context:material.title, level:'new'}));
+    if (replace) state.cards = state.cards.filter(c=>c.materialId!==material.id).concat(newCards);
+    else state.cards = newCards.concat(state.cards);
+  }
+  function generateCardsFromActive(showToast){ const m=activeMaterial(); if(!m) return; generateCards(m,true); state.review.index=0; state.review.flipped=false; save(); if(showToast) toast('تم تحديث بطاقات المراجعة من الملخص.'); }
+  function seedMapFromMaterial(){
+    const m = activeMaterial(); if(!m) return;
+    const root = state.map.nodes.find(n=>n.id==='root');
+    if (root && !root.title) root.title = m.title;
+    state.selectedNodeId = 'root'; save();
+  }
+  function speakActiveSummary(){
+    const m = activeMaterial(); if(!m) return;
+    if (!('speechSynthesis' in window)) { toast('الاستماع الصوتي غير مدعوم في هذا المتصفح.'); return; }
+    speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(m.summary); u.lang='ar'; u.rate=.92; speechSynthesis.speak(u); toast('بدأ تشغيل الملخص صوتيًا.');
+  }
+
+  function setupMapEvents(){
+    const board = $('#mapBoard'); if(board) setTimeout(()=>{ if(board.scrollLeft===0 && board.scrollTop===0) board.scrollTo(150,90); },0);
+    setupNodeDrag(); setupPenCanvas();
+    ['nodeTitleInput','nodeNoteInput','nodePageInput'].forEach(id => { const el=$('#'+id); if(el) el.addEventListener('change',()=>{save();render();}); });
+  }
+  function addNode(parentId){
+    const p = state.map.nodes.find(n=>n.id===parentId) || state.map.nodes[0];
+    const count = state.map.nodes.length;
+    const angle = (count * 53 % 360) * Math.PI/180;
+    const n = {id:uid('node'), x:clamp(p.x + Math.cos(angle)*210, 35, W-210), y:clamp(p.y + Math.sin(angle)*145, 50, H-130), title:'', color:COLORS[count % COLORS.length], note:'', page:''};
+    state.map.nodes.push(n); state.map.edges.push({from:p.id,to:n.id}); state.selectedNodeId=n.id; save(); render(); toast('أُضيف مفهوم جديد. اكتب عنوانه داخل العقدة.');
+  }
+  function deleteNode(id){
+    state.map.nodes = state.map.nodes.filter(n=>n.id!==id); state.map.edges = state.map.edges.filter(e=>e.from!==id && e.to!==id); state.selectedNodeId='root'; save(); render();
+  }
+  function updateSelected(patch, rerender=true){
+    const n = state.map.nodes.find(x=>x.id===state.selectedNodeId); if(!n) return;
+    Object.assign(n, patch); save(); if(rerender) render();
+  }
+  function setupNodeDrag(){
+    let drag=null;
+    $$('.mind-node').forEach(el => {
+      el.addEventListener('click', e => {
+        const id = el.dataset.node;
+        if (state.linkFrom) { handleLinkClick(id); e.stopPropagation(); return; }
+        state.selectedNodeId = id; save(); if(!e.target.matches('[contenteditable]')) render();
+      });
+      el.addEventListener('pointerdown', e => {
+        if (state.pen.mode !== 'nodes' || state.linkFrom || e.target.closest('button') || e.target.matches('[contenteditable]')) return;
+        const n = state.map.nodes.find(x=>x.id===el.dataset.node); if(!n) return;
+        const rect = $('#mapContent').getBoundingClientRect();
+        drag = {id:n.id, el, dx:(e.clientX-rect.left)/state.map.zoom - n.x, dy:(e.clientY-rect.top)/state.map.zoom - n.y};
+        state.selectedNodeId = n.id; el.setPointerCapture(e.pointerId); e.preventDefault();
+      });
+      el.addEventListener('pointermove', e => {
+        if(!drag) return; const n = state.map.nodes.find(x=>x.id===drag.id); const rect = $('#mapContent').getBoundingClientRect();
+        n.x = clamp((e.clientX-rect.left)/state.map.zoom - drag.dx, 10, W-210); n.y = clamp((e.clientY-rect.top)/state.map.zoom - drag.dy, 10, H-115);
+        drag.el.style.left = n.x+'px'; drag.el.style.top = n.y+'px';
+      });
+      el.addEventListener('pointerup', () => { if(drag){ drag=null; save(); render(); } });
+    });
+  }
+  function handleLinkClick(id){
+    if (state.linkFrom === 'waiting') { state.linkFrom=id; toast('اختر العقدة الثانية لإكمال الرابط.'); save(); render(); return; }
+    if (state.linkFrom && state.linkFrom !== id) {
+      if (!state.map.edges.some(e=>e.from===state.linkFrom&&e.to===id)) state.map.edges.push({from:state.linkFrom,to:id});
+      state.linkFrom=null; save(); render(); toast('تم إنشاء الرابط بين المفهومين.');
+    }
+  }
+
+  function setupPenCanvas(){
+    const canvas = $('#penCanvas'); if(!canvas) return;
+    const dpr = window.devicePixelRatio || 1; canvas.width=W*dpr; canvas.height=H*dpr; const ctx=canvas.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+    let pts=[], drawing=false;
+    const pos = e => { const r=canvas.getBoundingClientRect(); return {x:clamp((e.clientX-r.left)/state.map.zoom,0,W), y:clamp((e.clientY-r.top)/state.map.zoom,0,H)}; };
+    const clear = () => ctx.clearRect(0,0,W,H);
+    const drawTemp = () => { clear(); if(pts.length<2) return; ctx.globalAlpha=state.pen.tool==='highlighter'?.42:.95; ctx.strokeStyle=state.pen.color; ctx.lineWidth=state.pen.size; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.beginPath(); ctx.moveTo(pts[0].x,pts[0].y); pts.slice(1).forEach(p=>ctx.lineTo(p.x,p.y)); ctx.stroke(); ctx.globalAlpha=1; };
+    canvas.onpointerdown = e => {
+      if(state.pen.mode!=='pen') return; const p=pos(e);
+      if(state.pen.tool==='eraser'){ eraseAt(p); return; }
+      drawing=true; pts=[p]; canvas.setPointerCapture(e.pointerId); e.preventDefault();
+    };
+    canvas.onpointermove = e => { if(!drawing) return; pts.push(pos(e)); drawTemp(); };
+    canvas.onpointerup = () => { if(!drawing) return; drawing=false; if(pts.length>2){ const d = state.pen.smart ? recognizeShape(pts) : null; state.map.drawings.push(d || {type:'path', points:pts, color:state.pen.color, size:state.pen.size, tool:state.pen.tool}); save(); } clear(); render(); };
+  }
+  function recognizeShape(points){
+    const xs=points.map(p=>p.x), ys=points.map(p=>p.y), minX=Math.min(...xs), maxX=Math.max(...xs), minY=Math.min(...ys), maxY=Math.max(...ys), w=maxX-minX, h=maxY-minY;
+    if (w<28 || h<18) return null;
+    const first=points[0], last=points[points.length-1], closed=Math.hypot(first.x-last.x, first.y-last.y) < Math.max(w,h)*.32;
+    const base={x:minX,y:minY,w,h,color:state.pen.color,size:state.pen.size,tool:state.pen.tool};
+    if (closed && Math.abs(w-h)/Math.max(w,h) < .24) return {...base,type:'ellipse'};
+    if (closed) return {...base,type:'rect'};
+    const direct=Math.hypot(first.x-last.x, first.y-last.y), path=points.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p.x-points[i].x,p.y-points[i].y),0);
+    if (direct>55 && path/direct < 1.7) return {type:'arrow',x1:first.x,y1:first.y,x2:last.x,y2:last.y,color:state.pen.color,size:state.pen.size,tool:state.pen.tool};
+    return null;
+  }
+  function eraseAt(p){
+    const before = state.map.drawings.length;
+    state.map.drawings = state.map.drawings.filter(d => {
+      const box = drawingBox(d); return !(p.x>=box.x-18 && p.x<=box.x+box.w+18 && p.y>=box.y-18 && p.y<=box.y+box.h+18);
+    });
+    save(); render(); toast(before===state.map.drawings.length?'لم يتم العثور على رسم قريب.':'تم مسح الرسم المحدد.');
+  }
+  function drawingBox(d){
+    if(d.type==='path'){ const xs=d.points.map(p=>p.x), ys=d.points.map(p=>p.y); return {x:Math.min(...xs),y:Math.min(...ys),w:Math.max(...xs)-Math.min(...xs),h:Math.max(...ys)-Math.min(...ys)}; }
+    if(d.type==='arrow') return {x:Math.min(d.x1,d.x2),y:Math.min(d.y1,d.y2),w:Math.abs(d.x2-d.x1),h:Math.abs(d.y2-d.y1)};
+    return {x:d.x,y:d.y,w:d.w,h:d.h};
+  }
+
+  function gradeCard(level){
+    const c = state.cards[state.review.index]; if(!c) return; c.level = level === 'hard' ? 'hard' : level === 'good' ? 'easy' : 'mastered'; nextCard();
+  }
+  function nextCard(){ state.review.index = state.cards.length ? (state.review.index + 1) % state.cards.length : 0; state.review.flipped=false; save(); render(); }
+
+  function exportMap(){
+    const svg = mapSvg(true).replace('class="map-svg"','');
+    if (state.export.format === 'svg') return download('faheem-mind-map.svg', svg, 'image/svg+xml');
+    if (state.export.format === 'pdf') return printPdf(svg);
+    exportPng(svg);
+  }
+  function download(name, content, type){ const blob=new Blob([content],{type}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); toast('تم تجهيز الملف للتنزيل.'); }
+  function printPdf(svg){
+    const win = window.open('', '_blank'); if(!win){ toast('اسمح بالنوافذ المنبثقة لتصدير PDF.'); return; }
+    win.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>فهيم PDF</title><style>body{margin:0;display:grid;place-items:center;min-height:100vh;background:#fff}svg{width:96vw;height:auto}@page{size:landscape;margin:10mm}</style></head><body>${svg}<script>onload=()=>setTimeout(()=>print(),250)<\/script></body></html>`); win.document.close();
+  }
+  function exportPng(svg){
+    const img = new Image(); const blob = new Blob([svg],{type:'image/svg+xml;charset=utf-8'}); const url=URL.createObjectURL(blob);
+    img.onload = () => { const canvas=document.createElement('canvas'); canvas.width=3840; canvas.height=2160; const ctx=canvas.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,canvas.width,canvas.height); const scale=Math.min(canvas.width/W,canvas.height/H); const dw=W*scale, dh=H*scale; ctx.drawImage(img,(canvas.width-dw)/2,(canvas.height-dh)/2,dw,dh); canvas.toBlob(b=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='faheem-mind-map-4k.png'; a.click(); URL.revokeObjectURL(a.href); URL.revokeObjectURL(url); toast('تم تنزيل الصورة العريضة.'); }); };
+    img.src=url;
+  }
+
+  render();
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+})();
+</script>
+</body>
+</html>

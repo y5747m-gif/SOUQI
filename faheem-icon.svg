@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="شعار فهيم">
+  <defs>
+    <linearGradient id="bg" x1="90" y1="40" x2="430" y2="472" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1E3A2F"/>
+      <stop offset="1" stop-color="#2F6B54"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="170" y1="80" x2="345" y2="370" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F6DA91"/>
+      <stop offset="1" stop-color="#B98B35"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="118" fill="url(#bg)"/>
+  <circle cx="390" cy="118" r="74" fill="#DCEEE5" opacity=".14"/>
+  <circle cx="102" cy="407" r="92" fill="#D9AD54" opacity=".12"/>
+  <path d="M102 158c62-28 113-20 154 24 41-44 92-52 154-24v231c-62-24-113-16-154 24-41-40-92-48-154-24V158Z" fill="#FFFDF8"/>
+  <path d="M256 181v231" stroke="#1E3A2F" stroke-width="18" stroke-linecap="round"/>
+  <path d="M256 86c48 49 76 93 76 136 0 42-34 76-76 76s-76-34-76-76c0-43 28-87 76-136Z" fill="url(#gold)"/>
+  <path d="M256 151c19 25 30 47 30 69a30 30 0 1 1-60 0c0-22 11-44 30-69Z" fill="#1E3A2F" opacity=".9"/>
+  <path d="M136 205c38-10 71-5 96 14M136 253c38-10 71-5 96 14M280 219c25-19 58-24 96-14M280 267c25-19 58-24 96-14" stroke="#1E3A2F" stroke-width="14" stroke-linecap="round" opacity=".38"/>
+</svg>
