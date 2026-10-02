@@ -1,5 +1,5 @@
-const fs = require('fs');
-const assert = require('assert');
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
 
 const manifest = JSON.parse(fs.readFileSync('manifest.webmanifest', 'utf8'));
 const sw = fs.readFileSync('sw.js', 'utf8');
@@ -13,7 +13,8 @@ assert.ok(manifest.icons.some(i => i.sizes === '512x512'), 'أيقونة 512 م�
 assert.ok(html.includes('rel="manifest"'), 'ملف HTML يجب أن يربط manifest');
 assert.ok(html.includes('id="installAppBtn"'), 'زر تحميل التطبيق غير موجود');
 assert.ok(html.includes('function plansPage()'), 'صفحة الباقات لم تدخل البناء النهائي');
-assert.ok(source.includes("APP.userPlan = 'plus'"), 'تفعيل بلس غير منفذ');
+assert.ok(source.includes("provider === 'paymob' ? 'card' : 'fawry_reference'"), 'ربط الدفع الحقيقي غير موجود');
+assert.ok(source.includes('/api/subscriptions/checkout'), 'واجهة الاشتراك غير مربوطة بالـ API');
 assert.ok(source.includes('plusWorkspace'), 'مركز بلس الذكي غير موجود');
 assert.ok(sw.includes("self.addEventListener('fetch'"), 'دعم العمل دون اتصال غير موجود');
 assert.ok(sw.includes("self.addEventListener('install'"), 'تثبيت service worker غير موجود');

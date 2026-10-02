@@ -147,18 +147,62 @@ function plansPage() {
 
 function openPlusCheckout() {
   if (APP.userPlan === 'plus') return toast('سوقي بلس مفعّل بالفعل على حسابك', 'ok', '✦');
-  openModal('✦ الترقية إلى سوقي بلس', `
-    <div class="card pad" style="background:#fffaf0;border-color:#e4cf95"><div class="between"><div><div class="b">سوقي بلس</div><div class="tiny muted">كل المجاني + الإمكانيات المتقدمة</div></div><div class="price big">49 <span class="cur">ج.م/شهر</span></div></div></div>
-    <div class="field mt14"><label>دورة الاشتراك</label><select class="select" id="plusCycle"><option value="monthly">شهري — 49 ج.م</option><option value="annual">سنوي — 419 ج.م (وفر 169 ج.م)</option></select></div>
-    <div class="insight info mt14"><span class="ic">🔒</span><div class="sm"><b>هذه تجربة توضيحية آمنة.</b><br>لن تُطلب بيانات بطاقة ولن يتم تحصيل مبلغ في هذا النموذج. الربط الفعلي يحتاج بوابة دفع وحساب مستخدم على الخادم.</div></div>`,
-    `<button class="btn primary" id="confirmPlus">تجربة تفعيل بلس</button><button class="btn" onclick="closeModal()">إلغاء</button>`);
-  $('#confirmPlus').onclick = () => {
-    APP.userPlan = 'plus'; save('userPlan', 'plus'); closeModal(); render();
-    toast('تم تفعيل تجربة سوقي بلس — استمتع بالإمكانيات الأقوى', 'ok', '✦');
-  };
+  openModal('✦ اشترك في سوقي بلس', `
+    <div class="card pad" style="background:#fffaf0;border-color:#e4cf95"><div class="between"><div><div class="b">سوقي بلس</div><div class="tiny muted">كل المجاني + الإمكانيات المتقدمة</div></div><div class="price big" id="checkoutPrice">49 <span class="cur">ج.م/شهر</span></div></div></div>
+    <div class="field mt14"><label>دورة الاشتراك</label><select class="select" id="plusCycle"><option value="plus_monthly">شهري — 49 ج.م</option><option value="plus_annual">سنوي — 419 ج.م (وفر 169 ج.م)</option></select></div>
+    <div class="field mt14"><label>طريقة الدفع الآمنة</label><div class="grid g-2">
+      <label class="card pad" style="cursor:pointer"><span class="row"><input type="radio" name="plusPay" value="paymob" checked><span><b>💳 فيزا / ماستركارد</b><small class="muted" style="display:block">Paymob · حفظ آمن بالتوكين · 3D Secure</small></span></span></label>
+      <label class="card pad" style="cursor:pointer"><span class="row"><input type="radio" name="plusPay" value="fawry"><span><b>🟡 الدفع عبر فوري</b><small class="muted" style="display:block">رقم مرجعي صالح للدفع</small></span></span></label>
+    </div></div>
+    <div class="insight info mt14"><span class="ic">🛡️</span><div class="sm"><b>بيانات بطاقتك لا تمر عبر سيرفر سوقي.</b><br>عند اختيار الكارت ستنتقل لصفحة Paymob المؤمّنة لإدخال البيانات وإتمام 3DS، ونخزّن التوكين فقط. فوري يعرض رقمًا مرجعيًا ويتفعّل الاشتراك بعد وصول إشعار الدفع الموقّع.</div></div>
+    <div id="checkoutError" class="insight bad mt10" style="display:none"><span class="ic">⚠️</span><div class="sm"></div></div>`,
+    `<button class="btn primary" id="confirmPlus">متابعة للدفع الآمن</button><button class="btn" onclick="closeModal()">إلغاء</button>`);
+  $('#plusCycle').onchange = () => { $('#checkoutPrice').innerHTML = $('#plusCycle').value === 'plus_annual' ? '419 <span class="cur">ج.م/سنة</span>' : '49 <span class="cur">ج.م/شهر</span>'; };
+  $('#confirmPlus').onclick = startPlusCheckout;
+}
+
+async function startPlusCheckout() {
+  const button = $('#confirmPlus'), errorBox = $('#checkoutError');
+  const provider = (document.querySelector('input[name="plusPay"]:checked') || {}).value || 'paymob';
+  const authToken = load('authToken', '');
+  if (!authToken) {
+    errorBox.style.display = 'flex'; errorBox.querySelector('div').innerHTML = '<b>سجّل الدخول أولًا.</b><br>الدفع الحقيقي يحتاج جلسة مستخدم آمنة. بعد ربط نظام الدخول، يُرسل JWT إلى API الاشتراكات.';
+    return;
+  }
+  button.disabled = true; button.textContent = 'جارٍ إنشاء عملية الدفع…';
+  try {
+    const response = await fetch('/api/subscriptions/checkout', {
+      method: 'POST', headers: {'content-type': 'application/json', 'authorization': 'Bearer ' + authToken},
+      body: JSON.stringify({planCode: $('#plusCycle').value, provider, paymentMethod: provider === 'paymob' ? 'card' : 'fawry_reference'})
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error === 'unauthorized' ? 'انتهت جلسة الدخول. سجّل الدخول مرة أخرى.' : (result.error || 'تعذر إنشاء عملية الدفع.'));
+    if (result.checkoutUrl) { window.location.assign(result.checkoutUrl); return; }
+    if (result.referenceCode) {
+      openModal('🟡 رقم الدفع عبر فوري', `<div class="center"><div class="tiny muted">استخدم الرقم التالي في أي ماكينة أو تطبيق فوري</div><div class="price big mt14 num" style="font-size:38px;letter-spacing:3px">${esc(String(result.referenceCode))}</div><p class="sm muted mt14">لن يتفعّل الاشتراك إلا بعد إتمام الدفع ووصول إشعار FawryPay الموقّع إلى الخادم.</p></div>`, `<button class="btn primary" onclick="closeModal()">حفظت الرقم</button>`);
+    }
+  } catch (error) {
+    errorBox.style.display = 'flex'; errorBox.querySelector('div').textContent = error.message;
+    button.disabled = false; button.textContent = 'إعادة المحاولة';
+  }
+}
+
+async function syncPaidSubscription() {
+  const authToken = load('authToken', '');
+  if (!authToken) return;
+  try {
+    const response = await fetch('/api/subscriptions/me', {headers: {'authorization': 'Bearer ' + authToken}});
+    if (!response.ok) return;
+    const subscription = await response.json();
+    if (subscription && subscription.status === 'active' && APP.userPlan !== 'plus') {
+      APP.userPlan = 'plus'; save('userPlan', 'plus'); render();
+      toast('تم تأكيد الدفع وتفعيل سوقي بلس', 'ok', '✦');
+    }
+  } catch (_) { /* يبقى التطبيق قابلًا للعمل دون اتصال */ }
 }
 
 function bindPlans() {
+  syncPaidSubscription();
   ['#plansInstall', '#bottomInstall'].forEach(sel => { const b = $(sel); if (b) b.onclick = installSOUQI; });
   const hero = $('#heroPlanBtn'); if (hero) hero.onclick = openPlusCheckout;
   const report = $('#plusReport'); if (report) report.onclick = () => {
