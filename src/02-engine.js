@@ -12,9 +12,58 @@ function norm(s) {
     .replace(/[^\w\u0600-\u06FF\s]/g, ' ')
     .replace(/\s+/g, ' ').trim().toLowerCase();
 }
-const STOP = new Set(['في', 'من', 'على', 'عن', 'عايز', 'عاوز', 'اريد', 'أريد', 'محتاج', 'ممكن', 'هات', 'لي', 'عندي', 'بحوالي', 'جنيه', 'جنية', 'جنيها', 'ال', 'و', 'او', 'أو', 'جدا', 'كمان', 'قريب', 'قريبة', 'مني', 'لحد', 'حتى', 'اقل', 'أقل', 'اكثر', 'أكثر']);
+const STOP = new Set(['في', 'من', 'على', 'عن', 'عايز', 'عايزه', 'عاوز', 'عاوزه', 'اريد', 'أريد', 'محتاج', 'محتاجه', 'ممكن', 'هات', 'لي', 'عندي', 'بحوالي', 'جنيه', 'جنية', 'جنيها', 'ال', 'و', 'او', 'أو', 'جدا', 'كمان', 'قريب', 'قريبة', 'مني', 'لحد', 'حتى', 'اقل', 'أقل', 'اكثر', 'أكثر', 'نفسي', 'بدور', 'ادور', 'بدوّر', 'ابحث', 'دور', 'لو', 'سمحت', 'ياريت', 'اشتري', 'شراء', 'فين', 'الاقي', 'ألاقي', 'حاجه', 'حاجة', 'تقريبا', 'حوالي', 'بس', 'يعني', 'كده', 'دلوقتي']);
 const AR_DIGITS = { '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4', '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9' };
 const fixDigits = (s) => String(s).replace(/[٠-٩]/g, d => AR_DIGITS[d]);
+
+/* ---------- الأرقام المنطوقة بالعامية → أرقام ----------
+   «الفين» → 2000 ، «خمس آلاف» → 5000 ، «15k» → 15000 ، «ميه» → 100 */
+const UNIT_WORDS = {
+  'اتنين': 2, 'اثنين': 2, 'تلات': 3, 'تلاته': 3, 'ثلاث': 3, 'ثلاثه': 3, 'اربع': 4, 'اربعه': 4,
+  'خمس': 5, 'خمسه': 5, 'ست': 6, 'سته': 6, 'سبع': 7, 'سبعه': 7, 'تمان': 8, 'تمانيه': 8, 'ثمان': 8, 'ثمانيه': 8,
+  'تسع': 9, 'تسعه': 9, 'عشر': 10, 'عشره': 10, 'خمستاشر': 15, 'عشرين': 20, 'تلاتين': 30, 'ثلاثين': 30,
+  'اربعين': 40, 'خمسين': 50, 'ستين': 60, 'سبعين': 70, 'تمانين': 80, 'ثمانين': 80, 'تسعين': 90, 'ميه': 100, 'ميت': 100
+};
+function spokenNums(s) {
+  let t = String(s);
+  // 15k أو ١٥ك → 15000
+  t = t.replace(/(\d+(?:[.,]\d+)?)\s*[kK]\b/g, (m, v) => String(Math.round(parseFloat(v.replace(',', '.')) * 1000)));
+  // الفين → 2000
+  t = t.replace(/[أا]لفين/g, '2000');
+  // «خمس آلاف» / «تلاتة الاف» → 5000 / 3000  (ملحوظة: \b لا يعمل مع العربية)
+  t = t.replace(/([\u0600-\u06FF]+)\s+(?:[آأا]لاف|[أا]لف)(?![\u0600-\u06FF])/g, (m, w) => {
+    const key = norm(w);
+    return UNIT_WORDS[key] ? String(UNIT_WORDS[key] * 1000) : m;
+  });
+  return t;
+}
+
+/* ---------- مطابقة ضبابية: تتسامح مع خطأ إملائي أو خطأين ----------
+   «سمسونج» تطابق «سامسونج» ، «ايفوون» تطابق «ايفون» */
+function editDist(a, b, maxD) {
+  if (Math.abs(a.length - b.length) > maxD) return maxD + 1;
+  let prev = [];
+  for (let j = 0; j <= b.length; j++) prev[j] = j;
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    let rowMin = i;
+    for (let j = 1; j <= b.length; j++) {
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      if (cur[j] < rowMin) rowMin = cur[j];
+    }
+    if (rowMin > maxD) return maxD + 1; // قطع مبكر
+    prev = cur;
+  }
+  return prev[b.length];
+}
+function fuzzyEq(a, b) {
+  if (a === b) return true;
+  const len = Math.min(a.length, b.length);
+  const maxD = len >= 7 ? 2 : len >= 4 ? 1 : 0;
+  if (!maxD) return false;
+  return editDist(a, b, maxD) <= maxD;
+}
+function fuzzyIn(tok, hayToks) { return hayToks.some(h => fuzzyEq(tok, h)); }
 
 /* ---------- البحث عن منتج: مطابقة بالمعرّف أو الماركة أو الكلمات ---------- */
 function findProduct(q) {
@@ -24,11 +73,15 @@ function findProduct(q) {
   let best = null, bestScore = 0;
   PRODUCTS.forEach(p => {
     const hay = norm(p.name + ' ' + p.brand + ' ' + p.kw + ' ' + p.cat + ' ' + catOf(p.cat).ar);
+    const hayToks = hay.split(' ').filter(t => t.length > 2);
     let sc = 0;
     if (n.includes(norm(p.id))) sc += 6;
     if (p.kw.split(' ').some(k => k.length > 2 && n.includes(norm(k)))) sc += 5;
     if (n.includes(norm(p.brand))) sc += 3;
-    toks.forEach(t => { if (hay.includes(t)) sc += 2.2; });
+    toks.forEach(t => {
+      if (hay.includes(t)) sc += 2.2;
+      else if (t.length > 3 && fuzzyIn(t, hayToks)) sc += 1.8; // تسامح مع الخطأ الإملائي
+    });
     const pn = norm(p.name).split(' ');
     if (pn.filter(t => t.length > 2 && n.includes(t)).length >= 2) sc += 3.5;
     if (sc > bestScore) { bestScore = sc; best = p; }
@@ -37,6 +90,7 @@ function findProduct(q) {
 }
 function findCategory(q) {
   const n = norm(q);
+  if (!n) return null; // استعلام فارغ لا يطابق أي فئة
   let hit = null, len = 0;
   CATS.forEach(c => {
     const words = [c.id, c.ar, ...(c.ar.split(' '))].map(norm).filter(w => w.length > 2);
@@ -49,35 +103,70 @@ function findCategory(q) {
   });
   // كلمات شعبية إضافية
   const extra = [
-    ['موبايل', 'mobile'], ['تليفون', 'mobile'], ['هاتف', 'mobile'], ['تابلت', 'mobile'], ['ساعه', 'mobile'],
-    ['لاب توب', 'computer'], ['لابتوب', 'computer'], ['كمبيوتر', 'computer'], ['رام', 'computer'], ['هارد', 'computer'], ['كارت', 'computer'],
-    ['سماعه', 'audio'], ['هيدفون', 'audio'], ['اسبيكر', 'audio'], ['مكبر', 'audio'],
-    ['شاشه', 'electronics'], ['راوتر', 'electronics'], ['ماوس', 'electronics'], ['باور', 'electronics'],
-    ['بلايستيشن', 'gaming'], ['اكس بوكس', 'gaming'], ['لعبه', 'gaming'],
-    ['حله', 'home'], ['قلايه', 'home'], ['مكنسه', 'home'], ['مروحه', 'home'], ['اثاث', 'home'],
-    ['قميص', 'clothing'], ['بنطلون', 'clothing'], ['تيشيرت', 'clothing'], ['فستان', 'clothing'], ['ملابس', 'clothing'],
-    ['جزمة', 'shoes'], ['حزاء', 'shoes'], ['احذيه', 'shoes'], ['سنيكرز', 'shoes'],
-    ['عطر', 'beauty'], ['كريم', 'beauty'], ['ميكب', 'beauty'], ['شامبو', 'beauty'],
-    ['بقاله', 'supermarket'], ['سوبر', 'supermarket'], ['زيت', 'supermarket'], ['ارز', 'supermarket'],
-    ['كتاب', 'books'], ['مكتبه', 'books'], ['روايه', 'books'],
-    ['شنيور', 'tools'], ['مفك', 'tools'], ['سلم', 'tools'], ['ادوات', 'tools'],
-    ['مطعم', 'restaurant'], ['وجبه', 'restaurant'], ['بيتزا', 'restaurant'], ['كريب', 'restaurant'],
-    ['صيدليه', 'pharmacy'], ['دوا', 'pharmacy'], ['فيتامين', 'pharmacy'],
-    ['سياره', 'auto'], ['كاوتش', 'auto'], ['زيت موتور', 'auto'],
-    ['دمبل', 'sports'], ['جيم', 'sports'], ['رياضه', 'sports']
+    ['موبايل', 'mobile'], ['تليفون', 'mobile'], ['هاتف', 'mobile'], ['تابلت', 'mobile'], ['ساعه', 'mobile'], ['فون', 'mobile'], ['جوال', 'mobile'],
+    ['لاب توب', 'computer'], ['لابتوب', 'computer'], ['كمبيوتر', 'computer'], ['رام', 'computer'], ['هارد', 'computer'], ['كارت', 'computer'], ['كيبورد', 'computer'], ['بروسيسور', 'computer'],
+    ['سماعه', 'audio'], ['هيدفون', 'audio'], ['اسبيكر', 'audio'], ['مكبر', 'audio'], ['ايربودز', 'audio'], ['صوتيات', 'audio'],
+    ['شاشه', 'electronics'], ['راوتر', 'electronics'], ['ماوس', 'electronics'], ['باور', 'electronics'], ['شاحن', 'electronics'], ['كابل', 'electronics'],
+    ['بلايستيشن', 'gaming'], ['اكس بوكس', 'gaming'], ['لعبه', 'gaming'], ['جيمنج', 'gaming'], ['دراع', 'gaming'],
+    ['حله', 'home'], ['قلايه', 'home'], ['مكنسه', 'home'], ['مروحه', 'home'], ['اثاث', 'home'], ['غساله', 'home'], ['بوتجاز', 'home'], ['سخان', 'home'], ['مكواه', 'home'], ['خلاط', 'home'], ['تلاجه', 'home'],
+    ['قميص', 'clothing'], ['بنطلون', 'clothing'], ['تيشيرت', 'clothing'], ['فستان', 'clothing'], ['ملابس', 'clothing'], ['جاكيت', 'clothing'], ['هودي', 'clothing'], ['بدله', 'clothing'], ['هدوم', 'clothing'],
+    ['جزمة', 'shoes'], ['حزاء', 'shoes'], ['احذيه', 'shoes'], ['سنيكرز', 'shoes'], ['كوتشي', 'shoes'], ['شبشب', 'shoes'], ['صندل', 'shoes'],
+    ['عطر', 'beauty'], ['كريم', 'beauty'], ['ميكب', 'beauty'], ['شامبو', 'beauty'], ['برفان', 'beauty'], ['مكياج', 'beauty'], ['لوشن', 'beauty'],
+    ['بقاله', 'supermarket'], ['سوبر', 'supermarket'], ['زيت', 'supermarket'], ['ارز', 'supermarket'], ['سكر', 'supermarket'], ['مكرونه', 'supermarket'], ['شاي', 'supermarket'], ['لبن', 'supermarket'],
+    ['كتاب', 'books'], ['مكتبه', 'books'], ['روايه', 'books'], ['قصص', 'books'], ['كراسه', 'books'],
+    ['شنيور', 'tools'], ['مفك', 'tools'], ['سلم', 'tools'], ['ادوات', 'tools'], ['شاكوش', 'tools'], ['كماشه', 'tools'], ['مثقاب', 'tools'],
+    ['مطعم', 'restaurant'], ['وجبه', 'restaurant'], ['بيتزا', 'restaurant'], ['كريب', 'restaurant'], ['برجر', 'restaurant'], ['شاورما', 'restaurant'], ['فراخ', 'restaurant'], ['اكل', 'restaurant'],
+    ['صيدليه', 'pharmacy'], ['دوا', 'pharmacy'], ['فيتامين', 'pharmacy'], ['مسكن', 'pharmacy'], ['علاج', 'pharmacy'],
+    ['سياره', 'auto'], ['كاوتش', 'auto'], ['زيت موتور', 'auto'], ['بطاريه عربيه', 'auto'], ['فلتر', 'auto'],
+    ['دمبل', 'sports'], ['جيم', 'sports'], ['رياضه', 'sports'], ['مشايه', 'sports'], ['عجله', 'sports'], ['دراجه', 'sports']
   ];
   extra.forEach(([w, cid]) => { if (n.includes(norm(w)) && w.length > len) { len = w.length; hit = catOf(cid); } });
+  // مطابقة ضبابية للكلمات الشعبية عند عدم وجود نتيجة مباشرة («سماعا» → سماعة)
+  if (!hit) {
+    const toks = n.split(' ').filter(t => t.length > 3);
+    outer: for (const t of toks) {
+      for (const [w, cid] of extra) {
+        if (fuzzyEq(t, norm(w))) { hit = catOf(cid); break outer; }
+      }
+    }
+  }
   return hit;
 }
 const BRANDS = Array.from(new Set(PRODUCTS.map(p => p.brand)).values()).filter(b => b !== 'محلي' && b !== 'مطعم' && b !== 'مكتبة' && b !== 'صيدلية');
-function findBrand(q) { const n = norm(q); return BRANDS.find(b => n.includes(norm(b))) || null; }
+/* أسماء الماركات بالعربي كما يكتبها الناس فعلًا */
+const BRAND_AR = {
+  'ابل': 'Apple', 'ايفون': 'Apple', 'سامسونج': 'Samsung', 'سامسونغ': 'Samsung', 'سمسنج': 'Samsung',
+  'شاومي': 'Xiaomi', 'شياومي': 'Xiaomi', 'ريدمي': 'Xiaomi', 'اوبو': 'Oppo', 'ريلمي': 'Realme',
+  'هواوي': 'Huawei', 'انكر': 'Anker', 'جي بي ال': 'JBL', 'سوني': 'Sony', 'ال جي': 'LG',
+  'توشيبا': 'Toshiba', 'لينوفو': 'Lenovo', 'اتش بي': 'HP', 'ديل': 'Dell', 'اسوس': 'Asus',
+  'نايك': 'Nike', 'اديداس': 'Adidas', 'بوما': 'Puma', 'فيليبس': 'Philips', 'تورنيدو': 'Tornado', 'براون': 'Braun'
+};
+function findBrand(q) {
+  const n = norm(q);
+  const direct = BRANDS.find(b => n.includes(norm(b)));
+  if (direct) return direct;
+  // الاسم العربي للماركة
+  for (const ar in BRAND_AR) {
+    if (n.includes(norm(ar)) && BRANDS.some(b => norm(b) === norm(BRAND_AR[ar]))) return BRAND_AR[ar];
+  }
+  // مطابقة ضبابية: «سمسونج» → Samsung (بالاسم العربي أو اللاتيني)
+  const toks = n.split(' ').filter(t => t.length > 3);
+  for (const t of toks) {
+    const hitB = BRANDS.find(b => fuzzyEq(t, norm(b)));
+    if (hitB) return hitB;
+    for (const ar in BRAND_AR) {
+      if (fuzzyEq(t, norm(ar)) && BRANDS.some(b => norm(b) === norm(BRAND_AR[ar]))) return BRAND_AR[ar];
+    }
+  }
+  return null;
+}
 
 /* ---------- تحويل الجملة الطبيعية إلى فلاتر ----------
    مثال: "عايز سماعة JBL تحت 3000 جنيه قريبة مني"
    → {cat:audio, brand:JBL, max:3000, near:true, ...}
 ------------------------------------------------------------- */
 function parseQuery(q) {
-  const raw = fixDigits(q || '');
+  const raw = spokenNums(fixDigits(q || ''));
   const n = norm(raw);
   const p = {
     q: raw, tokens: n.split(' ').filter(t => t && !STOP.has(t)),
@@ -85,11 +174,30 @@ function parseQuery(q) {
     cheap: false, best: false, discountMin: 0, radiusK: null, used: false, unknown: true, stores: [], notes: []
   };
 
+  /* نطاق سعري صريح: «بين 2000 و5000» ، «من 3000 لـ 6000» */
+  let rg = raw.match(/(?:ما بين|بين)\s*(\d[\d,\.]*)\s*(?:و|الى|إلى|ل)ـ?\s*(\d[\d,\.]*)/);
+  if (!rg) rg = raw.match(/من\s*(\d[\d,\.]*)\s*(?:الى|إلى|لحد|حتى|لغاية|ل)ـ?\s*(\d[\d,\.]*)/);
+  if (rg) {
+    let a = parseFloat(rg[1].replace(/[,\s]/g, '')), b = parseFloat(rg[2].replace(/[,\s]/g, ''));
+    if (a > b) { const t = a; a = b; b = t; }
+    if (b > 150) { p.min = a; p.max = b; p.notes.push('range'); }
+  }
+
+  /* سعر تقريبي: «حوالي 4000» ، «تقريبًا 3000» → نطاق ±20% */
+  if (p.max == null) {
+    const am = raw.match(/(?:حوالي|تقريبا|تقريبًا|بحوالي|يدور حول|قد)\s*(\d[\d,\.]*)\s*(?:الف|ألف)?/);
+    if (am) {
+      let v = parseFloat(am[1].replace(/[,\s]/g, ''));
+      if (/الف|ألف/.test(am[0])) v *= 1000;
+      if (v > 150) { p.min = Math.round(v * 0.8); p.max = Math.round(v * 1.2); p.notes.push('approx'); }
+    }
+  }
+
   /* الميزانية القصوى */
-  let m = raw.match(/(?:أقل|اقل|تحت|بأقل|بحد أقصى|حد اقصى|ميزانية|معايا|عندي|لحد|حتى|في حدود|بحدود)\s*(\d[\d,\.]*)\s*(?:الف|ألف|ف)?/);
-  if (!m) m = raw.match(/(\d[\d,\.]*)\s*(?:جنيه|جنية|ج\.م|EGP|egp)/);
+  let m = p.max != null ? null : raw.match(/(?:أقل|اقل|تحت|بأقل|بحد أقصى|حد اقصى|ميزانية|معايا|عندي|لحد|حتى|في حدود|بحدود)\s*(\d[\d,\.]*)\s*(?:الف|ألف|ف)?/);
+  if (!m && p.max == null) m = raw.match(/(\d[\d,\.]*)\s*(?:جنيه|جنية|ج\.م|EGP|egp)/);
   if (m) { let v = parseFloat(m[1].replace(/[,\s]/g, '')); if (/الف|ألف/.test(m[0])) v *= 1000; if (v > 150) p.max = v; }
-  let m2 = raw.match(/(?:أكثر من|اكثر من|فوق|أعلى من|اعلى من|يبدأ من|من غير أقل من)\s*(\d[\d,\.]*)\s*(?:الف|ألف|ف)?/);
+  let m2 = p.min != null ? null : raw.match(/(?:أكثر من|اكثر من|فوق|أعلى من|اعلى من|يبدأ من|من غير أقل من)\s*(\d[\d,\.]*)\s*(?:الف|ألف|ف)?/);
   if (m2) { let v = parseFloat(m2[1].replace(/[,\s]/g, '')); if (/الف|ألف/.test(m2[0]) || v < 500) v *= 1000; p.min = v; }
   if (!p.max) { const mm = n.match(/(\d{2,4})\s*(?:الف|ألف)/); if (mm) p.max = parseFloat(mm[1]) * 1000; }
 
@@ -99,10 +207,10 @@ function parseQuery(q) {
   else { const mm2 = n.match(/(\d{3,5})\s*(?:متر|م)\s*(?:مني|من موقعي|حولي)?/); if (mm2) p.radiusK = parseFloat(mm2[1]) / 1000; }
 
   /* نية الطلب */
-  if (/(قريب|جنبي|حوالي|حولي|نفس المنطقة|قريبة مني|قريب مني|بجانبي|بالقرب|جمبي)/.test(n)) p.near = true;
-  if (/(مفتوح|فاتح|شغال|الان|دلوقتي|يعمل حاليا|مفتوحه)/.test(n)) p.openNow = true;
-  if (/(ارخص|رخيص|اقل سعر|افضل سعر|باقل|توفير)/.test(n)) p.cheap = true;
-  if (/(افضل|احسن|كويس|جوده|ممتاز)/.test(n)) p.best = true;
+  if (/(قريب|جنبي|حوالي(?!\s*\d)|حولي|حواليا|حوالين|نفس المنطقة|قريبة مني|قريب مني|بجانبي|بالقرب|جمبي|جنب البيت|في منطقتي)/.test(n)) p.near = true;
+  if (/(مفتوح|فاتح|شغال|الان|دلوقتي|يعمل حاليا|مفتوحه|لسه فاتح)/.test(n)) p.openNow = true;
+  if (/(ارخص|رخيص|اقل سعر|افضل سعر|باقل|توفير|اوفر|علي قد الايد|اقتصادي)/.test(n)) p.cheap = true;
+  if (/(افضل|احسن|كويس|جوده|ممتاز|اعلي تقييم|قيمه مقابل)/.test(n)) p.best = true;
   const dm = n.match(/(\d+)\s*(?:%|في الميه|بالميه)\s*(?:خصم)?/);
   if (dm) p.discountMin = parseFloat(dm[1]);
 
