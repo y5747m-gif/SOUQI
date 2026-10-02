@@ -37,6 +37,7 @@ function tourModal() {
 }
 function init() {
   injectBrandIcon();          // أيقونة العلامة في تبويب المتصفح
+  initPWA();                  // تسجيل التطبيق للعمل دون اتصال وإتاحة تثبيته
   loadRealEdits();            // تصحيحات المستخدم على بيانات OSM
   loadUserPrices();           // الأسعار التي سجّلها المستخدم لمحلات حقيقية
   realCacheLoad();            // آخر نتائج بحث حقيقي (محفوظة على الجهاز)

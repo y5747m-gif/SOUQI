@@ -4,6 +4,10 @@ Thumbs.db
 .vscode/
 .idea/
 *.log
+.env
+.env.*
+!.env.example
+node_modules/
 
 # مؤقتات البناء والاختبار
 /tmp/
