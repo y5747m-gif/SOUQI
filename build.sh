@@ -39,4 +39,7 @@ node /tmp/souqi-reg.js | tail -4
 echo "▸ اختبار المحلات الحقيقية (OpenStreetMap) والأيقونة..."
 cat tests/dom-stub.js /tmp/souqi-app.js tests/real-tests.js > /tmp/souqi-real.js
 node /tmp/souqi-real.js | tail -8
+echo "▸ اختبار محرك الفهم اللغوي المحلي..."
+cat tests/dom-stub.js /tmp/souqi-app.js tests/nlu-tests.js > /tmp/souqi-nlu.js
+node /tmp/souqi-nlu.js | tail -4
 echo "✅ تم البناء والاختبار بنجاح — افتح souqi.html في المتصفح."
