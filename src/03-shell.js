@@ -9,7 +9,8 @@ const APP = {
   fav: load('fav', { stores: [], products: [] }),
   history: load('history', [{ q: 'ايفون 15 تحت 40000', at: 'أمس' }, { q: 'سماعة JBL قريبة مني', at: 'منذ 3 أيام' }]),
   myStore: load('myStore', 'nile'),
-  radius: load('radius', 10)
+  radius: load('radius', 10),
+  userPlan: load('userPlan', 'free')
 };
 const LOC = { get lat() { return APP.loc.lat; }, get lon() { return APP.loc.lon; } };
 
@@ -39,7 +40,7 @@ function parseHash() {
 function render() {
   APP.route = parseHash();
   const n = APP.route.name;
-  const page = ({ home: homePage, search: resultsPage, product: productPage, store: storePage, offers: offersPage, nearby: nearbyPage, favorites: favoritesPage, account: accountPage, dashboard: dashboardPage, admin: adminPage, addstore: addStorePage, assistant: assistantPage, stores: storesPage, directory: directoryPage }[n]) || homePage;
+  const page = ({ home: homePage, search: resultsPage, product: productPage, store: storePage, offers: offersPage, nearby: nearbyPage, favorites: favoritesPage, account: accountPage, dashboard: dashboardPage, admin: adminPage, addstore: addStorePage, assistant: assistantPage, stores: storesPage, directory: directoryPage, plans: plansPage }[n]) || homePage;
   $('#app').innerHTML = page() + footer();
   $('#bottomnav-in').innerHTML = bottomNav(n);
   afterRender(n);
@@ -81,6 +82,8 @@ function header(active) {
       ? `<button class="btn sm2" id="userBtn"><span class="avatar" style="width:26px;height:26px;font-size:12px">${esc(u.name[0])}</span> ${esc(u.name)}</button>`
       : `<button class="btn primary sm2" id="loginBtn">دخول</button>`}
       <button class="btn dark sm2" id="addStoreBtn">➕ متجرك</button>
+      <button class="btn sm2 install-btn" id="installAppBtn" title="نزّل سوقي كتطبيق على هاتفك">⬇️ <span class="install-label">تحميل التطبيق</span></button>
+      <a class="btn sm2 plus-btn" href="#/plans" title="سوقي بلس — إمكانيات أقوى"><span class="spark">✦</span> <span class="plus-label">${APP.userPlan === 'plus' ? 'بلس مفعّل' : 'سوقي بلس'}</span></a>
       <button class="env nowrap" id="envBadge" title="اضغط لمعرفة ما هو حقيقي وما هو توضيحي في النموذج">ℹ️ بيانات تجريبية</button>
     </div>
   </header>`;
@@ -101,7 +104,7 @@ function footer() {
         </div>
         <div><h4>للمستخدمين</h4><a href="#/search">البحث عن منتج</a><a href="#/nearby">المتاجر القريبة</a><a href="#/offers">🔥 العروض والتخفيضات</a><a href="#/assistant">ماذا أشتري؟</a><a href="#/favorites">المفضلة والتنبيهات</a></div>
         <div><h4>لأصحاب المحلات</h4><a href="#/addstore">سجّل محلّك (8 خطوات)</a><a href="#/directory">دليل المحلات المسجّلة</a><a href="#/dashboard">لوحة تحكم المتجر</a><a href="#/dashboard">تحديث الأسعار</a></div>
-        <div><h4>المنصة</h4><a href="#/admin">لوحة الإدارة</a><a href="#/home">كيف تعمل؟</a><a href="#/home">موثوقية البيانات</a><a href="#/home">الإبلاغ عن سعر</a></div>
+        <div><h4>المنصة</h4><a href="#/plans">✦ سوقي بلس</a><a href="#/plans" data-install-link>⬇️ تحميل التطبيق</a><a href="#/admin">لوحة الإدارة</a><a href="#/home">موثوقية البيانات</a><a href="#/home">الإبلاغ عن سعر</a></div>
       </div>
       <div class="fbottom">
         <span>© 2026 سوقي — SOUQI. جميع الحقوق محفوظة.</span>
@@ -466,6 +469,7 @@ function afterRender(page) {
   if (page === 'stores') bindStoresPage();
   if (page === 'addstore') bindRegister();
   if (page === 'directory') bindDirectory();
+  if (page === 'plans') bindPlans();
 }
 function bindGlobal() {
   const ms = $('#miniSearch');
@@ -479,6 +483,8 @@ function bindGlobal() {
   const adb = $('#addStoreBtn'); if (adb) adb.onclick = (e) => { e.preventDefault(); regBlankReset(false); go('addstore', { step: 1 }); };
   const ti = $('#trustInfo'); if (ti) ti.onclick = trustModal;
   const eb = $('#envBadge'); if (eb) eb.onclick = demoModal;
+  const ib = $('#installAppBtn'); if (ib) ib.onclick = installSOUQI;
+  document.querySelectorAll('[data-install-link]').forEach(a => a.onclick = (e) => { e.preventDefault(); installSOUQI(); });
 
   document.querySelectorAll('[data-act]').forEach(b => {
     b.onclick = (e) => {

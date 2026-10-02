@@ -42,4 +42,6 @@ node /tmp/souqi-real.js | tail -8
 echo "▸ اختبار محرك الفهم اللغوي المحلي..."
 cat tests/dom-stub.js /tmp/souqi-app.js tests/nlu-tests.js > /tmp/souqi-nlu.js
 node /tmp/souqi-nlu.js | tail -4
+echo "▸ اختبار تطبيق الهاتف وباقة سوقي بلس..."
+node tests/pwa-tests.js
 echo "✅ تم البناء والاختبار بنجاح — افتح souqi.html في المتصفح."
