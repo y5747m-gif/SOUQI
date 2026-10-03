@@ -1,9 +1,10 @@
-/* فهيم — Service Worker: app shell offline cache */
-const CACHE = 'faheem-study-app-v1';
-const OLD_PREFIXES = ['souqi-', 'faheem-study-app-'];
+/* NOVA STUDY — offline-first application shell */
+const CACHE = 'nova-study-v1';
+const OLD_PREFIXES = ['souqi-', 'faheem-study-app-', 'nova-study-'];
 const APP_SHELL = [
   './', './index.html', './souqi.html', './manifest.webmanifest',
-  './faheem-icon.svg', './faheem-icon-192.png', './faheem-icon-256.png', './faheem-icon-512.png'
+  './nova-icon.svg', './nova-icon-192.png', './nova-icon-512.png',
+  './assets/nova-books.webp'
 ];
 
 self.addEventListener('install', event => {
@@ -14,8 +15,8 @@ self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
       .then(keys => Promise.all(keys
-        .filter(k => OLD_PREFIXES.some(prefix => k.startsWith(prefix)) && k !== CACHE)
-        .map(k => caches.delete(k))))
+        .filter(key => OLD_PREFIXES.some(prefix => key.startsWith(prefix)) && key !== CACHE)
+        .map(key => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
@@ -24,28 +25,20 @@ self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
-
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request)
-        .then(response => {
-          const copy = response.clone();
-          caches.open(CACHE).then(cache => cache.put(event.request, copy));
-          return response;
-        })
-        .catch(() => caches.match('./index.html'))
+      fetch(event.request).then(response => {
+        const copy = response.clone();
+        caches.open(CACHE).then(cache => cache.put('./index.html', copy));
+        return response;
+      }).catch(() => caches.match('./index.html'))
     );
     return;
   }
-
   event.respondWith(
-    caches.match(event.request)
-      .then(cached => cached || fetch(event.request).then(response => {
-        if (response.ok) {
-          const copy = response.clone();
-          caches.open(CACHE).then(cache => cache.put(event.request, copy));
-        }
-        return response;
-      }))
+    caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
+      if (response.ok) caches.open(CACHE).then(cache => cache.put(event.request, response.clone()));
+      return response;
+    }))
   );
 });

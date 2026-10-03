@@ -3,595 +3,321 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#1E3A2F">
-  <meta name="description" content="فهيم — منصة دراسية احترافية لتلخيص المواد وبناء الخرائط الذهنية والمراجعة الذكية.">
+  <meta name="theme-color" content="#070b24">
+  <meta name="description" content="NOVA STUDY — منصتك الذكية للمذاكرة والتخطيط والإنجاز.">
   <link rel="manifest" href="manifest.webmanifest">
-  <title>فهيم — منصة الدراسة الذكية</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <title>NOVA STUDY — مستقبلك يبدأ من هنا</title>
   <style>
     :root{
-      --ink:#17231d;--ink-2:#31463a;--muted:#7a887f;--paper:#f6f1e7;--paper-2:#fbf8f0;--surface:#fffdf8;--line:#e8dfcf;
-      --emerald:#1E3A2F;--emerald-2:#285444;--mint:#dceee5;--mint-2:#eff8f2;--gold:#b98b35;--sand:#efe3ca;--red:#b9564d;
-      --blue:#3e6d8f;--shadow:0 20px 55px rgba(28,41,33,.14);--soft-shadow:0 10px 30px rgba(30,58,47,.09);
-      --radius-xl:30px;--radius-lg:22px;--radius-md:16px;--safe-bottom:env(safe-area-inset-bottom,0px)
+      color-scheme:dark;
+      --bg:#03071b;--bg-2:#060b24;--surface:#090f2f;--surface-2:#0b1338;--surface-3:#101a48;
+      --panel:rgba(9,16,48,.87);--panel-solid:#090f2f;--line:rgba(76,111,255,.2);--line-strong:rgba(45,217,255,.5);
+      --text:#f8faff;--text-2:#ccd4f6;--muted:#7d89b9;--cyan:#00d4ff;--cyan-2:#21efff;--violet:#7158ff;
+      --purple:#9c55ff;--pink:#fa5fca;--green:#39e2ae;--orange:#ff956c;--danger:#ff5f86;
+      --glow:0 0 0 1px rgba(0,212,255,.07),0 16px 50px rgba(0,0,0,.28);
+      --neon:0 0 22px rgba(0,212,255,.34),0 0 45px rgba(113,88,255,.2);
+      --radius:18px;--radius-sm:13px;--sidebar:238px;--topbar:70px;
     }
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100dvh;background:
-      radial-gradient(circle at 15% 15%,rgba(185,139,53,.18),transparent 28%),
-      radial-gradient(circle at 86% 22%,rgba(72,130,104,.22),transparent 26%),linear-gradient(135deg,#14241d,#f3eadb 52%,#fffaf0);
-      color:var(--ink);font-family:"IBM Plex Sans Arabic","Segoe UI",Tahoma,Arial,sans-serif;overflow-x:hidden}
-    body:before{content:"";position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.5),transparent 70%);pointer-events:none}
-    button,input,textarea,select{font:inherit}button{border:0;cursor:pointer;color:inherit}a{color:inherit}.hide{display:none!important}
-    .workspace{position:relative;z-index:1;min-height:100dvh;display:grid;grid-template-columns:minmax(280px,1fr) minmax(360px,444px) minmax(20px,.35fr);gap:38px;align-items:center;padding:28px clamp(18px,4vw,58px)}
-    .brand-panel{color:#fff;max-width:650px}.brand-chip{display:inline-flex;align-items:center;gap:10px;padding:9px 14px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.09);border-radius:999px;backdrop-filter:blur(12px);font-size:13px;color:#f9f2e5}.brand-lockup{display:flex;align-items:center;gap:16px;margin:30px 0 20px}.mark{width:64px;height:64px;border-radius:22px;display:grid;place-items:center;background:linear-gradient(145deg,#f9f2dc,#d9ad54);box-shadow:0 22px 55px rgba(0,0,0,.25)}.mark svg{width:44px;height:44px}.brand-panel h1{font-size:clamp(42px,6vw,82px);line-height:1.02;margin:0;letter-spacing:-2px}.brand-panel p{font-size:18px;line-height:2;color:#e7dac5;max-width:560px;margin:18px 0 0}.principles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:30px}.principle{padding:15px;border:1px solid rgba(255,255,255,.14);border-radius:20px;background:rgba(255,255,255,.08);backdrop-filter:blur(10px)}.principle b{display:block;margin-bottom:6px}.principle span{font-size:12px;line-height:1.7;color:#e4d8c4}
-    .phone{width:min(100%,444px);height:min(900px,calc(100dvh - 34px));min-height:720px;border-radius:42px;background:linear-gradient(180deg,var(--paper-2),#f4ecdd);border:1px solid rgba(255,255,255,.75);box-shadow:0 32px 90px rgba(9,19,14,.34),inset 0 0 0 10px rgba(255,255,255,.35);overflow:hidden;display:flex;flex-direction:column;position:relative}.phone:before{content:"";position:absolute;top:10px;left:50%;transform:translateX(-50%);width:112px;height:6px;border-radius:999px;background:rgba(30,58,47,.18);z-index:5}.appbar{padding:26px 22px 12px;background:linear-gradient(180deg,rgba(255,253,248,.96),rgba(255,253,248,.72));backdrop-filter:blur(16px);border-bottom:1px solid rgba(232,223,207,.75);position:relative;z-index:4}.appbar-row{display:flex;align-items:center;justify-content:space-between;gap:14px}.mini-brand{display:flex;align-items:center;gap:10px}.mini-logo{width:42px;height:42px;border-radius:16px;background:var(--emerald);display:grid;place-items:center;color:#fff;box-shadow:var(--soft-shadow)}.mini-logo svg{width:28px;height:28px}.mini-brand b{display:block;font-size:19px}.mini-brand span{display:block;color:var(--muted);font-size:11px;margin-top:2px}.date-pill{padding:8px 11px;border-radius:999px;background:var(--mint-2);color:var(--emerald);font-size:11px;font-weight:800;white-space:nowrap}.screen{flex:1;overflow:auto;padding:18px 18px 110px;scrollbar-width:none}.screen::-webkit-scrollbar{display:none}.tabbar{position:absolute;z-index:8;left:14px;right:14px;bottom:calc(13px + var(--safe-bottom));height:76px;background:rgba(255,253,248,.9);border:1px solid rgba(232,223,207,.9);border-radius:28px;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:8px;box-shadow:0 18px 45px rgba(30,58,47,.16);backdrop-filter:blur(20px)}.tabbar button{background:transparent;border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#89968e;font-size:10px;font-weight:800}.tabbar button .ico{font-size:20px;line-height:1}.tabbar button.active{background:var(--emerald);color:#fff;box-shadow:0 12px 26px rgba(30,58,47,.22)}
-    .hero{position:relative;overflow:hidden;background:linear-gradient(145deg,#1e3a2f,#2f5d4a);border-radius:var(--radius-xl);padding:24px;color:#fff;box-shadow:var(--shadow)}.hero:after{content:"";position:absolute;inset:auto -25% -35% auto;width:260px;height:260px;background:radial-gradient(circle,rgba(220,238,229,.25),transparent 62%);border-radius:50%}.eyebrow{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.14);font-size:11px;font-weight:800;color:#f8efd9}.hero h2{font-size:28px;line-height:1.25;margin:14px 0 8px}.hero p{color:#e7f2eb;line-height:1.9;margin:0;font-size:14px}.hero-actions{display:flex;gap:9px;margin-top:18px;flex-wrap:wrap}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 15px;border-radius:16px;background:#fff;color:var(--emerald);font-weight:900;font-size:13px;border:1px solid transparent;transition:.18s ease;white-space:nowrap}.btn:hover{transform:translateY(-1px);box-shadow:0 12px 25px rgba(30,58,47,.12)}.btn.primary{background:var(--emerald);color:#fff}.btn.gold{background:#fbf0d6;color:#7a5513;border-color:#ecd49e}.btn.ghost{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.18)}.btn.soft{background:var(--mint-2);color:var(--emerald);border-color:#d5e9dd}.btn.danger{background:#fff2f0;color:var(--red);border-color:#f1cbc6}.btn.small{padding:8px 11px;border-radius:12px;font-size:11px}.btn.block{width:100%}.btn:disabled{opacity:.45;pointer-events:none}.stack{display:grid;gap:14px}.mt{margin-top:16px}.section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:22px 2px 12px}.section-title h3{margin:0;font-size:18px}.section-title p{margin:4px 0 0;color:var(--muted);font-size:12px}.card{background:rgba(255,253,248,.92);border:1px solid rgba(232,223,207,.95);border-radius:var(--radius-lg);box-shadow:var(--soft-shadow);padding:17px}.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{padding:14px;border-radius:19px;background:rgba(255,255,255,.72);border:1px solid var(--line)}.stat b{display:block;font-size:22px;color:var(--emerald);letter-spacing:-.5px}.stat span{display:block;color:var(--muted);font-size:10px;line-height:1.5;margin-top:4px}.empty{padding:26px 16px;text-align:center;color:var(--muted);border:1px dashed #d8cbb8;border-radius:22px;background:rgba(255,255,255,.45)}.empty .big{font-size:42px;margin-bottom:8px}.empty b{display:block;color:var(--ink);font-size:16px;margin-bottom:6px}.muted{color:var(--muted)}.tiny{font-size:11px;line-height:1.7}.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:var(--mint-2);color:var(--emerald);font-size:10px;font-weight:900}.badge.gold{background:#fff5dc;color:#846019}.badge.gray{background:#f2eee7;color:#756c61}.split{display:flex;align-items:center;justify-content:space-between;gap:12px}.chips{display:flex;gap:8px;overflow:auto;padding-bottom:2px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 12px;font-size:12px;font-weight:800;color:var(--ink-2);white-space:nowrap}.chip.active{background:var(--emerald);color:#fff;border-color:var(--emerald)}
-    .material{display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:12px}.material-icon{width:48px;height:48px;border-radius:17px;background:linear-gradient(145deg,var(--mint),#fff);display:grid;place-items:center;color:var(--emerald);font-size:22px}.material h4{margin:0 0 4px;font-size:14px}.material p{margin:0;color:var(--muted);font-size:11px}.progress-line{height:8px;background:#eee4d4;border-radius:999px;overflow:hidden;margin-top:10px}.progress-line i{display:block;height:100%;background:linear-gradient(90deg,var(--emerald),#62a383);border-radius:999px;width:0%}
-    .form{display:grid;gap:12px}.field label{display:block;font-size:12px;font-weight:900;margin:0 4px 8px;color:var(--ink-2)}.input,.textarea,.select{width:100%;border:1px solid var(--line);background:rgba(255,255,255,.86);border-radius:17px;padding:13px 14px;color:var(--ink);outline:0}.textarea{min-height:138px;resize:vertical;line-height:1.8}.input:focus,.textarea:focus,.select:focus{border-color:#8db69f;box-shadow:0 0 0 4px rgba(30,58,47,.08)}.drop{border:1.5px dashed #c9bda8;background:rgba(255,255,255,.54);border-radius:22px;padding:20px;text-align:center;color:var(--muted);cursor:pointer}.drop strong{display:block;color:var(--ink);margin:6px 0}.drop input{display:none}.style-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.style-card{padding:12px;border:1px solid var(--line);border-radius:17px;background:#fff;text-align:start}.style-card.active{border-color:var(--emerald);background:var(--mint-2);box-shadow:inset 0 0 0 1px var(--emerald)}.style-card b{display:block;font-size:12px}.style-card span{display:block;color:var(--muted);font-size:10px;line-height:1.6;margin-top:3px}.switch-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.7)}.switch{position:relative;width:48px;height:28px;flex:0 0 auto}.switch input{display:none}.switch i{position:absolute;inset:0;border-radius:999px;background:#d8cebd;transition:.18s}.switch i:after{content:"";position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.17);transition:.18s}.switch input:checked+i{background:var(--emerald)}.switch input:checked+i:after{right:24px}
-    .reader-title{background:linear-gradient(145deg,#fffdf8,#f3eadb);border:1px solid var(--line);border-radius:28px;padding:19px}.reader-title h2{margin:9px 0 8px;font-size:24px;line-height:1.35}.reader-body{line-height:2.05;font-size:14px}.quote{border-right:4px solid var(--gold);background:#fff7e3;border-radius:18px;padding:13px;color:#70531c}.point-list{display:grid;gap:9px}.point{display:flex;gap:10px;padding:12px;border-radius:17px;background:#fff;border:1px solid var(--line)}.point i{font-style:normal;width:24px;height:24px;border-radius:50%;background:var(--mint);color:var(--emerald);display:grid;place-items:center;font-weight:900;font-size:11px;flex:0 0 auto}
-    .modebar{display:flex;gap:8px;position:sticky;top:-18px;z-index:3;background:linear-gradient(180deg,var(--paper-2),rgba(246,241,231,.88));padding:8px 0 12px;backdrop-filter:blur(12px);overflow:auto;scrollbar-width:none}.modebar::-webkit-scrollbar{display:none}.tool-row{display:flex;gap:7px;align-items:center;overflow:auto;scrollbar-width:none}.tool-row::-webkit-scrollbar{display:none}.tool{height:38px;padding:0 11px;border-radius:13px;background:#fff;border:1px solid var(--line);font-size:11px;font-weight:900;color:var(--ink-2);white-space:nowrap}.tool.active{background:var(--emerald);color:#fff;border-color:var(--emerald)}.tool.color{width:34px;padding:0;border-radius:12px}.tool.size{min-width:34px;padding:0}.map-shell{display:grid;gap:12px}.map-board{height:430px;border-radius:28px;border:1px solid #d9ccb9;background:#f8f1e4;box-shadow:inset 0 0 0 1px rgba(255,255,255,.68),var(--soft-shadow);overflow:auto;position:relative;direction:ltr;touch-action:none}.map-content{position:relative;width:760px;height:640px;transform-origin:center center;background-image:radial-gradient(#cabda9 1.15px,transparent 1.15px);background-size:22px 22px}.map-svg{position:absolute;inset:0;width:760px;height:640px;overflow:visible;pointer-events:none}.pen-canvas{position:absolute;inset:0;width:760px;height:640px;z-index:3;pointer-events:none}.pen-mode .pen-canvas{pointer-events:auto;cursor:crosshair}.mind-node{position:absolute;z-index:4;width:172px;min-height:82px;padding:12px;border-radius:22px;background:rgba(255,253,248,.96);border:2px solid var(--node-color,#1E3A2F);box-shadow:0 14px 30px rgba(30,58,47,.13);direction:rtl;touch-action:none}.mind-node.root{width:200px;min-height:95px;background:linear-gradient(145deg,#1E3A2F,#2d604c);color:#fff;border-color:#d9ad54}.mind-node.selected{box-shadow:0 0 0 4px rgba(185,139,53,.25),0 18px 34px rgba(30,58,47,.2)}.node-title{font-weight:900;line-height:1.5;outline:0;min-height:24px}.node-title:empty:before{content:attr(data-placeholder);color:rgba(122,136,127,.76)}.root .node-title:empty:before{color:rgba(255,255,255,.72)}.node-meta{font-size:10px;color:var(--muted);margin-top:5px}.root .node-meta{color:#dceee5}.node-actions{display:flex;gap:5px;margin-top:9px}.node-actions button{width:28px;height:26px;border-radius:10px;background:var(--mint-2);color:var(--emerald);font-weight:900}.root .node-actions button{background:rgba(255,255,255,.15);color:#fff}.inspector{position:relative;z-index:5}.inspector textarea{min-height:76px}.color-dots{display:flex;gap:8px}.dot{width:28px;height:28px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px var(--line);padding:0}.dot.active{box-shadow:0 0 0 3px rgba(30,58,47,.22)}
-    .flash-card{min-height:260px;border-radius:30px;padding:24px;background:linear-gradient(145deg,#fffdf8,#f2eadb);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}.flash-card:after{content:"";position:absolute;left:-45px;bottom:-60px;width:170px;height:170px;background:rgba(30,58,47,.08);border-radius:50%}.flash-card h3{margin:0;font-size:24px;line-height:1.55}.flash-card p{line-height:2;color:var(--ink-2)}.review-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.review-stats .stat{text-align:center}.difficulty{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.export-preview{height:250px;background:#fff;border:1px solid var(--line);border-radius:24px;overflow:auto;display:grid;place-items:center}.export-preview svg{max-width:100%;height:auto}.format-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.format{padding:12px;border-radius:17px;border:1px solid var(--line);background:#fff;text-align:center}.format.active{background:var(--mint-2);border-color:var(--emerald)}.format b{display:block;font-size:12px}.format span{font-size:10px;color:var(--muted)}.toast{position:fixed;z-index:99;left:50%;bottom:24px;transform:translate(-50%,20px);background:#173127;color:#fff;padding:12px 15px;border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:.25s;max-width:min(92vw,420px);font-size:13px}.toast.show{opacity:1;transform:translate(-50%,0)}
-    @media(max-width:980px){.workspace{display:block;padding:0}.brand-panel{display:none}.phone{width:100%;height:100dvh;min-height:100dvh;border-radius:0;box-shadow:none;border:0;inset:0}.phone:before{display:none}.appbar{padding-top:18px}.screen{padding-inline:14px}.map-board{height:calc(100dvh - 330px);min-height:390px}.tabbar{left:10px;right:10px;bottom:calc(10px + var(--safe-bottom));border-radius:24px}}
-    @media(max-width:390px){.stat-grid,.review-stats,.format-grid{grid-template-columns:1fr}.style-grid,.difficulty{grid-template-columns:1fr}.hero h2{font-size:23px}.tabbar button{font-size:9px}.tabbar button .ico{font-size:18px}}
-    @media print{body{background:#fff}.workspace{display:block;padding:0}.brand-panel,.appbar,.tabbar,.screen>*:not(.printable){display:none!important}.phone{box-shadow:none;border:0;width:100%;height:auto;overflow:visible}.screen{overflow:visible;padding:0}.printable{display:block!important}}
+    body.light{
+      color-scheme:light;--bg:#eef3ff;--bg-2:#f8faff;--surface:#fff;--surface-2:#f4f7ff;--surface-3:#eaf0ff;
+      --panel:rgba(255,255,255,.9);--panel-solid:#fff;--line:rgba(63,86,177,.15);--line-strong:rgba(61,93,223,.3);
+      --text:#111b4b;--text-2:#394470;--muted:#7882a6;--glow:0 0 0 1px rgba(74,97,186,.05),0 14px 35px rgba(39,55,120,.09)
+    }
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100dvh;background:var(--bg);color:var(--text);font-family:"Tajawal","Segoe UI",Tahoma,Arial,sans-serif;overflow-x:hidden}
+    body::before{content:"";position:fixed;inset:0;pointer-events:none;background:
+      radial-gradient(circle at 13% 11%,rgba(42,44,196,.25),transparent 25%),radial-gradient(circle at 89% 4%,rgba(0,196,255,.12),transparent 22%),
+      radial-gradient(circle at 75% 92%,rgba(117,45,255,.13),transparent 28%);z-index:-2}
+    body::after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.52;z-index:-1;background-image:radial-gradient(circle,#fff 0 1px,transparent 1.4px),radial-gradient(circle,#24d9ff 0 1px,transparent 1.5px);background-size:83px 83px,137px 137px;background-position:10px 21px,42px 7px;mask-image:linear-gradient(to bottom,#000,transparent 68%)}
+    body.light::after{opacity:.12}button,input,textarea,select{font:inherit}button{color:inherit}a{color:inherit;text-decoration:none}button{border:0;cursor:pointer}.hidden{display:none!important}
+    :focus-visible{outline:2px solid var(--cyan);outline-offset:3px}.icon{width:20px;height:20px;display:inline-block;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .icon.sm{width:16px;height:16px}.icon.lg{width:24px;height:24px}.icon.xl{width:30px;height:30px}
+    .app{display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);direction:ltr;min-height:100dvh}
+    .sidebar{direction:rtl;position:fixed;left:0;top:0;bottom:0;width:var(--sidebar);z-index:40;background:linear-gradient(180deg,rgba(7,11,38,.97),rgba(4,8,27,.98));border-right:1px solid var(--line);padding:22px 15px 18px;display:flex;flex-direction:column;box-shadow:14px 0 50px rgba(0,0,0,.14)}
+    body.light .sidebar{background:rgba(255,255,255,.97)}
+    .brand{display:flex;align-items:center;gap:10px;padding:0 8px 20px;direction:ltr;justify-content:flex-start}.brand-logo{width:40px;height:40px;filter:drop-shadow(0 0 10px rgba(0,212,255,.55))}.brand-text{font-weight:900;font-size:16px;letter-spacing:.3px;white-space:nowrap}.brand-text b{color:var(--cyan)}
+    .side-nav{display:grid;gap:5px;margin-top:4px}.nav-label{color:var(--muted);font-size:10px;font-weight:700;padding:10px 15px 3px}.nav-item{width:100%;min-height:46px;border:1px solid transparent;border-radius:12px;background:transparent;display:flex;align-items:center;gap:13px;padding:0 15px;color:var(--text-2);font-weight:600;font-size:13px;text-align:right;transition:.2s}.nav-item:hover{background:rgba(62,85,183,.11);color:var(--text)}.nav-item.active{color:#fff;border-color:rgba(73,91,255,.3);background:linear-gradient(90deg,#683cff,#315cff);box-shadow:0 8px 28px rgba(80,61,255,.27)}.nav-item.active .icon{color:#fff}.nav-item .icon{color:var(--muted)}
+    .sidebar-bottom{margin-top:auto;display:grid;gap:7px}.upgrade-card{margin:8px 2px 10px;padding:14px;border-radius:15px;background:linear-gradient(145deg,rgba(94,49,237,.2),rgba(0,207,255,.08));border:1px solid rgba(121,91,255,.25);position:relative;overflow:hidden}.upgrade-card::after{content:"✦";position:absolute;left:9px;top:4px;color:var(--cyan);font-size:36px;opacity:.17}.upgrade-card b{display:block;font-size:12px}.upgrade-card span{display:block;color:var(--muted);font-size:10px;line-height:1.65;margin:5px 0 10px}.mini-progress{height:4px;border-radius:20px;background:rgba(109,125,193,.2);overflow:hidden}.mini-progress i{display:block;height:100%;width:68%;background:linear-gradient(90deg,var(--purple),var(--cyan))}
+    .main-shell{direction:rtl;grid-column:2;min-width:0}.topbar{height:var(--topbar);position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:16px;padding:0 25px;background:rgba(4,8,28,.76);border-bottom:1px solid var(--line);backdrop-filter:blur(22px)}body.light .topbar{background:rgba(247,249,255,.84)}
+    .mobile-menu{display:none}.search-wrap{position:relative;width:min(520px,47vw);margin-left:auto}.search-wrap>.icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}.search-input{width:100%;height:42px;padding:0 43px 0 15px;border:1px solid var(--line);border-radius:12px;background:rgba(17,26,68,.62);color:var(--text);outline:none;font-size:12px}.search-input:focus{border-color:rgba(0,212,255,.55);box-shadow:0 0 0 3px rgba(0,212,255,.08)}.search-input::placeholder{color:var(--muted)}body.light .search-input{background:#fff}
+    .search-results{position:absolute;top:49px;right:0;left:0;background:var(--panel-solid);border:1px solid var(--line);border-radius:14px;padding:8px;box-shadow:0 20px 50px rgba(0,0,0,.35);display:none}.search-results.show{display:grid}.search-result{display:flex;align-items:center;gap:10px;padding:10px;border-radius:9px;color:var(--text-2);font-size:12px;background:transparent;text-align:right}.search-result:hover{background:var(--surface-3);color:var(--text)}.search-empty{padding:15px;text-align:center;color:var(--muted);font-size:12px}
+    .top-actions{display:flex;align-items:center;gap:7px}.icon-btn{width:39px;height:39px;border-radius:11px;border:1px solid transparent;background:transparent;display:grid;place-items:center;color:var(--text-2);position:relative;transition:.2s}.icon-btn:hover{background:var(--surface-3);border-color:var(--line);color:var(--cyan)}.icon-btn .dot{position:absolute;width:7px;height:7px;border-radius:50%;background:var(--pink);top:7px;right:7px;box-shadow:0 0 8px var(--pink)}
+    .profile-button{height:44px;display:flex;align-items:center;gap:9px;padding:3px 4px 3px 11px;border-radius:13px;background:transparent;border:1px solid transparent}.profile-button:hover{background:var(--surface-3);border-color:var(--line)}.avatar{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(145deg,#6a53ff,#12d7fb);box-shadow:0 0 15px rgba(0,212,255,.25);font-weight:900;color:white;position:relative;overflow:hidden}.avatar::after{content:"";position:absolute;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.22);top:-6px;left:-3px}.profile-copy{text-align:right}.profile-copy b{display:block;font-size:11px}.profile-copy span{font-size:9px;color:var(--muted)}
+    .notification-pop{position:fixed;z-index:70;top:61px;left:85px;width:min(350px,calc(100vw - 24px));padding:10px;border:1px solid var(--line);background:rgba(8,14,43,.98);border-radius:16px;box-shadow:0 24px 70px rgba(0,0,0,.4);display:none}body.light .notification-pop{background:#fff}.notification-pop.show{display:block;animation:pop .18s ease}.pop-head{display:flex;align-items:center;justify-content:space-between;padding:7px 8px 11px}.pop-head b{font-size:13px}.text-button{background:transparent;color:var(--cyan);font-size:10px}.notification{display:flex;gap:10px;padding:11px 8px;border-top:1px solid var(--line)}.notification .n-icon{width:35px;height:35px;display:grid;place-items:center;border-radius:10px;background:rgba(107,78,255,.15);color:var(--purple);flex:0 0 auto}.notification b{font-size:11px;display:block}.notification p{font-size:10px;line-height:1.65;color:var(--muted);margin:3px 0}
+    .page{padding:20px clamp(16px,2.3vw,34px) 42px;max-width:1560px;margin-inline:auto}.welcome-mobile{display:none}
+    .hero{min-height:246px;display:grid;grid-template-columns:175px minmax(260px,1fr) minmax(330px,42%);direction:ltr;align-items:center;position:relative;overflow:hidden;border:1px solid rgba(94,93,255,.3);border-radius:20px;background:linear-gradient(115deg,rgba(14,25,71,.96),rgba(12,18,63,.92) 47%,rgba(6,15,47,.75));box-shadow:var(--glow);isolation:isolate}
+    .hero::before{content:"";position:absolute;inset:0;z-index:-2;background:radial-gradient(circle at 18% 40%,rgba(0,212,255,.16),transparent 20%),radial-gradient(circle at 70% 55%,rgba(100,43,255,.2),transparent 29%)}.hero::after{content:"";position:absolute;inset:0;z-index:-1;opacity:.33;background-image:radial-gradient(#fff 0 1px,transparent 1.3px);background-size:43px 43px}
+    body.light .hero{background:linear-gradient(115deg,#f4f6ff,#eaf1ff);border-color:#cdd8ff}.hero-progress{direction:rtl;padding-left:23px;display:grid;place-items:center}.progress-ring{--p:72;position:relative;width:126px;height:126px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--cyan) calc(var(--p)*1%),#7454ff calc(var(--p)*1%),rgba(94,111,184,.15) 0);box-shadow:0 0 26px rgba(0,212,255,.2)}.progress-ring::before{content:"";position:absolute;inset:11px;border-radius:50%;background:#0a1236;border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 0 25px rgba(0,0,0,.25)}body.light .progress-ring::before{background:#fff}.progress-value{position:relative;text-align:center}.progress-value strong{display:block;font-size:27px;line-height:1;font-weight:900}.progress-value span{color:var(--muted);font-size:9px}
+    .hero-copy{direction:rtl;padding:26px 14px;text-align:right;z-index:2}.hero-copy .date{font-size:10px;color:var(--cyan);font-weight:700}.hero-copy h1{font-size:clamp(24px,2.2vw,34px);margin:5px 0 5px}.hero-copy h1 span{font-weight:500}.hero-copy>p{color:var(--text-2);font-size:12px;margin:0 0 17px}.quote{color:var(--muted);font-size:10px;line-height:1.8;border-right:2px solid var(--cyan);padding-right:9px;margin-bottom:17px}.hero-stats{display:flex;gap:19px;flex-wrap:wrap}.hero-stat{display:flex;align-items:center;gap:7px}.hero-stat>.icon{color:var(--cyan)}.hero-stat b{font-size:12px;display:block}.hero-stat span{font-size:9px;color:var(--muted)}
+    .hero-art{height:100%;position:relative;overflow:hidden}.hero-art img{position:absolute;width:116%;height:116%;object-fit:cover;object-position:center;inset:-8% -8%;mix-blend-mode:screen;filter:saturate(1.07) contrast(1.04)}body.light .hero-art img{mix-blend-mode:multiply;opacity:.7}.hero-art::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#0c1241 0,transparent 30%)}body.light .hero-art::after{background:linear-gradient(90deg,#edf2ff 0,transparent 28%)}
+    .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin:20px 2px 11px}.section-head h2{font-size:15px;margin:0}.section-head p{font-size:9px;color:var(--muted);margin:4px 0 0}.link-button{display:inline-flex;align-items:center;gap:5px;background:transparent;color:var(--cyan);font-size:10px;font-weight:700;padding:6px}.link-button:hover{color:var(--text)}.muted{color:var(--muted);font-size:10px}.badge{display:inline-flex;padding:5px 9px;border-radius:99px;background:rgba(0,212,255,.1);color:var(--cyan);font-size:9px;font-weight:800}.subject-progress{height:4px;background:rgba(117,130,188,.15);border-radius:10px;margin-top:12px;overflow:hidden}.subject-progress i{display:block;height:100%;border-radius:10px}
+    .content-grid{display:grid;grid-template-columns:minmax(0,1fr) 286px;direction:ltr;gap:16px}.main-column,.side-column{direction:rtl;min-width:0}.subjects-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:11px}.subject-card{min-height:112px;border-radius:15px;border:1px solid var(--line);background:linear-gradient(145deg,rgba(14,25,67,.92),rgba(7,14,43,.9));padding:13px;text-align:right;position:relative;overflow:hidden;box-shadow:var(--glow);transition:.25s}.subject-card::after{content:"";position:absolute;width:58px;height:58px;border-radius:50%;background:var(--subject);filter:blur(38px);opacity:.3;left:-10px;top:-6px}.subject-card:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--subject),transparent 45%);box-shadow:0 15px 30px rgba(0,0,0,.25),0 0 22px color-mix(in srgb,var(--subject),transparent 76%)}body.light .subject-card{background:#fff}.subject-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:20px;font-weight:900;color:var(--subject);background:color-mix(in srgb,var(--subject),transparent 84%);box-shadow:0 0 18px color-mix(in srgb,var(--subject),transparent 70%);margin-bottom:9px}.subject-card h3{font-size:11px;margin:0 0 4px}.subject-card p{font-size:9px;color:var(--muted);margin:0}.subject-card .subject-progress{height:3px;background:rgba(117,130,188,.15);border-radius:10px;margin-top:9px;overflow:hidden}.subject-card .subject-progress i{display:block;height:100%;background:var(--subject);width:var(--progress);box-shadow:0 0 8px var(--subject)}
+    .glass-card{border-radius:16px;border:1px solid var(--line);background:var(--panel);box-shadow:var(--glow)}.files-card{padding:13px;height:100%}.files-list{display:grid;gap:7px}.file-item{display:grid;grid-template-columns:37px minmax(0,1fr) auto;gap:9px;align-items:center;padding:9px;border-radius:11px;background:rgba(21,31,78,.55);border:1px solid rgba(90,110,194,.08);transition:.2s;cursor:pointer}body.light .file-item{background:#f6f8ff}.file-item:hover{border-color:var(--line-strong);transform:translateX(-2px)}.file-icon{width:37px;height:37px;border-radius:9px;display:grid;place-items:center;background:rgba(51,128,255,.16);color:#55a7ff}.file-item:nth-child(2) .file-icon{background:rgba(145,94,255,.16);color:#9b65ff}.file-item:nth-child(3) .file-icon{background:rgba(255,127,92,.15);color:#ff986f}.file-info{min-width:0}.file-info b{display:block;font-size:9.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.file-info span{display:block;font-size:8px;color:var(--muted);margin-top:3px}.more-btn{width:25px;height:25px;background:transparent;color:var(--muted);display:grid;place-items:center;border-radius:7px}.more-btn:hover{background:var(--surface-3);color:var(--text)}
+    .plan-card{padding:13px}.plan-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) 104px;gap:8px;direction:ltr}.task{direction:rtl;min-height:65px;border-radius:11px;background:rgba(17,28,73,.58);border:1px solid rgba(92,111,200,.11);padding:10px;display:flex;align-items:flex-start;justify-content:space-between;gap:7px;transition:.2s}body.light .task{background:#f5f7ff}.task.done{opacity:.65}.task.done b{text-decoration:line-through}.task b{font-size:9.5px;display:block}.task span{font-size:8px;color:var(--muted)}.task-check{width:21px;height:21px;flex:0 0 auto;border-radius:50%;border:1px solid #4b5a95;background:transparent;display:grid;place-items:center;color:transparent}.task.done .task-check{background:linear-gradient(145deg,var(--cyan),var(--violet));border-color:transparent;color:white}.date-tile{direction:rtl;border-radius:11px;background:linear-gradient(145deg,rgba(109,68,255,.2),rgba(0,213,255,.08));border:1px solid rgba(103,90,255,.25);padding:9px;text-align:center}.date-tile b{display:block;font-size:11px}.date-tile strong{font-size:23px;display:block;color:var(--cyan)}.date-tile span{font-size:8px;color:var(--muted)}
+    .bottom-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;margin-top:16px}.continue-card{padding:16px;display:grid;grid-template-columns:1fr 210px;gap:15px;align-items:center;overflow:hidden;position:relative}.continue-card::after{content:"";position:absolute;width:160px;height:160px;border-radius:50%;background:rgba(95,61,255,.12);filter:blur(30px);left:-50px;bottom:-60px}.continue-info{display:flex;align-items:center;gap:12px}.continue-icon{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,rgba(0,211,255,.18),rgba(111,67,255,.18));color:var(--cyan)}.continue-info h3{font-size:12px;margin:0 0 4px}.continue-info p{font-size:9px;color:var(--muted);line-height:1.65;margin:0}.lesson-progress{margin-top:9px;display:flex;align-items:center;gap:8px}.lesson-progress div{height:5px;border-radius:10px;background:rgba(110,124,180,.2);overflow:hidden;flex:1}.lesson-progress i{display:block;width:63%;height:100%;background:linear-gradient(90deg,var(--violet),var(--cyan))}.lesson-progress span{color:var(--cyan);font-size:9px}
+    .primary-btn,.secondary-btn{height:42px;padding:0 18px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:11px;font-weight:800;transition:.2s}.primary-btn{color:white;background:linear-gradient(100deg,#7555ff,#285cff 52%,#00caee);box-shadow:0 8px 24px rgba(83,77,255,.28)}.primary-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,212,255,.27)}.secondary-btn{background:var(--surface-3);border:1px solid var(--line);color:var(--text-2)}.secondary-btn:hover{border-color:var(--line-strong);color:var(--text)}
+    .ai-promo{padding:16px;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(39,26,102,.9),rgba(7,42,77,.9))}.ai-promo::before{content:"";position:absolute;width:180px;height:180px;border-radius:50%;border:1px solid rgba(0,217,255,.12);left:-55px;top:-72px;box-shadow:0 0 35px rgba(0,212,255,.1)}.ai-promo b{font-size:13px;display:block}.ai-promo p{font-size:9px;color:var(--text-2);line-height:1.8;margin:5px 0 12px}.ai-orb{position:absolute;left:18px;bottom:14px;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;color:white;background:radial-gradient(circle,#715cff 0 20%,#0fcaf0 22%,#5836fc 48%,rgba(12,20,67,.9) 51%);box-shadow:0 0 23px #244dff,0 0 43px rgba(0,212,255,.25)}.ai-orb::after{content:"✦";font-size:20px;text-shadow:0 0 8px white}
+    .mobile-bottom{display:none}.fab-ai{display:none}
+    .module-page{animation:fade .25s ease}.module-hero{padding:22px;display:flex;align-items:center;justify-content:space-between;gap:15px;background:linear-gradient(130deg,rgba(47,37,132,.75),rgba(6,41,75,.7));margin-bottom:16px}.module-hero h1{font-size:22px;margin:0 0 5px}.module-hero p{font-size:11px;color:var(--text-2);margin:0}.module-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.module-card{padding:16px;min-height:140px}.module-card h3{font-size:13px;margin:12px 0 5px}.module-card p{font-size:10px;color:var(--muted);line-height:1.75}.module-card .subject-icon{margin:0}.quiz-card{padding:15px;display:flex;align-items:center;gap:13px}.quiz-score{margin-right:auto;color:var(--cyan);font-weight:900}.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.big-stat{padding:17px}.big-stat b{display:block;font-size:25px;color:var(--cyan)}.big-stat span{font-size:10px;color:var(--muted)}.chart{height:190px;padding:18px;display:flex;align-items:flex-end;gap:16px}.bar{flex:1;min-width:18px;height:var(--h);border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,var(--cyan),var(--violet));position:relative;box-shadow:0 0 16px rgba(0,212,255,.15)}.bar span{position:absolute;top:-21px;left:50%;transform:translateX(-50%);font-size:8px;color:var(--muted)}
+    .settings-list{display:grid;gap:9px}.setting-row{padding:15px;display:flex;align-items:center;gap:12px}.setting-row>div:nth-child(2){flex:1}.setting-row b{font-size:12px}.setting-row p{font-size:9px;color:var(--muted);margin:3px 0 0}.toggle{width:45px;height:25px;border-radius:30px;background:#303b70;padding:3px;transition:.2s}.toggle i{display:block;width:19px;height:19px;border-radius:50%;background:white;transition:.2s}.toggle.on{background:linear-gradient(90deg,var(--violet),var(--cyan))}.toggle.on i{transform:translateX(-20px)}
+    .overlay{position:fixed;inset:0;z-index:80;background:rgba(1,4,18,.74);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:18px}.overlay.show{display:flex}.modal{width:min(520px,100%);max-height:min(700px,90dvh);overflow:auto;background:linear-gradient(155deg,#0d153d,#070c29);border:1px solid rgba(76,112,255,.32);border-radius:21px;box-shadow:0 25px 90px rgba(0,0,0,.55),var(--neon);animation:pop .22s ease}body.light .modal{background:white}.modal-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--line)}.modal-head h2{font-size:15px;margin:0}.modal-body{padding:20px}.field{display:grid;gap:7px;margin-bottom:13px}.field label{font-size:10px;color:var(--text-2);font-weight:700}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);background:var(--surface-2);border-radius:11px;padding:12px;color:var(--text);outline:none}.field textarea{min-height:92px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--cyan)}.modal-actions{display:flex;gap:9px;margin-top:16px}.modal-actions>*{flex:1}
+    .assistant-panel{width:min(430px,100%)}.assistant-visual{display:grid;place-items:center;padding:25px 0}.assistant-orb{width:100px;height:100px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 50% 50%,#bcb3ff 0 4%,#5631fe 16%,#0be1ff 34%,#3722b9 52%,#080e32 55%);box-shadow:0 0 22px #6054ff,0 0 70px rgba(0,212,255,.36);position:relative}.assistant-orb::after{content:"✦";font-size:37px;color:white;text-shadow:0 0 10px white}.assistant-visual h3{font-size:16px;margin:18px 0 3px}.assistant-visual p{font-size:10px;color:var(--muted);margin:0}.quick-prompts{display:grid;grid-template-columns:1fr 1fr;gap:8px}.prompt{padding:11px;border-radius:11px;border:1px solid var(--line);background:var(--surface-2);color:var(--text-2);font-size:10px;text-align:right}.prompt:hover{border-color:var(--cyan);color:var(--text)}.chat-box{display:none;margin-top:15px}.chat-box.show{display:block}.message{padding:11px;border-radius:12px;margin-bottom:8px;font-size:11px;line-height:1.8;max-width:90%}.message.user{margin-right:auto;background:linear-gradient(100deg,#593af3,#246cff);color:white}.message.bot{background:var(--surface-2);border:1px solid var(--line)}.chat-input{display:flex;gap:7px;margin-top:10px}.chat-input input{flex:1;min-width:0;background:var(--surface-2);border:1px solid var(--line);border-radius:11px;padding:11px;color:var(--text);outline:none}.chat-input button{width:42px;border-radius:11px;background:linear-gradient(145deg,var(--violet),var(--cyan));color:white}
+    .toast{position:fixed;z-index:120;left:50%;bottom:25px;transform:translate(-50%,25px);padding:11px 16px;border:1px solid rgba(0,212,255,.3);border-radius:12px;background:#0d173e;color:white;box-shadow:var(--neon);font-size:11px;opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}
+    @keyframes pop{from{opacity:0;transform:scale(.97) translateY(-5px)}to{opacity:1;transform:none}}@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+    @media(max-width:1180px){:root{--sidebar:210px}.subjects-grid{grid-template-columns:repeat(3,1fr)}.hero{grid-template-columns:145px 1fr 38%}.content-grid{grid-template-columns:1fr 255px}.plan-grid{grid-template-columns:repeat(2,1fr)}.date-tile{grid-column:span 2}.bottom-grid{grid-template-columns:1fr}.module-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:850px){:root{--topbar:64px}.app{display:block}.sidebar{transform:translateX(-110%);transition:.28s;width:min(285px,84vw);box-shadow:20px 0 80px rgba(0,0,0,.6)}.sidebar.open{transform:translateX(0)}.main-shell{min-height:100dvh}.topbar{padding:0 14px;gap:8px}.mobile-menu{display:grid}.profile-copy{display:none}.profile-button{padding:3px}.search-wrap{width:auto;flex:1;margin-left:0}.search-input{height:40px}.top-actions{gap:2px}.page{padding:14px 13px 105px}.welcome-mobile{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 13px}.welcome-mobile p{margin:0;color:var(--muted);font-size:10px}.welcome-mobile h1{font-size:18px;margin:3px 0 0}.content-grid{display:block}.hero{min-height:180px;grid-template-columns:105px 1fr;direction:ltr}.hero-progress{padding-left:13px}.progress-ring{width:90px;height:90px}.progress-ring::before{inset:8px}.progress-value strong{font-size:21px}.hero-copy{padding:18px 12px}.hero-copy .date,.hero-copy h1{display:none}.hero-copy>p{font-size:11px;margin-bottom:11px}.quote{display:none}.hero-stats{gap:10px}.hero-stat{gap:5px}.hero-stat b{font-size:10px}.hero-stat span{font-size:8px}.hero-art{display:none}.subjects-grid{grid-template-columns:repeat(4,minmax(0,1fr));overflow:auto;padding-bottom:6px;scrollbar-width:none;direction:rtl}.subject-card{min-width:102px;min-height:102px}.side-column{margin-top:14px}.files-card{height:auto}.plan-grid{display:grid;grid-template-columns:1fr 1fr}.date-tile{grid-column:span 2}.bottom-grid{grid-template-columns:1fr}.continue-card{grid-template-columns:1fr}.continue-card>.primary-btn{width:100%}.ai-promo{min-height:130px}.mobile-bottom{position:fixed;z-index:45;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;bottom:9px;left:10px;right:10px;height:72px;padding:7px;border:1px solid rgba(64,109,255,.34);background:rgba(6,12,38,.91);backdrop-filter:blur(22px);border-radius:22px;box-shadow:0 10px 40px rgba(0,0,0,.5)}body.light .mobile-bottom{background:rgba(255,255,255,.93)}.mobile-nav{height:55px;border-radius:15px;background:transparent;color:var(--muted);display:grid;place-items:center;align-content:center;gap:3px;font-size:8px}.mobile-nav.active{color:var(--cyan)}.mobile-nav .icon{width:20px;height:20px}.fab-ai{display:grid;place-items:center;width:56px;height:56px;border-radius:50%;margin:auto;background:radial-gradient(circle,#875bff 0 24%,#00d9ff 28%,#5237fc 52%,#0c133c 56%);border:3px solid #253a93;color:white;box-shadow:0 0 19px #345cff,0 0 34px rgba(0,212,255,.42);transform:translateY(-12px)}.module-grid{grid-template-columns:1fr 1fr}.stats-row{grid-template-columns:1fr 1fr}.notification-pop{left:12px;top:58px}.desktop-only{display:none!important}.modal{border-radius:20px}.quick-prompts{grid-template-columns:1fr 1fr}}
+    @media(max-width:500px){.topbar .theme-btn{display:none}.page{padding-inline:11px}.hero{grid-template-columns:94px 1fr}.hero-copy>p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.subjects-grid{grid-template-columns:repeat(5,102px)}.subject-card{padding:11px}.plan-grid{grid-template-columns:1fr}.date-tile{grid-column:auto}.module-grid{grid-template-columns:1fr}.module-hero{padding:18px}.module-hero h1{font-size:19px}.stats-row{grid-template-columns:1fr 1fr}.chart{gap:8px}.quick-prompts{grid-template-columns:1fr}.profile-button{display:none}.search-input::placeholder{font-size:10px}.continue-info{align-items:flex-start}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
   </style>
 </head>
 <body>
-  <div class="workspace">
-    <aside class="brand-panel" aria-label="فلسفة تطبيق فهيم">
-      <div class="brand-chip">✦ أداة إنتاجية دراسية — وليست روبوت محادثة</div>
-      <div class="brand-lockup">
-        <div class="mark" aria-hidden="true">
-          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 17c9-4 16-3 20 2 4-5 11-6 20-2v30c-9-3-16-2-20 3-4-5-11-6-20-3V17Z" fill="#1E3A2F"/><path d="M32 19v31" stroke="#F4D18B" stroke-width="3" stroke-linecap="round"/><path d="M32 12c5 5 8 10 8 15a8 8 0 1 1-16 0c0-5 3-10 8-15Z" fill="#D9AD54"/></svg>
-        </div>
-        <div>
-          <h1>فهيم</h1>
-          <p>منصة عربية راقية لتلخيص المواد، بناء الخرائط الذهنية، الرسم بالقلم، والمراجعة الذكية — الذكاء يعمل في الخلفية والطالب يقود التجربة.</p>
-        </div>
-      </div>
-      <div class="principles">
-        <div class="principle"><b>صفحة بيضاء</b><span>لا نضع مواد أو مخططات تجريبية؛ يبدأ الطالب ببناء مفاهيمه بنفسه.</span></div>
-        <div class="principle"><b>مصادر موثوقة</b><span>كل ملخص أو بطاقة ترتبط بمصدر الطالب وسياق المادة الأصلية.</span></div>
-        <div class="principle"><b>إخراج احترافي</b><span>تصدير PDF أو SVG أو صورة عريضة مناسبة للطباعة والمشاركة.</span></div>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10.5V21h14V10.5M9 21v-6h6v6"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H11v17H7.5A3.5 3.5 0 0 0 4 22V5.5Z"/><path d="M20 5.5A3.5 3.5 0 0 0 16.5 2H13v17h3.5A3.5 3.5 0 0 1 20 22V5.5Z"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6h7l2 2h9v11H3V6Z"/><path d="M3 10h18"/></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 10h6M9 14h6M9 18h4"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6M17 2v6M3 10h18"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H5l-3 2 1-5a9 9 0 1 1 18-5Z"/><path d="M8 12h.01M12 12h.01M16 12h.01"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.5 1A8 8 0 0 0 14 5.8L13.7 3h-4L9.3 5.8A8 8 0 0 0 7 7.1l-2.5-1-2 3.4 2 1.5a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.5-1a8 8 0 0 0 2.3 1.3l.4 2.8h4l.4-2.8a8 8 0 0 0 2.3-1.3l2.5 1 2-3.4-2-1.5c0-.3.1-.7.1-1Z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 2h8l4 4v16H6V2Z"/><path d="M14 2v5h5M9 12h6M9 16h6"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 4-7 8-7s7 2 8 7"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3M7 8l5-5 5 5M4 15v6h16v-6"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="m5 5 14 14M19 5 5 19"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7V5Z"/></symbol>
+  </defs></svg>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar" aria-label="القائمة الرئيسية">
+      <a class="brand" href="#home" data-nav="home" aria-label="NOVA STUDY الصفحة الرئيسية">
+        <svg class="brand-logo" viewBox="0 0 64 64" fill="none"><path d="M10 19c9-5 17-5 22 2 5-7 13-7 22-2v30c-9-4-17-3-22 4-5-7-13-8-22-4V19Z" stroke="#20E5FF" stroke-width="3"/><path d="M32 21v32" stroke="#785BFF" stroke-width="3"/><path d="m32 5 4 9 9 4-9 4-4 9-4-9-9-4 9-4 4-9Z" fill="#fff" stroke="#705BFF" stroke-width="2"/></svg>
+        <span class="brand-text">NOVA <b>STUDY</b></span>
+      </a>
+      <nav class="side-nav">
+        <button class="nav-item active" data-nav="home"><span data-icon="home"></span><span>الرئيسية</span></button>
+        <button class="nav-item" data-nav="subjects"><span data-icon="book"></span><span>موادي</span></button>
+        <button class="nav-item" data-nav="library"><span data-icon="folder"></span><span>المكتبة</span></button>
+        <button class="nav-item" data-nav="tests"><span data-icon="clipboard"></span><span>الاختبارات</span></button>
+        <button class="nav-item" data-nav="planner"><span data-icon="calendar"></span><span>خطة المذاكرة</span></button>
+        <button class="nav-item" data-nav="stats"><span data-icon="chart"></span><span>الإحصائيات</span></button>
+        <div class="nav-label">التواصل</div>
+        <button class="nav-item" data-nav="chat"><span data-icon="chat"></span><span>المحادثات</span></button>
+        <button class="nav-item" data-nav="notifications"><span data-icon="bell"></span><span>الإشعارات</span></button>
+        <button class="nav-item" data-nav="settings"><span data-icon="settings"></span><span>الإعدادات</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="upgrade-card"><b>مستواك هذا الأسبوع</b><span>أكملت 68% من هدفك الأسبوعي. استمر!</span><div class="mini-progress"><i></i></div></div>
       </div>
     </aside>
 
-    <main class="phone" role="application" aria-label="تطبيق فهيم">
-      <header class="appbar">
-        <div class="appbar-row">
-          <div class="mini-brand">
-            <div class="mini-logo" aria-hidden="true">
-              <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 17c9-4 16-3 20 2 4-5 11-6 20-2v30c-9-3-16-2-20 3-4-5-11-6-20-3V17Z" fill="#fff"/><path d="M32 19v31" stroke="#D9AD54" stroke-width="3" stroke-linecap="round"/><path d="M32 12c5 5 8 10 8 15a8 8 0 1 1-16 0c0-5 3-10 8-15Z" fill="#D9AD54"/></svg>
-            </div>
-            <div><b>فهيم</b><span>استوديو الدراسة الذكية</span></div>
-          </div>
-          <div class="date-pill">٢ أكتوبر ٢٠٢٦</div>
+    <main class="main-shell">
+      <header class="topbar">
+        <button class="icon-btn mobile-menu" id="menuBtn" aria-label="فتح القائمة"><span data-icon="menu"></span></button>
+        <div class="search-wrap">
+          <span data-icon="search"></span><input class="search-input" id="searchInput" type="search" placeholder="ابحث عن درس، مادة، ملف..." autocomplete="off" aria-label="البحث">
+          <div class="search-results" id="searchResults"></div>
+        </div>
+        <div class="top-actions">
+          <button class="icon-btn desktop-only" id="uploadBtn" aria-label="رفع ملف"><span data-icon="upload"></span></button>
+          <button class="icon-btn theme-btn" id="themeBtn" aria-label="تغيير المظهر"><span data-icon="moon"></span></button>
+          <button class="icon-btn" id="notificationBtn" aria-label="الإشعارات"><span data-icon="bell"></span><i class="dot"></i></button>
+          <button class="profile-button" data-nav="settings"><span class="avatar">أ</span><span class="profile-copy"><b>أحمد محمد</b><span>الصف الثالث الثانوي</span></span></button>
         </div>
       </header>
-      <section class="screen" id="screen" aria-live="polite"></section>
-      <nav class="tabbar" id="tabbar" aria-label="التنقل الرئيسي">
-        <button data-go="home"><span class="ico">⌂</span><span>مكتبتي</span></button>
-        <button data-go="import"><span class="ico">⇧</span><span>استيراد</span></button>
-        <button data-go="reader"><span class="ico">☰</span><span>الملخص</span></button>
-        <button data-go="map"><span class="ico">◎</span><span>الخريطة</span></button>
-        <button data-go="review"><span class="ico">◇</span><span>مراجعة</span></button>
-      </nav>
+
+      <div class="notification-pop" id="notificationPop">
+        <div class="pop-head"><b>الإشعارات</b><button class="text-button" id="markRead">تحديد الكل كمقروء</button></div>
+        <div class="notification"><span class="n-icon" data-icon="calendar"></span><div><b>حان وقت المذاكرة</b><p>لديك جلسة رياضيات تبدأ خلال 15 دقيقة.</p></div></div>
+        <div class="notification"><span class="n-icon" data-icon="star"></span><div><b>إنجاز جديد!</b><p>حافظت على سلسلة مذاكرة لمدة 7 أيام متتالية.</p></div></div>
+        <div class="notification"><span class="n-icon" data-icon="clipboard"></span><div><b>اختبار الفيزياء</b><p>أصبحت نتيجة اختبارك التجريبي جاهزة.</p></div></div>
+      </div>
+
+      <div class="page" id="pageRoot">
+        <section id="dashboardPage">
+          <div class="welcome-mobile"><div><p>السبت، ٣ أكتوبر</p><h1>صباح الخير، أحمد ☀️</h1></div><span class="avatar">أ</span></div>
+          <section class="hero" aria-labelledby="welcomeTitle">
+            <div class="hero-progress"><div class="progress-ring" id="progressRing" style="--p:72"><div class="progress-value"><strong id="progressNumber">72%</strong><span>إنجاز اليوم</span></div></div></div>
+            <div class="hero-copy"><div class="date" id="todayLabel">السبت، ٣ أكتوبر ٢٠٢٦</div><h1 id="welcomeTitle"><span>صباح الخير،</span> أحمد ☀️</h1><p>مستعد للمذاكرة اليوم؟</p><div class="quote">«النجاح لا يأتي من المحاولة مرة واحدة، بل من الاستمرار والعمل.»</div><div class="hero-stats"><div class="hero-stat"><span data-icon="clock"></span><div><b>٤٥ دقيقة</b><span>وقت المذاكرة</span></div></div><div class="hero-stat"><span data-icon="book"></span><div><b>٣ دروس</b><span>مكتملة اليوم</span></div></div><div class="hero-stat"><span data-icon="star"></span><div><b>١٨ سؤال</b><span>تم حلها</span></div></div></div></div>
+            <div class="hero-art"><img src="assets/nova-books.webp" alt="كتب دراسية وقبعة تخرج في فضاء مضيء"></div>
+          </section>
+
+          <div class="content-grid">
+            <div class="main-column">
+              <div class="section-head"><div><h2>موادي الدراسية</h2><p>تابع تقدمك في كل مادة</p></div><button class="link-button" data-nav="subjects">عرض الكل <span data-icon="arrow"></span></button></div>
+              <div class="subjects-grid">
+                <button class="subject-card" data-subject="الرياضيات" style="--subject:#00d9ff;--progress:79%"><span class="subject-icon">π</span><h3>الرياضيات</h3><p>١٢ درس</p><div class="subject-progress"><i></i></div></button>
+                <button class="subject-card" data-subject="الفيزياء" style="--subject:#8d61ff;--progress:62%"><span class="subject-icon">⚛</span><h3>الفيزياء</h3><p>٨ دروس</p><div class="subject-progress"><i></i></div></button>
+                <button class="subject-card" data-subject="الكيمياء" style="--subject:#ff66a8;--progress:68%"><span class="subject-icon">♙</span><h3>الكيمياء</h3><p>١٠ دروس</p><div class="subject-progress"><i></i></div></button>
+                <button class="subject-card" data-subject="اللغة العربية" style="--subject:#48e1b1;--progress:56%"><span class="subject-icon">ع</span><h3>اللغة العربية</h3><p>٧ دروس</p><div class="subject-progress"><i></i></div></button>
+                <button class="subject-card" data-subject="اللغة الإنجليزية" style="--subject:#9d75ff;--progress:73%"><span class="subject-icon">A</span><h3>اللغة الإنجليزية</h3><p>٩ دروس</p><div class="subject-progress"><i></i></div></button>
+              </div>
+
+              <div class="section-head"><div><h2>خطة اليوم</h2><p>٣ مهام متبقية لإكمال هدفك</p></div><button class="link-button" data-action="add-task">إضافة مهمة +</button></div>
+              <div class="glass-card plan-card"><div class="plan-grid" id="taskList">
+                <article class="task done" data-task="0"><div><b>الرياضيات</b><span>مراجعة التفاضل · ٤٥ دقيقة</span></div><button class="task-check" aria-label="تغيير حالة المهمة"><span data-icon="check"></span></button></article>
+                <article class="task" data-task="1"><div><b>الفيزياء</b><span>الفصل الثالث · ٣٠ دقيقة</span></div><button class="task-check" aria-label="تغيير حالة المهمة"><span data-icon="check"></span></button></article>
+                <article class="task" data-task="2"><div><b>مراجعة شاملة</b><span>حل اختبار · ٢٠ دقيقة</span></div><button class="task-check" aria-label="تغيير حالة المهمة"><span data-icon="check"></span></button></article>
+                <div class="date-tile"><b>الأربعاء</b><strong>٢٣</strong><span>أكتوبر</span></div>
+              </div></div>
+
+              <div class="bottom-grid">
+                <section class="glass-card continue-card"><div class="continue-info"><span class="continue-icon" data-icon="file"></span><div><h3>ملخص الدرس: قوانين الحركة</h3><p>أهم النقاط والقوانين مع أمثلة محلولة للمراجعة السريعة.</p><div class="lesson-progress"><div><i></i></div><span>٦٣٪</span></div></div></div><button class="primary-btn" data-action="continue"><span data-icon="play"></span> متابعة المذاكرة</button></section>
+                <section class="glass-card ai-promo"><b>مساعدك الدراسي الذكي</b><p>اسأل نوفا عن أي سؤال، لخّص درسًا<br>أو أنشئ لك اختبارًا في ثوانٍ.</p><button class="secondary-btn" data-action="assistant">جرّبه الآن</button><span class="ai-orb"></span></section>
+              </div>
+            </div>
+
+            <aside class="side-column">
+              <div class="section-head"><div><h2>آخر الملفات</h2><p>ملفاتك المضافة مؤخرًا</p></div><button class="link-button" data-nav="library">عرض الكل</button></div>
+              <section class="glass-card files-card"><div class="files-list">
+                <article class="file-item" data-file="مذكرة الفيزياء.pdf"><span class="file-icon" data-icon="file"></span><div class="file-info"><b>مذكرة الفيزياء.pdf</b><span>منذ ساعتين · ٤٫٢ MB</span></div><button class="more-btn"><span data-icon="more"></span></button></article>
+                <article class="file-item" data-file="أسئلة الرياضيات.docx"><span class="file-icon" data-icon="file"></span><div class="file-info"><b>أسئلة الرياضيات.docx</b><span>منذ ٤ ساعات · ٢٫٨ MB</span></div><button class="more-btn"><span data-icon="more"></span></button></article>
+                <article class="file-item" data-file="ملخص الكيمياء.pdf"><span class="file-icon" data-icon="file"></span><div class="file-info"><b>ملخص الكيمياء.pdf</b><span>منذ ٦ ساعات · ٣٫٦ MB</span></div><button class="more-btn"><span data-icon="more"></span></button></article>
+              </div></section>
+            </aside>
+          </div>
+        </section>
+        <section id="modulePage" class="module-page hidden" aria-live="polite"></section>
+      </div>
     </main>
   </div>
-  <div class="toast" id="toast"></div>
 
-<script>
-(() => {
-  const W = 760, H = 640;
-  const KEY = 'faheem.study.workspace.v1';
-  const COLORS = ['#1E3A2F','#3E6D8F','#B98B35','#8A6F52','#8B5E83','#B9564D'];
-  const styles = {
-    exam: ['نقاط للاختبار','استخراج الأفكار التي تصلح للمراجعة السريعة قبل الاختبار.'],
-    concept: ['شرح مفاهيمي','صياغة مترابطة تساعد على الفهم العميق.'],
-    qa: ['أسئلة وأجوبة','تحويل المادة إلى أسئلة تدريبية مع إجابات مختصرة.'],
-    map: ['خريطة ذهنية','اقتراح محاور أولية يمكن للطالب تعديلها يدويًا.']
-  };
-  const $ = (s, root=document) => root.querySelector(s);
-  const $$ = (s, root=document) => Array.from(root.querySelectorAll(s));
-  const esc = value => String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
-  const uid = prefix => prefix + '-' + Math.random().toString(36).slice(2, 9);
-  const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
-  const nowText = () => new Intl.DateTimeFormat('ar', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}).format(new Date());
+  <nav class="mobile-bottom" aria-label="التنقل على الهاتف">
+    <button class="mobile-nav active" data-nav="home"><span data-icon="home"></span><span>الرئيسية</span></button>
+    <button class="mobile-nav" data-nav="subjects"><span data-icon="book"></span><span>موادي</span></button>
+    <button class="fab-ai" data-action="assistant" aria-label="المساعد الذكي">✦</button>
+    <button class="mobile-nav" data-nav="tests"><span data-icon="clipboard"></span><span>الاختبارات</span></button>
+    <button class="mobile-nav" data-nav="settings"><span data-icon="user"></span><span>حسابي</span></button>
+  </nav>
 
-  function defaultState(){
-    return {
-      screen:'home', activeMaterialId:null, selectedNodeId:'root', linkFrom:null,
-      draft:{title:'', text:'', style:'exam', fileName:'', extractFormulas:true, cards:true, quiz:false},
-      pen:{mode:'nodes', color:'#1E3A2F', size:4, tool:'pen', smart:true},
-      export:{ratio:'wide', format:'pdf', notes:true, bg:true, header:true, index:false},
-      review:{index:0, flipped:false},
-      materials:[], cards:[],
-      map:{zoom:1, nodes:[{id:'root', x:280, y:255, title:'', color:'#1E3A2F', note:'', page:''}], edges:[], drawings:[]}
-    };
-  }
-  let state = loadState();
-  function loadState(){
-    try{
-      const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
-      return saved ? merge(defaultState(), saved) : defaultState();
-    }catch(_){ return defaultState(); }
-  }
-  function merge(base, saved){
-    for (const k in saved) {
-      if (saved[k] && typeof saved[k] === 'object' && !Array.isArray(saved[k]) && base[k]) base[k] = merge(base[k], saved[k]);
-      else base[k] = saved[k];
+  <div class="overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal" id="modal"></div></div>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+  (() => {
+    const $ = (s, r=document) => r.querySelector(s);
+    const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+    const icon = (name, cls='') => `<svg class="icon ${cls}" aria-hidden="true"><use href="#i-${name}"></use></svg>`;
+    const fillIcons = (root=document) => $$('[data-icon]', root).forEach(el => { if(!el.querySelector('svg')) el.innerHTML = icon(el.dataset.icon); });
+    const state = {theme:localStorage.getItem('nova-theme') || 'dark', tasks:JSON.parse(localStorage.getItem('nova-tasks') || '[true,false,false]'), current:'home'};
+    const modulePage = $('#modulePage'), dashboardPage = $('#dashboardPage'), overlay = $('#modalOverlay'), modal = $('#modal');
+    fillIcons();
+
+    function toast(message){ const t=$('#toast'); t.textContent=message; t.classList.add('show'); clearTimeout(toast.timer); toast.timer=setTimeout(()=>t.classList.remove('show'),2300); }
+    function setTheme(theme){ state.theme=theme; document.body.classList.toggle('light',theme==='light'); localStorage.setItem('nova-theme',theme); $('#themeBtn').innerHTML=icon(theme==='light'?'sun':'moon'); document.querySelector('meta[name="theme-color"]').content=theme==='light'?'#f4f7ff':'#070b24'; }
+    setTheme(state.theme);
+
+    const arDate = new Intl.DateTimeFormat('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date());
+    $('#todayLabel').textContent=arDate;
+    const hour=new Date().getHours();
+    const greeting=hour<12?'صباح الخير':hour<18?'مساء الخير':'مساء النور';
+    $('#welcomeTitle').innerHTML=`<span>${greeting}،</span> أحمد ${hour<17?'☀️':'🌙'}`;
+
+    function syncTasks(){
+      $$('.task').forEach((task,i)=>task.classList.toggle('done',!!state.tasks[i]));
+      const completed=state.tasks.filter(Boolean).length;
+      const progress=Math.min(96,58+completed*14);
+      $('#progressRing').style.setProperty('--p',progress); $('#progressNumber').textContent=progress+'%';
+      localStorage.setItem('nova-tasks',JSON.stringify(state.tasks));
     }
-    if (!base.map.nodes.length) base.map.nodes = defaultState().map.nodes;
-    return base;
-  }
-  function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
-  function activeMaterial(){ return state.materials.find(m => m.id === state.activeMaterialId) || state.materials[0] || null; }
-  function go(screen){ location.hash = screen; }
-  function route(){ return (location.hash || '#home').replace('#','') || 'home'; }
-  function toast(msg){ const el = $('#toast'); el.textContent = msg; el.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(()=>el.classList.remove('show'), 2300); }
+    syncTasks();
 
-  const screens = {home: homeScreen, import: importScreen, reader: readerScreen, map: mapScreen, review: reviewScreen, export: exportScreen};
-  function render(){
-    state.screen = screens[route()] ? route() : 'home';
-    $('#screen').innerHTML = screens[state.screen]();
-    $$('#tabbar button').forEach(btn => btn.classList.toggle('active', btn.dataset.go === state.screen));
-    afterRender(state.screen);
-    save();
-  }
-
-  function homeScreen(){
-    const mats = state.materials;
-    const doneCards = state.cards.filter(c => c.level === 'easy' || c.level === 'mastered').length;
-    return `
-      <div class="hero">
-        <span class="eyebrow">✦ بيئة دراسة احترافية</span>
-        <h2>رتّب مصادر المادة وحوّلها إلى فهم قابل للمراجعة.</h2>
-        <p>ابدأ من ملف أو نص، ثم اقرأ الملخص، ابنِ خريطتك الذهنية بيدك، وصدّرها بجودة عالية.</p>
-        <div class="hero-actions">
-          <button class="btn" data-go="import">⇧ إضافة مادة</button>
-          <button class="btn ghost" data-go="map">◎ بناء خريطة</button>
-        </div>
-      </div>
-      <div class="section-title"><div><h3>لوحة المذاكرة</h3><p>الأرقام تبدأ من إنجازاتك الفعلية داخل التطبيق.</p></div></div>
-      <div class="stat-grid">
-        <div class="stat"><b>${mats.length}</b><span>مواد محفوظة</span></div>
-        <div class="stat"><b>${state.cards.length}</b><span>بطاقات مراجعة</span></div>
-        <div class="stat"><b>${doneCards}</b><span>بطاقات متقنة</span></div>
-      </div>
-      <div class="section-title"><div><h3>مكتبتي</h3><p>مصادرك وملخصاتك بدون محتوى تجريبي.</p></div><button class="btn small soft" data-go="import">+ جديد</button></div>
-      <div class="stack">
-        ${mats.length ? mats.map(materialCard).join('') : emptyBox('📚','ابدأ بمادة من عندك','ارفع ملفاً أو الصق نص المحاضرة. لن تظهر هنا أي مواد أو أمثلة جاهزة قبل أن تضيفها أنت.','استيراد مادة','import')}
-      </div>
-      <div class="section-title"><div><h3>مسار العمل</h3><p>من المصدر إلى التصدير في خطوات واضحة.</p></div></div>
-      <div class="stack">
-        ${workflowStep('1','استيراد ومعالجة','حدد نمط التلخيص والملحقات التي تحتاجها.')}
-        ${workflowStep('2','قراءة تفاعلية','راجع الخلاصة والنقاط المهمة مع ربطها بالصفحات.')}
-        ${workflowStep('3','خريطة الطالب','ابنِ العلاقات يدويًا وارسم بالقلم مع تسوية الأشكال.')}
-        ${workflowStep('4','مراجعة وتصدير','حوّل النتائج إلى بطاقات، PDF، SVG أو صورة عريضة.')}
-      </div>`;
-  }
-  function workflowStep(n,title,text){return `<div class="card split"><div><span class="badge gray">${n}</span><b style="display:block;margin-top:7px">${title}</b><p class="tiny muted" style="margin:5px 0 0">${text}</p></div><span style="font-size:24px;color:var(--gold)">↢</span></div>`}
-  function materialCard(m){
-    const progress = Math.min(100, 25 + (m.keyPoints.length*10) + (state.cards.filter(c=>c.materialId===m.id).length*4));
-    return `<article class="card material" data-open-material="${m.id}">
-      <div class="material-icon">▤</div>
-      <div><h4>${esc(m.title)}</h4><p>${esc(m.source)} · ${esc(m.createdAt)} · ${m.words} كلمة تقريبًا</p><div class="progress-line"><i style="width:${progress}%"></i></div></div>
-      <button class="btn small soft" data-open-material="${m.id}">فتح</button>
-    </article>`;
-  }
-  function emptyBox(icon,title,text,btn,screen){return `<div class="empty"><div class="big">${icon}</div><b>${title}</b><p class="tiny">${text}</p>${btn?`<button class="btn primary small" data-go="${screen}">${btn}</button>`:''}</div>`}
-
-  function importScreen(){
-    const d = state.draft;
-    return `
-      <div class="section-title" style="margin-top:0"><div><h3>إضافة ومعالجة المحتوى</h3><p>البرنامج يعالج ما يضيفه الطالب فقط؛ لا توجد مواد افتراضية.</p></div></div>
-      <div class="card form">
-        <div class="field"><label>اسم المادة أو الفصل</label><input class="input" id="draftTitle" placeholder="مثال: اكتب اسم المقرر أو عنوان المحاضرة" value="${esc(d.title)}"></div>
-        <label class="drop" for="fileInput"><div style="font-size:32px;color:var(--emerald)">⇧</div><strong>اختر ملفاً من جهازك</strong><span class="tiny">PDF، Word، TXT، صورة أو تسجيل. يتم حفظ الاسم فقط إذا لم يكن الملف نصيًا.</span><input id="fileInput" type="file" accept=".txt,.md,.pdf,.doc,.docx,image/*,audio/*,video/*"></label>
-        <div id="fileLabel" class="tiny muted">${d.fileName ? '✓ الملف المختار: ' + esc(d.fileName) : 'لم يتم اختيار ملف بعد.'}</div>
-        <div class="field"><label>أو الصق نص المادة</label><textarea class="textarea" id="draftText" placeholder="الصق نص المحاضرة أو الفصل هنا ليتم تلخيصه وتنظيمه...">${esc(d.text)}</textarea></div>
-      </div>
-      <div class="section-title"><div><h3>نمط التلخيص</h3><p>اختر الناتج الأقرب لطريقة مذاكرتك.</p></div></div>
-      <div class="style-grid">
-        ${Object.entries(styles).map(([id,[title,desc]])=>`<button class="style-card ${d.style===id?'active':''}" data-style="${id}"><b>${title}</b><span>${desc}</span></button>`).join('')}
-      </div>
-      <div class="section-title"><div><h3>ملحقات ذكية</h3><p>يمكن تعديل كل شيء لاحقًا.</p></div></div>
-      <div class="stack">
-        ${switchRow('extractFormulas','استخراج القوانين والمصطلحات','تمييز المعادلات والتعاريف من النص.',d.extractFormulas)}
-        ${switchRow('cards','توليد بطاقات مراجعة','إنشاء بطاقات من النقاط المهمة.',d.cards)}
-        ${switchRow('quiz','أسئلة اختبار تدريبية','إضافة أسئلة قصيرة للتحقق من الفهم.',d.quiz)}
-      </div>
-      <div class="mt stack">
-        <button class="btn primary block" id="processBtn">✦ معالجة المادة وحفظها</button>
-        <button class="btn soft block" id="clearDraftBtn">مسح النموذج</button>
-      </div>`;
-  }
-  function switchRow(id,title,desc,checked){return `<div class="switch-row"><div><b>${title}</b><div class="tiny muted">${desc}</div></div><label class="switch"><input type="checkbox" data-toggle="${id}" ${checked?'checked':''}><i></i></label></div>`}
-
-  function readerScreen(){
-    const m = activeMaterial();
-    if (!m) return `<div class="section-title" style="margin-top:0"><div><h3>قارئ الملخص</h3><p>سيظهر الملخص هنا بعد إضافة مادة.</p></div></div>${emptyBox('☰','لا يوجد ملخص بعد','أضف نصًا أو ملفًا من شاشة الاستيراد ليبني فهيم مساحة قراءة منظمة.','إضافة مادة','import')}`;
-    return `
-      <div class="reader-title">
-        <span class="badge">${esc(styles[m.style]?.[0] || 'ملخص')}</span>
-        <h2>${esc(m.title)}</h2>
-        <div class="tiny muted">${esc(m.source)} · ${esc(m.createdAt)} · ${m.words} كلمة تقريبًا</div>
-      </div>
-      <div class="section-title"><div><h3>الخلاصة التنفيذية</h3><p>صياغة قصيرة قابلة للمراجعة.</p></div></div>
-      <article class="card reader-body">${paragraphs(m.summary)}</article>
-      <div class="section-title"><div><h3>نقاط مهمة</h3><p>يمكن تحويلها لبطاقات أو ربطها بالخريطة.</p></div></div>
-      <div class="point-list">${m.keyPoints.length ? m.keyPoints.map((p,i)=>`<div class="point"><i>${i+1}</i><span>${esc(p)}</span></div>`).join('') : `<div class="empty"><b>لا توجد نقاط مستخرجة</b><p class="tiny">أضف نصًا أطول للحصول على نقاط مراجعة أكثر.</p></div>`}</div>
-      ${m.formulas.length ? `<div class="section-title"><div><h3>قوانين ومصطلحات</h3><p>مستخرجة من نص الطالب.</p></div></div><div class="stack">${m.formulas.map(f=>`<div class="quote">${esc(f)}</div>`).join('')}</div>` : ''}
-      <div class="section-title"><div><h3>إجراءات سريعة</h3><p>انتقل من القراءة إلى البناء والمراجعة.</p></div></div>
-      <div class="stack">
-        <button class="btn primary block" id="sendToMap">◎ فتح الخريطة الذهنية لهذه المادة</button>
-        <button class="btn soft block" id="makeCards">◇ تحديث بطاقات المراجعة</button>
-        <button class="btn gold block" id="speakSummary">استماع للملخص</button>
-      </div>`;
-  }
-  function paragraphs(text){ return esc(text).split('\n').filter(Boolean).map(p=>`<p>${p}</p>`).join('') || '<p class="muted">لا يوجد نص كافٍ بعد.</p>'; }
-
-  function mapScreen(){
-    const selected = state.map.nodes.find(n => n.id === state.selectedNodeId) || state.map.nodes[0];
-    return `
-      <div class="modebar">
-        <button class="tool ${state.pen.mode==='nodes'?'active':''}" data-mode="nodes">العقد والمفاهيم</button>
-        <button class="tool ${state.pen.mode==='pen'?'active':''}" data-mode="pen">الرسم بالقلم</button>
-        <button class="tool ${state.linkFrom?'active':''}" id="linkModeBtn">ربط بين مفهومين</button>
-        <button class="tool" data-go="export">تصدير</button>
-      </div>
-      <div class="map-shell">
-        <div class="card stack">
-          <div class="split"><div><b>كانفاس الطالب</b><div class="tiny muted">ابدأ بعقدة مركزية فارغة، أضف مفاهيمك واربطها بنفسك.</div></div><span class="badge gold">${Math.round(state.map.zoom*100)}%</span></div>
-          <div class="tool-row">
-            <button class="tool" id="addNodeBtn">+ إضافة مفهوم</button>
-            <button class="tool" id="centerMapBtn">توسيط</button>
-            <button class="tool" id="zoomInBtn">تكبير</button>
-            <button class="tool" id="zoomOutBtn">تصغير</button>
-          </div>
-          ${state.pen.mode==='pen' ? penToolbar() : ''}
-        </div>
-        ${mapBoard()}
-        ${inspector(selected)}
-      </div>`;
-  }
-  function penToolbar(){
-    return `<div class="tool-row">
-      <button class="tool ${state.pen.tool==='pen'?'active':''}" data-pen-tool="pen">قلم</button>
-      <button class="tool ${state.pen.tool==='highlighter'?'active':''}" data-pen-tool="highlighter">تظليل</button>
-      <button class="tool ${state.pen.tool==='eraser'?'active':''}" data-pen-tool="eraser">ممحاة</button>
-      ${[3,5,8].map(s=>`<button class="tool size ${state.pen.size===s?'active':''}" data-pen-size="${s}">${s}</button>`).join('')}
-      ${COLORS.map(c=>`<button class="tool color ${state.pen.color===c?'active':''}" data-pen-color="${c}" style="background:${c}"></button>`).join('')}
-      <button class="tool ${state.pen.smart?'active':''}" id="smartToggle">تسوية الأشكال ✓</button>
-      <button class="tool" id="undoDrawBtn">تراجع</button>
-      <button class="tool" id="clearDrawBtn">مسح الرسم</button>
-    </div><div class="tiny muted">ارسم دائرة أو مستطيلاً أو سهمًا؛ عند تفعيل التسوية سيحوّل فهيم الخربشة إلى شكل منتظم.</div>`;
-  }
-  function mapBoard(){
-    const modeClass = state.pen.mode === 'pen' ? 'pen-mode' : '';
-    return `<div class="map-board ${modeClass}" id="mapBoard"><div class="map-content" id="mapContent" style="transform:scale(${state.map.zoom})">
-      ${mapSvg(false)}
-      ${state.map.nodes.map(nodeHtml).join('')}
-      <canvas class="pen-canvas" id="penCanvas"></canvas>
-    </div></div>`;
-  }
-  function nodeHtml(n){
-    const isRoot = n.id === 'root'; const selected = n.id === state.selectedNodeId;
-    return `<div class="mind-node ${isRoot?'root':''} ${selected?'selected':''}" data-node="${n.id}" style="left:${n.x}px;top:${n.y}px;--node-color:${esc(n.color)}">
-      <div class="node-title" contenteditable="true" spellcheck="false" data-node-title="${n.id}" data-placeholder="${isRoot?'اكتب المفهوم الأساسي هنا':'اكتب المفهوم'}">${esc(n.title)}</div>
-      <div class="node-meta">${n.page ? 'صفحة ' + esc(n.page) : isRoot ? 'عقدة البداية' : 'مفهوم فرعي'}</div>
-      <div class="node-actions"><button title="فرع جديد" data-add-child="${n.id}">+</button>${!isRoot?`<button title="حذف" data-delete-node="${n.id}">×</button>`:''}</div>
-    </div>`;
-  }
-  function inspector(n){
-    return `<div class="card inspector form">
-      <div class="split"><div><b>تخصيص العقدة</b><div class="tiny muted">العنوان، اللون، الملاحظات، ورقم الصفحة.</div></div><span class="badge">${n.id==='root'?'مركزية':'فرعية'}</span></div>
-      <div class="field"><label>عنوان المفهوم</label><input class="input" id="nodeTitleInput" value="${esc(n.title)}" placeholder="اكتب عنوان المفهوم"></div>
-      <div class="field"><label>لون الفرع</label><div class="color-dots">${COLORS.map(c=>`<button class="dot ${n.color===c?'active':''}" data-node-color="${c}" style="background:${c}"></button>`).join('')}</div></div>
-      <div class="field"><label>ملاحظات شخصية أو صيغة</label><textarea class="textarea" id="nodeNoteInput" placeholder="اكتب شرحك الخاص أو قانوناً تريد تذكّره...">${esc(n.note)}</textarea></div>
-      <div class="field"><label>ربط بصفحة في المصدر</label><input class="input" id="nodePageInput" value="${esc(n.page)}" placeholder="مثال: 24"></div>
-    </div>`;
-  }
-  function mapSvg(exportMode=true){
-    const bg = state.export.bg || !exportMode ? `<rect width="${W}" height="${H}" rx="0" fill="#F8F1E4"/><defs><pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#CABDA9" opacity=".75"/></pattern><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#1E3A2F"/></marker></defs><rect width="${W}" height="${H}" fill="url(#dots)" opacity=".75"/>` : `<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#1E3A2F"/></marker></defs><rect width="${W}" height="${H}" fill="#fff"/>`;
-    const edges = state.map.edges.map(e => {
-      const a = state.map.nodes.find(n=>n.id===e.from), b = state.map.nodes.find(n=>n.id===e.to); if(!a||!b) return '';
-      const ax=a.x+(a.id==='root'?100:86), ay=a.y+45, bx=b.x+(b.id==='root'?100:86), by=b.y+40;
-      const mx = (ax+bx)/2; return `<path d="M${ax} ${ay} C${mx} ${ay}, ${mx} ${by}, ${bx} ${by}" fill="none" stroke="#8A7A62" stroke-width="2.4" stroke-linecap="round" opacity=".75"/>`;
-    }).join('');
-    const drawings = state.map.drawings.map(d => drawingSvg(d)).join('');
-    const nodes = state.map.nodes.map(n => nodeSvg(n, exportMode)).join('');
-    const header = exportMode && state.export.header ? `<text x="${W-28}" y="34" text-anchor="end" font-family="Tahoma,Arial" font-size="18" font-weight="700" fill="#1E3A2F">فهيم — خريطة ذهنية</text><text x="28" y="34" text-anchor="start" font-family="Tahoma,Arial" font-size="12" fill="#8A7A62">${esc(nowText())}</text>` : '';
-    const footer = exportMode && state.export.index ? `<text x="${W/2}" y="${H-18}" text-anchor="middle" font-family="Tahoma,Arial" font-size="12" fill="#8A7A62">${state.map.nodes.length} مفاهيم · ${state.map.edges.length} روابط · ${state.map.drawings.length} رسومات</text>` : '';
-    return `<svg class="map-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" direction="rtl">${bg}${header}${edges}${drawings}${nodes}${footer}</svg>`;
-  }
-  function nodeSvg(n, exportMode){
-    const isRoot = n.id === 'root', ww = isRoot ? 200 : 172, hh = isRoot ? 95 : 82;
-    const fill = isRoot ? n.color : '#fffdf8', stroke = isRoot ? '#D9AD54' : n.color, text = n.title || (exportMode ? (isRoot?'المفهوم الأساسي':'مفهوم جديد') : '');
-    const color = isRoot ? '#fff' : '#17231d';
-    const note = exportMode && state.export.notes && n.note ? `<text x="${n.x+ww/2}" y="${n.y+65}" text-anchor="middle" font-family="Tahoma,Arial" font-size="10" fill="${isRoot?'#DCEEE5':'#7A887F'}">${esc(shorten(n.note,34))}</text>` : '';
-    return `<g><rect x="${n.x}" y="${n.y}" width="${ww}" height="${hh}" rx="22" fill="${fill}" stroke="${stroke}" stroke-width="2.5"/><text x="${n.x+ww/2}" y="${n.y+38}" text-anchor="middle" font-family="Tahoma,Arial" font-size="15" font-weight="700" fill="${color}">${esc(shorten(text,32))}</text>${note}</g>`;
-  }
-  function drawingSvg(d){
-    const common = `stroke="${esc(d.color)}" stroke-width="${d.size}" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="${d.tool==='highlighter'?'.42':'.9'}"`;
-    if (d.type === 'path') return `<polyline points="${d.points.map(p=>p.x+','+p.y).join(' ')}" ${common}/>`;
-    if (d.type === 'ellipse') return `<ellipse cx="${d.x+d.w/2}" cy="${d.y+d.h/2}" rx="${Math.abs(d.w/2)}" ry="${Math.abs(d.h/2)}" ${common}/>`;
-    if (d.type === 'rect') return `<rect x="${d.x}" y="${d.y}" width="${d.w}" height="${d.h}" rx="12" ${common}/>`;
-    if (d.type === 'arrow') return `<line x1="${d.x1}" y1="${d.y1}" x2="${d.x2}" y2="${d.y2}" ${common} marker-end="url(#arrow)"/>`;
-    return '';
-  }
-  function shorten(s,n){ s=String(s||''); return s.length>n ? s.slice(0,n-1)+'…' : s; }
-
-  function reviewScreen(){
-    const cards = state.cards; const c = cards[state.review.index] || null;
-    if (!c) return `<div class="section-title" style="margin-top:0"><div><h3>البطاقات الذكية</h3><p>تُنشأ البطاقات من موادك أنت.</p></div></div>${emptyBox('◇','لا توجد بطاقات بعد','أضف مادة أو اضغط توليد بطاقات من قارئ الملخص.','إضافة مادة','import')}`;
-    const mastered = cards.filter(x=>x.level==='mastered'||x.level==='easy').length;
-    return `
-      <div class="section-title" style="margin-top:0"><div><h3>جلسة مراجعة</h3><p>التكرار المتباعد يبدأ من تقييمك لصعوبة البطاقة.</p></div><span class="badge">${state.review.index+1} / ${cards.length}</span></div>
-      <div class="review-stats"><div class="stat"><b>${cards.length}</b><span>كل البطاقات</span></div><div class="stat"><b>${mastered}</b><span>متقنة</span></div><div class="stat"><b>${cards.length-mastered}</b><span>للمراجعة</span></div></div>
-      <div class="flash-card mt" id="flashCard"><div><span class="badge gold">${state.review.flipped?'الإجابة':'السؤال'}</span><h3>${esc(state.review.flipped ? c.a : c.q)}</h3>${state.review.flipped?`<p>${esc(c.context || '')}</p>`:'<p class="muted">اضغط على البطاقة أو زر إظهار الإجابة.</p>'}</div><button class="btn soft small" id="flipCard">${state.review.flipped?'إخفاء الإجابة':'إظهار الإجابة'}</button></div>
-      <div class="difficulty mt"><button class="btn danger" data-grade="hard">صعب</button><button class="btn gold" data-grade="good">جيد</button><button class="btn primary" data-grade="mastered">متقن</button></div>
-      <div class="mt"><button class="btn soft block" id="nextCard">البطاقة التالية</button></div>`;
-  }
-
-  function exportScreen(){
-    return `
-      <div class="section-title" style="margin-top:0"><div><h3>تصدير ومشاركة الخريطة</h3><p>معاينة حية قبل حفظ PDF أو صورة عريضة أو SVG.</p></div></div>
-      <div class="card stack">
-        <div class="split"><b>المعاينة</b><span class="badge gold">${state.export.ratio==='wide'?'16:9 عريض':'A4 طباعة'}</span></div>
-        <div class="export-preview">${mapSvg(true)}</div>
-        <div class="stat-grid"><div class="stat"><b>${state.map.nodes.length}</b><span>مفاهيم</span></div><div class="stat"><b>${state.map.drawings.length}</b><span>رسومات</span></div><div class="stat"><b>300</b><span>DPI للطباعة</span></div></div>
-      </div>
-      <div class="section-title"><div><h3>صيغة الحفظ</h3><p>اختر الصيغة المناسبة للمشاركة أو الطباعة.</p></div></div>
-      <div class="format-grid">
-        ${formatCard('pdf','PDF','للطباعة')}${formatCard('png','PNG 4K','صورة عريضة')}${formatCard('svg','SVG','متجهي')}
-      </div>
-      <div class="section-title"><div><h3>إعدادات الإخراج</h3><p>تحكم بما يظهر في النسخة النهائية.</p></div></div>
-      <div class="stack">
-        ${switchRow('export.notes','تضمين ملاحظات العقد','إظهار الشروحات الشخصية داخل التصدير.',state.export.notes)}
-        ${switchRow('export.bg','خلفية ورقية وشبكة نقاط','أوقفها للحصول على خلفية بيضاء موفرة للحبر.',state.export.bg)}
-        ${switchRow('export.header','ترويسة فهيم وتاريخ الحفظ','إضافة اسم التطبيق ووقت التصدير.',state.export.header)}
-        ${switchRow('export.index','إحصائيات أسفل الخريطة','إظهار عدد المفاهيم والروابط والرسومات.',state.export.index)}
-      </div>
-      <div class="mt stack"><button class="btn primary block" id="exportBtn">تصدير وتنزيل الملف</button><button class="btn soft block" data-go="map">العودة للكانفاس</button></div>`;
-  }
-  function formatCard(id,title,desc){ return `<button class="format ${state.export.format===id?'active':''}" data-export-format="${id}"><b>${title}</b><span>${desc}</span></button>`; }
-
-  function afterRender(screen){
-    if (screen === 'map') setupMapEvents();
-    if (screen === 'import') setupImportEvents();
-  }
-
-  document.addEventListener('click', (e) => {
-    const goBtn = e.target.closest('[data-go]'); if(goBtn){ go(goBtn.dataset.go); return; }
-    const open = e.target.closest('[data-open-material]'); if(open){ state.activeMaterialId=open.dataset.openMaterial; save(); go('reader'); return; }
-    const style = e.target.closest('[data-style]'); if(style){ state.draft.style = style.dataset.style; save(); render(); return; }
-    const format = e.target.closest('[data-export-format]'); if(format){ state.export.format = format.dataset.exportFormat; save(); render(); return; }
-    const toggle = e.target.closest('[data-toggle]'); if(toggle){ updateToggle(toggle.dataset.toggle, toggle.checked); return; }
-    const mode = e.target.closest('[data-mode]'); if(mode){ state.pen.mode = mode.dataset.mode; state.linkFrom=null; save(); render(); return; }
-    const penTool = e.target.closest('[data-pen-tool]'); if(penTool){ state.pen.tool = penTool.dataset.penTool; save(); render(); return; }
-    const penSize = e.target.closest('[data-pen-size]'); if(penSize){ state.pen.size = Number(penSize.dataset.penSize); save(); render(); return; }
-    const penColor = e.target.closest('[data-pen-color]'); if(penColor){ state.pen.color = penColor.dataset.penColor; save(); render(); return; }
-    const addChild = e.target.closest('[data-add-child]'); if(addChild){ e.stopPropagation(); addNode(addChild.dataset.addChild); return; }
-    const del = e.target.closest('[data-delete-node]'); if(del){ e.stopPropagation(); deleteNode(del.dataset.deleteNode); return; }
-    const nodeColor = e.target.closest('[data-node-color]'); if(nodeColor){ updateSelected({color:nodeColor.dataset.nodeColor}); return; }
-    if (e.target.closest('#processBtn')) { processMaterial(); return; }
-    if (e.target.closest('#clearDraftBtn')) { state.draft = defaultState().draft; save(); render(); return; }
-    if (e.target.closest('#sendToMap')) { seedMapFromMaterial(); go('map'); return; }
-    if (e.target.closest('#makeCards')) { generateCardsFromActive(true); return; }
-    if (e.target.closest('#speakSummary')) { speakActiveSummary(); return; }
-    if (e.target.closest('#addNodeBtn')) { addNode(state.selectedNodeId || 'root'); return; }
-    if (e.target.closest('#centerMapBtn')) { $('#mapBoard')?.scrollTo({left:160, top:100, behavior:'smooth'}); return; }
-    if (e.target.closest('#zoomInBtn')) { state.map.zoom=clamp(state.map.zoom+.1,.7,1.45); save(); render(); return; }
-    if (e.target.closest('#zoomOutBtn')) { state.map.zoom=clamp(state.map.zoom-.1,.7,1.45); save(); render(); return; }
-    if (e.target.closest('#linkModeBtn')) { state.linkFrom = state.linkFrom ? null : 'waiting'; toast(state.linkFrom?'اختر العقدة الأولى ثم الثانية لإنشاء رابط.':'تم إلغاء وضع الربط.'); save(); render(); return; }
-    if (e.target.closest('#smartToggle')) { state.pen.smart=!state.pen.smart; save(); render(); return; }
-    if (e.target.closest('#undoDrawBtn')) { state.map.drawings.pop(); save(); render(); return; }
-    if (e.target.closest('#clearDrawBtn')) { state.map.drawings=[]; save(); render(); return; }
-    if (e.target.closest('#flipCard') || e.target.closest('#flashCard')) { state.review.flipped=!state.review.flipped; save(); render(); return; }
-    const grade = e.target.closest('[data-grade]'); if(grade){ gradeCard(grade.dataset.grade); return; }
-    if (e.target.closest('#nextCard')) { nextCard(); return; }
-    if (e.target.closest('#exportBtn')) { exportMap(); return; }
-  });
-  document.addEventListener('input', (e) => {
-    if (e.target.id === 'draftTitle') state.draft.title = e.target.value;
-    if (e.target.id === 'draftText') state.draft.text = e.target.value;
-    if (e.target.id === 'nodeTitleInput') updateSelected({title:e.target.value}, false);
-    if (e.target.id === 'nodeNoteInput') updateSelected({note:e.target.value}, false);
-    if (e.target.id === 'nodePageInput') updateSelected({page:e.target.value}, false);
-    if (e.target.matches('[data-node-title]')) {
-      const n = state.map.nodes.find(x=>x.id===e.target.dataset.nodeTitle); if(n){ n.title = e.target.textContent.trim(); }
-    }
-    save();
-  });
-  document.addEventListener('change', (e) => {
-    if (e.target.matches('[data-toggle]')) updateToggle(e.target.dataset.toggle, e.target.checked);
-  });
-  window.addEventListener('hashchange', render);
-  $('#tabbar').addEventListener('click', e => { const b = e.target.closest('[data-go]'); if(b) go(b.dataset.go); });
-
-  function updateToggle(path, checked){
-    if (path.startsWith('export.')) state.export[path.split('.')[1]] = checked;
-    else state.draft[path] = checked;
-    save(); render();
-  }
-  function setupImportEvents(){
-    const file = $('#fileInput');
-    if(!file) return;
-    file.onchange = async () => {
-      const f = file.files[0]; if(!f) return;
-      state.draft.fileName = f.name;
-      if (!state.draft.title) state.draft.title = f.name.replace(/\.[^.]+$/,'');
-      if (/text|markdown|json|csv/.test(f.type) || /\.(txt|md|csv)$/i.test(f.name)) {
-        state.draft.text = await f.text();
-        toast('تم قراءة النص من الملف.');
-      } else {
-        toast('تم حفظ اسم الملف. قراءة PDF/الصوت تحتاج تكامل معالجة لاحق.');
-      }
-      save(); render();
+    const pageData = {
+      subjects:{title:'موادي الدراسية',subtitle:'كل موادك ودروسك في مكان واحد',kind:'subjects'},
+      library:{title:'المكتبة الرقمية',subtitle:'ملفاتك وملخصاتك ومصادرك التعليمية',kind:'library'},
+      tests:{title:'الاختبارات الذكية',subtitle:'اختبر مستواك وتابع تطور أدائك',kind:'tests'},
+      planner:{title:'خطة المذاكرة',subtitle:'نظّم أسبوعك وحقق أهدافك بثبات',kind:'planner'},
+      stats:{title:'إحصائيات أدائك',subtitle:'صورة واضحة عن وقتك وتقدمك الدراسي',kind:'stats'},
+      chat:{title:'المحادثات',subtitle:'تواصل مع مساعدك الدراسي الذكي',kind:'chat'},
+      notifications:{title:'الإشعارات',subtitle:'كل ما يهمك في مسيرتك الدراسية',kind:'notifications'},
+      settings:{title:'الإعدادات والحساب',subtitle:'خصص تجربتك بالطريقة التي تناسبك',kind:'settings'}
     };
-  }
-  function processMaterial(){
-    const title = ($('#draftTitle')?.value || state.draft.title || '').trim();
-    const text = ($('#draftText')?.value || state.draft.text || '').trim();
-    state.draft.title = title; state.draft.text = text;
-    if (!title && !text && !state.draft.fileName) { toast('أضف عنوانًا أو نصًا أو ملفًا أولًا.'); return; }
-    const material = summarize({title:title || state.draft.fileName?.replace(/\.[^.]+$/,'') || 'مادة جديدة', text, style:state.draft.style, fileName:state.draft.fileName});
-    state.materials.unshift(material);
-    state.activeMaterialId = material.id;
-    if (state.draft.cards) generateCards(material, false);
-    state.draft = {...defaultState().draft, style:state.draft.style};
-    save(); toast('تم حفظ المادة وبناء مساحة الملخص.'); go('reader');
-  }
-  function summarize({title,text,style,fileName}){
-    const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
-    const clean = text.replace(/\s+/g,' ').trim();
-    const sentences = clean ? clean.split(/(?<=[.!؟?])\s+|\n+/).map(s=>s.trim()).filter(s=>s.length>22) : [];
-    const keyPoints = sentences.slice(0,6).map(s=>shorten(s,170));
-    const formulas = extractFormulas(text).slice(0,5);
-    let summary;
-    if (!clean) summary = 'تم حفظ المصدر داخل مكتبتك. أضف نص المادة أو اربط خدمة قراءة ملفات PDF والصوت لاحقًا ليتم بناء ملخص تفصيلي قابل للمراجعة.';
-    else if (style === 'qa') summary = 'تم تحويل المادة إلى أسئلة وأجوبة مراجعة. ركّز على الأسئلة التي تكشف العلاقات بين التعاريف والأمثلة، ثم استخدم البطاقات لتثبيت الإجابات.';
-    else if (style === 'concept') summary = keyPoints.length ? 'الفكرة العامة للمادة تدور حول: ' + keyPoints.slice(0,3).join(' ') : 'تم إعداد ملخص مفاهيمي من النص المتاح.';
-    else if (style === 'map') summary = keyPoints.length ? 'يمكن بناء الخريطة الذهنية من المحاور التالية: ' + keyPoints.slice(0,4).join(' · ') : 'ابدأ بتحديد المفهوم المركزي ثم أضف الفروع يدويًا.';
-    else summary = keyPoints.length ? 'خلاصة مركزة للاختبار: ' + keyPoints.slice(0,4).join(' ') : 'تم حفظ النص، لكنّه قصير جدًا لاستخراج ملخص غني.';
-    return {id:uid('mat'), title, source:fileName || 'نص مباشر', style, createdAt:nowText(), words, summary, keyPoints, formulas};
-  }
-  function extractFormulas(text){
-    return (text.match(/[A-Za-zأ-ي0-9ΔΣπ=+\-*/^(){}\[\]<>≤≥]+\s*=\s*[^\n،؛.]{2,80}/g) || [])
-      .concat((text.match(/(?:تعريف|قانون|مصطلح)[:：]\s*[^\n.]{6,120}/g) || []));
-  }
-  function generateCards(material, replace){
-    const points = material.keyPoints.length ? material.keyPoints : [material.summary];
-    const newCards = points.map((p,i)=>({id:uid('card'), materialId:material.id, q:'ما الفكرة الأساسية في النقطة رقم ' + (i+1) + '؟', a:p, context:material.title, level:'new'}));
-    if (replace) state.cards = state.cards.filter(c=>c.materialId!==material.id).concat(newCards);
-    else state.cards = newCards.concat(state.cards);
-  }
-  function generateCardsFromActive(showToast){ const m=activeMaterial(); if(!m) return; generateCards(m,true); state.review.index=0; state.review.flipped=false; save(); if(showToast) toast('تم تحديث بطاقات المراجعة من الملخص.'); }
-  function seedMapFromMaterial(){
-    const m = activeMaterial(); if(!m) return;
-    const root = state.map.nodes.find(n=>n.id==='root');
-    if (root && !root.title) root.title = m.title;
-    state.selectedNodeId = 'root'; save();
-  }
-  function speakActiveSummary(){
-    const m = activeMaterial(); if(!m) return;
-    if (!('speechSynthesis' in window)) { toast('الاستماع الصوتي غير مدعوم في هذا المتصفح.'); return; }
-    speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(m.summary); u.lang='ar'; u.rate=.92; speechSynthesis.speak(u); toast('بدأ تشغيل الملخص صوتيًا.');
-  }
+    const subjectCards = () => ['الرياضيات|π|00d9ff|٧٩','الفيزياء|⚛|8d61ff|٦٢','الكيمياء|⚗|ff66a8|٦٨','اللغة العربية|ع|48e1b1|٥٦','اللغة الإنجليزية|A|9d75ff|٧٣','الأحياء|♧|36dfa8|٤٨'].map(s=>{const [n,x,c,p]=s.split('|');return `<button class="glass-card module-card" data-subject="${n}"><span class="subject-icon" style="--subject:#${c};color:#${c}">${x}</span><h3>${n}</h3><p>${p}٪ مكتمل · تابع من آخر درس وصلت إليه.</p><div class="subject-progress"><i style="width:${p}%;background:#${c}"></i></div></button>`}).join('');
+    const libraryCards = () => ['مذكرة الفيزياء.pdf','أسئلة الرياضيات.docx','ملخص الكيمياء.pdf','شرح النحو العربي.pdf','English Vocabulary.pdf','قوانين التفاضل.pdf'].map((n,i)=>`<article class="glass-card module-card" data-file="${n}"><span class="file-icon" data-icon="file"></span><h3>${n}</h3><p>${2+i}٫${i+1} MB · تم التعديل مؤخرًا</p><button class="link-button">معاينة الملف ${icon('arrow','sm')}</button></article>`).join('');
+    const quizzes = () => ['اختبار التفاضل والتكامل|١٨ / ٢٠|الرياضيات','اختبار قوانين نيوتن|١٦ / ٢٠|الفيزياء','اختبار العناصر الكيميائية|١٩ / ٢٠|الكيمياء','اختبار النحو الشامل|١٧ / ٢٠|اللغة العربية'].map(x=>{const [n,s,c]=x.split('|');return `<article class="glass-card quiz-card"><span class="subject-icon" style="--subject:var(--violet)">${icon('clipboard')}</span><div><b>${n}</b><p class="muted">${c} · ٢٠ سؤالًا</p></div><strong class="quiz-score">${s}</strong></article>`}).join('');
 
-  function setupMapEvents(){
-    const board = $('#mapBoard'); if(board) setTimeout(()=>{ if(board.scrollLeft===0 && board.scrollTop===0) board.scrollTo(150,90); },0);
-    setupNodeDrag(); setupPenCanvas();
-    ['nodeTitleInput','nodeNoteInput','nodePageInput'].forEach(id => { const el=$('#'+id); if(el) el.addEventListener('change',()=>{save();render();}); });
-  }
-  function addNode(parentId){
-    const p = state.map.nodes.find(n=>n.id===parentId) || state.map.nodes[0];
-    const count = state.map.nodes.length;
-    const angle = (count * 53 % 360) * Math.PI/180;
-    const n = {id:uid('node'), x:clamp(p.x + Math.cos(angle)*210, 35, W-210), y:clamp(p.y + Math.sin(angle)*145, 50, H-130), title:'', color:COLORS[count % COLORS.length], note:'', page:''};
-    state.map.nodes.push(n); state.map.edges.push({from:p.id,to:n.id}); state.selectedNodeId=n.id; save(); render(); toast('أُضيف مفهوم جديد. اكتب عنوانه داخل العقدة.');
-  }
-  function deleteNode(id){
-    state.map.nodes = state.map.nodes.filter(n=>n.id!==id); state.map.edges = state.map.edges.filter(e=>e.from!==id && e.to!==id); state.selectedNodeId='root'; save(); render();
-  }
-  function updateSelected(patch, rerender=true){
-    const n = state.map.nodes.find(x=>x.id===state.selectedNodeId); if(!n) return;
-    Object.assign(n, patch); save(); if(rerender) render();
-  }
-  function setupNodeDrag(){
-    let drag=null;
-    $$('.mind-node').forEach(el => {
-      el.addEventListener('click', e => {
-        const id = el.dataset.node;
-        if (state.linkFrom) { handleLinkClick(id); e.stopPropagation(); return; }
-        state.selectedNodeId = id; save(); if(!e.target.matches('[contenteditable]')) render();
-      });
-      el.addEventListener('pointerdown', e => {
-        if (state.pen.mode !== 'nodes' || state.linkFrom || e.target.closest('button') || e.target.matches('[contenteditable]')) return;
-        const n = state.map.nodes.find(x=>x.id===el.dataset.node); if(!n) return;
-        const rect = $('#mapContent').getBoundingClientRect();
-        drag = {id:n.id, el, dx:(e.clientX-rect.left)/state.map.zoom - n.x, dy:(e.clientY-rect.top)/state.map.zoom - n.y};
-        state.selectedNodeId = n.id; el.setPointerCapture(e.pointerId); e.preventDefault();
-      });
-      el.addEventListener('pointermove', e => {
-        if(!drag) return; const n = state.map.nodes.find(x=>x.id===drag.id); const rect = $('#mapContent').getBoundingClientRect();
-        n.x = clamp((e.clientX-rect.left)/state.map.zoom - drag.dx, 10, W-210); n.y = clamp((e.clientY-rect.top)/state.map.zoom - drag.dy, 10, H-115);
-        drag.el.style.left = n.x+'px'; drag.el.style.top = n.y+'px';
-      });
-      el.addEventListener('pointerup', () => { if(drag){ drag=null; save(); render(); } });
-    });
-  }
-  function handleLinkClick(id){
-    if (state.linkFrom === 'waiting') { state.linkFrom=id; toast('اختر العقدة الثانية لإكمال الرابط.'); save(); render(); return; }
-    if (state.linkFrom && state.linkFrom !== id) {
-      if (!state.map.edges.some(e=>e.from===state.linkFrom&&e.to===id)) state.map.edges.push({from:state.linkFrom,to:id});
-      state.linkFrom=null; save(); render(); toast('تم إنشاء الرابط بين المفهومين.');
+    function renderModule(type){
+      const d=pageData[type]; if(!d)return;
+      let content='';
+      if(d.kind==='subjects') content=`<div class="module-grid">${subjectCards()}</div>`;
+      if(d.kind==='library') content=`<div class="section-head"><button class="primary-btn" data-action="upload">${icon('upload')} رفع ملف جديد</button></div><div class="module-grid">${libraryCards()}</div>`;
+      if(d.kind==='tests') content=`<div class="glass-card" style="padding:14px;display:grid;gap:10px">${quizzes()}</div>`;
+      if(d.kind==='planner') content=`<div class="section-head"><button class="primary-btn" data-action="add-task">+ إضافة مهمة</button></div><div class="module-grid">${['الرياضيات — مراجعة التفاضل','الفيزياء — حل مسائل الحركة','الكيمياء — مراجعة الباب الثاني','العربية — تدريب النحو','الإنجليزية — حفظ الكلمات'].map((x,i)=>`<article class="glass-card module-card"><span class="badge">اليوم · ${i+3}:00 م</span><h3>${x}</h3><p>جلسة تركيز لمدة ${25+i*5} دقيقة، ثم استراحة قصيرة.</p><button class="secondary-btn" data-action="continue">بدء الجلسة</button></article>`).join('')}</div>`;
+      if(d.kind==='stats') content=`<div class="stats-row"><div class="glass-card big-stat"><b>١٢٫٥ س</b><span>وقت المذاكرة هذا الأسبوع</span></div><div class="glass-card big-stat"><b>٢٧</b><span>درسًا مكتملًا</span></div><div class="glass-card big-stat"><b>٨٧٪</b><span>متوسط الاختبارات</span></div><div class="glass-card big-stat"><b>٧ أيام</b><span>سلسلة الإنجاز</span></div></div><div class="glass-card chart">${[44,62,51,83,70,92,76].map((h,i)=>`<div class="bar" style="--h:${h}%"><span>${['س','ح','ن','ث','ر','خ','ج'][i]}</span></div>`).join('')}</div>`;
+      if(d.kind==='chat') content=`<div class="glass-card module-card" style="max-width:700px;margin:auto;text-align:center"><div class="assistant-visual"><div class="assistant-orb"></div><h3>مرحبًا أحمد، كيف أساعدك؟</h3><p>يمكنني شرح درس، تلخيص ملف، أو إعداد اختبار لك.</p></div><button class="primary-btn" data-action="assistant">ابدأ محادثة جديدة</button></div>`;
+      if(d.kind==='notifications') content=`<div class="glass-card" style="padding:12px">${$('#notificationPop').innerHTML.replace('pop-head','pop-head hidden')}</div>`;
+      if(d.kind==='settings') content=settingsTemplate();
+      modulePage.innerHTML=`<section class="glass-card module-hero"><div><h1>${d.title}</h1><p>${d.subtitle}</p></div><span class="ai-orb" style="position:relative;left:auto;bottom:auto"></span></section>${content}`;
+      dashboardPage.classList.add('hidden'); modulePage.classList.remove('hidden'); fillIcons(modulePage); bindDynamic(modulePage); window.scrollTo({top:0,behavior:'smooth'});
     }
-  }
+    function settingsTemplate(){return `<div class="settings-list"><div class="glass-card setting-row"><span class="avatar">أ</span><div><b>أحمد محمد</b><p>ahmed@example.com · الصف الثالث الثانوي</p></div><button class="secondary-btn">تعديل الملف</button></div><div class="glass-card setting-row"><span class="subject-icon" style="--subject:var(--violet)">${icon('moon')}</span><div><b>الوضع الليلي</b><p>اختر المظهر الأنسب لعينيك.</p></div><button class="toggle ${state.theme==='dark'?'on':''}" data-toggle="theme"><i></i></button></div><div class="glass-card setting-row"><span class="subject-icon" style="--subject:var(--cyan)">${icon('bell')}</span><div><b>إشعارات المذاكرة</b><p>تذكيرك بالخطة والاختبارات القادمة.</p></div><button class="toggle on" data-toggle="notifications"><i></i></button></div><div class="glass-card setting-row"><span class="subject-icon" style="--subject:var(--green)">${icon('book')}</span><div><b>لغة التطبيق</b><p>العربية</p></div><button class="secondary-btn">تغيير</button></div></div>`}
 
-  function setupPenCanvas(){
-    const canvas = $('#penCanvas'); if(!canvas) return;
-    const dpr = window.devicePixelRatio || 1; canvas.width=W*dpr; canvas.height=H*dpr; const ctx=canvas.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
-    let pts=[], drawing=false;
-    const pos = e => { const r=canvas.getBoundingClientRect(); return {x:clamp((e.clientX-r.left)/state.map.zoom,0,W), y:clamp((e.clientY-r.top)/state.map.zoom,0,H)}; };
-    const clear = () => ctx.clearRect(0,0,W,H);
-    const drawTemp = () => { clear(); if(pts.length<2) return; ctx.globalAlpha=state.pen.tool==='highlighter'?.42:.95; ctx.strokeStyle=state.pen.color; ctx.lineWidth=state.pen.size; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.beginPath(); ctx.moveTo(pts[0].x,pts[0].y); pts.slice(1).forEach(p=>ctx.lineTo(p.x,p.y)); ctx.stroke(); ctx.globalAlpha=1; };
-    canvas.onpointerdown = e => {
-      if(state.pen.mode!=='pen') return; const p=pos(e);
-      if(state.pen.tool==='eraser'){ eraseAt(p); return; }
-      drawing=true; pts=[p]; canvas.setPointerCapture(e.pointerId); e.preventDefault();
-    };
-    canvas.onpointermove = e => { if(!drawing) return; pts.push(pos(e)); drawTemp(); };
-    canvas.onpointerup = () => { if(!drawing) return; drawing=false; if(pts.length>2){ const d = state.pen.smart ? recognizeShape(pts) : null; state.map.drawings.push(d || {type:'path', points:pts, color:state.pen.color, size:state.pen.size, tool:state.pen.tool}); save(); } clear(); render(); };
-  }
-  function recognizeShape(points){
-    const xs=points.map(p=>p.x), ys=points.map(p=>p.y), minX=Math.min(...xs), maxX=Math.max(...xs), minY=Math.min(...ys), maxY=Math.max(...ys), w=maxX-minX, h=maxY-minY;
-    if (w<28 || h<18) return null;
-    const first=points[0], last=points[points.length-1], closed=Math.hypot(first.x-last.x, first.y-last.y) < Math.max(w,h)*.32;
-    const base={x:minX,y:minY,w,h,color:state.pen.color,size:state.pen.size,tool:state.pen.tool};
-    if (closed && Math.abs(w-h)/Math.max(w,h) < .24) return {...base,type:'ellipse'};
-    if (closed) return {...base,type:'rect'};
-    const direct=Math.hypot(first.x-last.x, first.y-last.y), path=points.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p.x-points[i].x,p.y-points[i].y),0);
-    if (direct>55 && path/direct < 1.7) return {type:'arrow',x1:first.x,y1:first.y,x2:last.x,y2:last.y,color:state.pen.color,size:state.pen.size,tool:state.pen.tool};
-    return null;
-  }
-  function eraseAt(p){
-    const before = state.map.drawings.length;
-    state.map.drawings = state.map.drawings.filter(d => {
-      const box = drawingBox(d); return !(p.x>=box.x-18 && p.x<=box.x+box.w+18 && p.y>=box.y-18 && p.y<=box.y+box.h+18);
-    });
-    save(); render(); toast(before===state.map.drawings.length?'لم يتم العثور على رسم قريب.':'تم مسح الرسم المحدد.');
-  }
-  function drawingBox(d){
-    if(d.type==='path'){ const xs=d.points.map(p=>p.x), ys=d.points.map(p=>p.y); return {x:Math.min(...xs),y:Math.min(...ys),w:Math.max(...xs)-Math.min(...xs),h:Math.max(...ys)-Math.min(...ys)}; }
-    if(d.type==='arrow') return {x:Math.min(d.x1,d.x2),y:Math.min(d.y1,d.y2),w:Math.abs(d.x2-d.x1),h:Math.abs(d.y2-d.y1)};
-    return {x:d.x,y:d.y,w:d.w,h:d.h};
-  }
+    function navigate(type){
+      state.current=type; history.replaceState(null,'','#'+type);
+      $$('.nav-item,.mobile-nav').forEach(n=>n.classList.toggle('active',n.dataset.nav===type));
+      if(type==='home'){modulePage.classList.add('hidden');dashboardPage.classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'});} else renderModule(type);
+      $('#sidebar').classList.remove('open');
+    }
+    function bindDynamic(root=document){
+      $$('[data-subject]',root).forEach(el=>el.onclick=()=>openSubject(el.dataset.subject));
+      $$('[data-file]',root).forEach(el=>el.onclick=e=>{if(e.target.closest('.more-btn'))return;openFile(el.dataset.file)});
+      $$('[data-action]',root).forEach(el=>el.onclick=()=>handleAction(el.dataset.action));
+      $$('[data-toggle]',root).forEach(el=>el.onclick=()=>{if(el.dataset.toggle==='theme'){setTheme(state.theme==='dark'?'light':'dark');el.classList.toggle('on',state.theme==='dark')}else{el.classList.toggle('on');toast(el.classList.contains('on')?'تم تفعيل الإشعارات':'تم إيقاف الإشعارات')}});
+    }
+    $$('[data-nav]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();navigate(el.dataset.nav)}));
+    bindDynamic();
 
-  function gradeCard(level){
-    const c = state.cards[state.review.index]; if(!c) return; c.level = level === 'hard' ? 'hard' : level === 'good' ? 'easy' : 'mastered'; nextCard();
-  }
-  function nextCard(){ state.review.index = state.cards.length ? (state.review.index + 1) % state.cards.length : 0; state.review.flipped=false; save(); render(); }
+    function openModal(title,body,wide=false){modal.className='modal'+(wide?' assistant-panel':'');modal.innerHTML=`<div class="modal-head"><h2 id="modalTitle">${title}</h2><button class="icon-btn" data-close>${icon('x')}</button></div><div class="modal-body">${body}</div>`;overlay.classList.add('show');document.body.style.overflow='hidden';$('[data-close]',modal).onclick=closeModal;fillIcons(modal);}
+    function closeModal(){overlay.classList.remove('show');document.body.style.overflow='';}
+    overlay.addEventListener('click',e=>{if(e.target===overlay)closeModal()});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();$('#notificationPop').classList.remove('show')}});
 
-  function exportMap(){
-    const svg = mapSvg(true).replace('class="map-svg"','');
-    if (state.export.format === 'svg') return download('faheem-mind-map.svg', svg, 'image/svg+xml');
-    if (state.export.format === 'pdf') return printPdf(svg);
-    exportPng(svg);
-  }
-  function download(name, content, type){ const blob=new Blob([content],{type}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); toast('تم تجهيز الملف للتنزيل.'); }
-  function printPdf(svg){
-    const win = window.open('', '_blank'); if(!win){ toast('اسمح بالنوافذ المنبثقة لتصدير PDF.'); return; }
-    win.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>فهيم PDF</title><style>body{margin:0;display:grid;place-items:center;min-height:100vh;background:#fff}svg{width:96vw;height:auto}@page{size:landscape;margin:10mm}</style></head><body>${svg}<script>onload=()=>setTimeout(()=>print(),250)<\/script></body></html>`); win.document.close();
-  }
-  function exportPng(svg){
-    const img = new Image(); const blob = new Blob([svg],{type:'image/svg+xml;charset=utf-8'}); const url=URL.createObjectURL(blob);
-    img.onload = () => { const canvas=document.createElement('canvas'); canvas.width=3840; canvas.height=2160; const ctx=canvas.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,canvas.width,canvas.height); const scale=Math.min(canvas.width/W,canvas.height/H); const dw=W*scale, dh=H*scale; ctx.drawImage(img,(canvas.width-dw)/2,(canvas.height-dh)/2,dw,dh); canvas.toBlob(b=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='faheem-mind-map-4k.png'; a.click(); URL.revokeObjectURL(a.href); URL.revokeObjectURL(url); toast('تم تنزيل الصورة العريضة.'); }); };
-    img.src=url;
-  }
+    function openSubject(name){
+      openModal(name,`<div class="assistant-visual" style="padding-top:5px"><span class="subject-icon" style="--subject:var(--cyan);width:65px;height:65px;font-size:27px">${name==='الرياضيات'?'π':name.charAt(0)}</span><h3>أكملت ٧ من ١٢ درسًا</h3><p>آخر درس: ${name==='الفيزياء'?'قوانين الحركة':'الوحدة الثالثة — الدرس الثاني'}</p></div><div class="field"><label>تقدم المادة</label><div class="lesson-progress"><div><i style="width:68%"></i></div><span>٦٨٪</span></div></div><div class="modal-actions"><button class="secondary-btn" data-close2>عرض الدروس</button><button class="primary-btn" data-start>${icon('play')} متابعة الدراسة</button></div>`);
+      $('[data-close2]',modal).onclick=()=>{closeModal();navigate('subjects')}; $('[data-start]',modal).onclick=()=>{closeModal();startSession(name)};
+    }
+    function openFile(name){openModal('معاينة الملف',`<div class="assistant-visual"><span class="file-icon" style="width:68px;height:68px">${icon('file','xl')}</span><h3>${name}</h3><p>تمت إضافة الملف إلى مكتبتك وهو جاهز للمراجعة.</p></div><div class="glass-card" style="padding:15px"><b style="font-size:12px">ملخص سريع</b><p style="font-size:10px;color:var(--muted);line-height:1.9">يحتوي هذا الملف على أهم النقاط والقوانين والأمثلة التدريبية مرتبة حسب الدروس.</p></div><div class="modal-actions"><button class="secondary-btn" data-download>${icon('upload')} تنزيل</button><button class="primary-btn" data-ai>تلخيص بالذكاء الاصطناعي</button></div>`);$('[data-download]',modal).onclick=()=>toast('تم تجهيز الملف للتنزيل');$('[data-ai]',modal).onclick=()=>{closeModal();openAssistant('لخّص لي '+name)}}
+    function addTaskModal(){openModal('إضافة مهمة جديدة',`<form id="taskForm"><div class="field"><label>عنوان المهمة</label><input name="title" required placeholder="مثال: مراجعة درس التكامل"></div><div class="field"><label>المادة</label><select name="subject"><option>الرياضيات</option><option>الفيزياء</option><option>الكيمياء</option><option>اللغة العربية</option></select></div><div class="field"><label>المدة</label><select name="duration"><option>٢٥ دقيقة</option><option>٤٥ دقيقة</option><option>٦٠ دقيقة</option></select></div><button class="primary-btn" style="width:100%">إضافة إلى الخطة</button></form>`);$('#taskForm').onsubmit=e=>{e.preventDefault();closeModal();toast('تمت إضافة المهمة إلى خطة اليوم ✓')}}
+    function uploadModal(){openModal('رفع ملف جديد',`<div class="field"><label for="filePicker" style="padding:32px;border:1px dashed var(--line-strong);border-radius:14px;text-align:center;cursor:pointer"><span style="display:block;color:var(--cyan);margin-bottom:8px">${icon('upload','xl')}</span><b>اسحب الملف هنا أو اضغط للاختيار</b><small style="display:block;color:var(--muted);margin-top:6px">PDF، Word، PowerPoint — حتى 25 MB</small></label><input id="filePicker" type="file" hidden></div><div id="uploadName" class="hidden"></div>`);$('#filePicker').onchange=e=>{const f=e.target.files[0];if(f){$('#uploadName').classList.remove('hidden');$('#uploadName').innerHTML=`<div class="glass-card" style="padding:12px">${icon('file')} ${f.name}</div><button class="primary-btn" id="finishUpload" style="width:100%;margin-top:12px">رفع الملف</button>`;$('#finishUpload').onclick=()=>{closeModal();toast('تم رفع الملف بنجاح ✓')}}}}
+    function startSession(subject='الفيزياء'){openModal('جلسة تركيز',`<div class="assistant-visual"><div class="progress-ring" style="--p:0"><div class="progress-value"><strong id="timerText">25:00</strong><span>${subject}</span></div></div><h3>وقت التركيز</h3><p>أغلق المشتتات وابدأ عندما تكون مستعدًا.</p></div><div class="modal-actions"><button class="secondary-btn" data-close3>إلغاء</button><button class="primary-btn" id="timerBtn">${icon('play')} ابدأ الآن</button></div>`);$('[data-close3]',modal).onclick=closeModal;let running=false,left=1500,timer;$('#timerBtn').onclick=()=>{running=!running;$('#timerBtn').textContent=running?'إيقاف مؤقت':'متابعة';if(running){timer=setInterval(()=>{left--;const m=String(Math.floor(left/60)).padStart(2,'0'),s=String(left%60).padStart(2,'0');$('#timerText').textContent=m+':'+s;if(left<=0){clearInterval(timer);toast('أحسنت! اكتملت جلسة التركيز')}} ,1000)}else clearInterval(timer)}}
+    function openAssistant(seed=''){
+      openModal('مساعدك الذكي',`<div class="assistant-visual"><div class="assistant-orb"></div><h3>مرحبًا أحمد!</h3><p>كيف يمكنني مساعدتك في دراستك اليوم؟</p></div><div class="quick-prompts"><button class="prompt">حل سؤال رياضيات</button><button class="prompt">لخّص لي درسًا</button><button class="prompt">اشرح لي قوانين الحركة</button><button class="prompt">أنشئ اختبارًا قصيرًا</button></div><div class="chat-box ${seed?'show':''}" id="chatBox">${seed?`<div class="message user">${seed}</div><div class="message bot">بالتأكيد! سأحلل محتوى الملف وأستخرج لك الأفكار الأساسية والقوانين المهمة في نقاط واضحة.</div>`:''}</div><div class="chat-input"><input id="chatInput" placeholder="اكتب سؤالك هنا..."><button id="sendChat">${icon('arrow')}</button></div>`,true);
+      $$('.prompt',modal).forEach(p=>p.onclick=()=>sendMessage(p.textContent));$('#sendChat').onclick=()=>sendMessage($('#chatInput').value);$('#chatInput').onkeydown=e=>{if(e.key==='Enter')sendMessage(e.target.value)};
+      function sendMessage(text){if(!text.trim())return;const box=$('#chatBox');box.classList.add('show');box.insertAdjacentHTML('beforeend',`<div class="message user">${escapeHtml(text)}</div><div class="message bot">سؤال رائع! سأشرح لك الفكرة خطوة بخطوة بطريقة بسيطة، ثم أعطيك مثالًا للتأكد من فهمها. ما الجزء الذي تريد أن نبدأ به؟</div>`);$('#chatInput').value='';box.scrollIntoView({behavior:'smooth',block:'end'})}
+    }
+    function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+    function handleAction(action){if(action==='assistant')openAssistant();if(action==='add-task')addTaskModal();if(action==='upload')uploadModal();if(action==='continue')startSession()}
 
-  render();
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
-})();
-</script>
+    $('#taskList').addEventListener('click',e=>{const task=e.target.closest('.task');if(!task)return;const i=+task.dataset.task;state.tasks[i]=!state.tasks[i];syncTasks();toast(state.tasks[i]?'أحسنت! اكتملت المهمة ✓':'أعيدت المهمة إلى الخطة')});
+    $('#themeBtn').onclick=()=>setTheme(state.theme==='dark'?'light':'dark');
+    $('#uploadBtn').onclick=uploadModal;
+    $('#menuBtn').onclick=()=>$('#sidebar').classList.toggle('open');
+    $('#notificationBtn').onclick=e=>{e.stopPropagation();$('#notificationPop').classList.toggle('show')};
+    $('#markRead').onclick=()=>{$('#notificationPop .dot')?.remove();$('#notificationBtn .dot')?.remove();toast('تم تحديد الكل كمقروء')};
+    document.addEventListener('click',e=>{if(!e.target.closest('#notificationPop')&&!e.target.closest('#notificationBtn'))$('#notificationPop').classList.remove('show')});
+
+    const searchable=[
+      {title:'الرياضيات',type:'مادة',go:'subjects'},{title:'الفيزياء',type:'مادة',go:'subjects'},{title:'الكيمياء',type:'مادة',go:'subjects'},
+      {title:'مذكرة الفيزياء.pdf',type:'ملف',file:true},{title:'أسئلة الرياضيات.docx',type:'ملف',file:true},{title:'ملخص الكيمياء.pdf',type:'ملف',file:true},
+      {title:'خطة المذاكرة',type:'صفحة',go:'planner'},{title:'الاختبارات الذكية',type:'صفحة',go:'tests'}
+    ];
+    $('#searchInput').addEventListener('input',e=>{const q=e.target.value.trim(),box=$('#searchResults');if(!q){box.classList.remove('show');return}const found=searchable.filter(x=>x.title.includes(q)).slice(0,5);box.innerHTML=found.length?found.map((x,i)=>`<button class="search-result" data-result="${i}">${icon(x.file?'file':'search','sm')}<span><b>${x.title}</b><small style="display:block;color:var(--muted)">${x.type}</small></span></button>`).join(''):`<div class="search-empty">لا توجد نتائج مطابقة</div>`;box.classList.add('show');$$('[data-result]',box).forEach((b,i)=>b.onclick=()=>{const x=found[i];box.classList.remove('show');e.target.value='';x.file?openFile(x.title):navigate(x.go)})});
+    $('#searchInput').addEventListener('keydown',e=>{if(e.key==='Enter'){const first=$('#searchResults .search-result');if(first)first.click()}});
+
+    if('serviceWorker' in navigator) addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+    const initial=location.hash.replace('#',''); if(pageData[initial])navigate(initial);
+  })();
+  </script>
 </body>
 </html>

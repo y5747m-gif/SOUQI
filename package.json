@@ -1,12 +1,12 @@
 {
-  "name": "faheem-study-app",
+  "name": "nova-study-app",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "node --watch server/static.js",
     "start": "node server/static.js",
-    "test": "node --test tests/faheem-smoke.test.js",
+    "test": "node --test tests/nova-smoke.test.js",
     "test:payments": "node --test tests/payment-server.test.js",
     "db:migrate": "psql \"$DATABASE_URL\" -v ON_ERROR_STOP=1 -f server/db/schema.sql"
   },
