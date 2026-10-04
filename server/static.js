@@ -9,7 +9,7 @@ const host = process.env.HOST || '0.0.0.0';
 const types = new Map([
   ['.html', 'text/html; charset=utf-8'], ['.js', 'text/javascript; charset=utf-8'], ['.css', 'text/css; charset=utf-8'],
   ['.json', 'application/json; charset=utf-8'], ['.webmanifest', 'application/manifest+json; charset=utf-8'],
-  ['.svg', 'image/svg+xml'], ['.png', 'image/png'], ['.jpg', 'image/jpeg'], ['.jpeg', 'image/jpeg'], ['.ico', 'image/x-icon']
+  ['.svg', 'image/svg+xml'], ['.png', 'image/png'], ['.jpg', 'image/jpeg'], ['.jpeg', 'image/jpeg'], ['.webp', 'image/webp'], ['.ico', 'image/x-icon']
 ]);
 
 function safePath(urlPath) {
@@ -30,10 +30,10 @@ const server = http.createServer(async (req, res) => {
   } catch (error) {
     res.statusCode = 500;
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    res.end('خطأ في تشغيل خادم فهيم');
+    res.end('تعذّر تشغيل خادم NOVA STUDY');
   }
 });
 
 server.listen(port, host, () => {
-  console.log(`Faheem study app is running on http://${host}:${port}`);
+  console.log(`NOVA STUDY is running on http://${host}:${port}`);
 });
